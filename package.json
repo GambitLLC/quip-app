@@ -46,7 +46,8 @@
     "react-native-svg": "13.9.0",
     "react-native-svg-transformer": "^1.1.0",
     "react-native-url-polyfill": "^2.0.0",
-    "zustand": "^4.4.1"
+    "zustand": "^4.4.1",
+    "@react-native-async-storage/async-storage": "1.18.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

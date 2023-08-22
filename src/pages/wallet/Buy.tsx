@@ -1,5 +1,5 @@
-import { View, StyleSheet } from "react-native";
-import { Screen, spacing, Text } from "@/lib";
+import {StyleSheet, View} from "react-native";
+import {Screen, spacing, Text} from "@/lib";
 
 interface BuyProps {
 

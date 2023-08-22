@@ -1,5 +1,6 @@
 import {
-  Arrow, ButtonClick,
+  Arrow,
+  ButtonClick,
   Circle,
   Diamond1,
   Diamond2,
@@ -10,13 +11,13 @@ import {
   Screen,
   spacing,
   Squiggle,
-  Star, typography
+  Star,
+  typography
 } from "@/lib";
-import { theme } from "@/util/Theme"
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { StyleSheet, View } from "react-native";
-import { Button } from "react-native-paper"
-import { CommonActions, ParamListBase } from "@react-navigation/native";
+import {theme} from "@/util/Theme"
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
+import {StyleSheet, View} from "react-native";
+import {CommonActions, ParamListBase} from "@react-navigation/native";
 
 export default function Splash({navigation}: NativeStackScreenProps<ParamListBase, "splash">) {
   return (

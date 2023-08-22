@@ -1,4 +1,4 @@
-import Svg, { Path, SvgProps, G } from "react-native-svg";
+import Svg, {G, Path, SvgProps} from "react-native-svg";
 
 export function Sol(props: SvgProps) {
   return (

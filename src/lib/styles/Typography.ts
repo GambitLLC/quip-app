@@ -1,4 +1,4 @@
-import { TextStyle } from "react-native";
+import {TextStyle} from "react-native";
 
 interface Typography {
   d1: TextStyle,

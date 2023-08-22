@@ -1,9 +1,9 @@
-import { View, StyleSheet } from "react-native";
+import {StyleSheet, View} from "react-native";
 import {m, p} from "../styles/Spacing";
-import { shortAddress } from "../../util/TextUtil";
-import { Text } from "../text/Text"
-import { theme } from "@/util/Theme"
-import { TransactionItem } from "../store/TransactionStore";
+import {shortAddress} from "../../util/TextUtil";
+import {Text} from "../text/Text"
+import {theme} from "@/util/Theme"
+import {TransactionItem} from "../store/TransactionStore";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 interface TransactionItemProps {

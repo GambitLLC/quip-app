@@ -1,4 +1,4 @@
-import { View, ViewProps } from "react-native";
+import {View, ViewProps} from "react-native";
 
 export function Circle(props: ViewProps) {
   return (

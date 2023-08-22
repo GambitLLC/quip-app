@@ -1,15 +1,16 @@
 import React from "react";
-import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack";
+import {createNativeStackNavigator, NativeStackScreenProps} from "@react-navigation/native-stack";
 import {Withdraw1} from "./Withdraw1";
 import {Withdraw2} from "./Withdraw2";
 import {Withdraw3} from "./Withdraw3";
-import { WalletModalHeader } from "@/lib";
+import {WalletModalHeader} from "@/lib";
 import {
-  createNavigationContainerRef, NavigationContainer,
-  useNavigation,
-  useNavigationState
+    createNavigationContainerRef,
+    NavigationContainer,
+    useNavigation,
+    useNavigationState
 } from "@react-navigation/native";
-import { StyleSheet } from "react-native";
+import {StyleSheet} from "react-native";
 import Scanner from "./Scanner";
 
 export type RootStackParamList = {

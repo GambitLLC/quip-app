@@ -1,10 +1,9 @@
-import { View, ViewProps } from "react-native";
-import { StyleSheet } from "react-native";
-import { theme } from "@/util/Theme"
-import { Text } from "../text/Text";
+import {StyleSheet, View, ViewProps} from "react-native";
+import {theme} from "@/util/Theme"
+import {Text} from "../text/Text";
 import LinearProgress from "../progress/LinearProgress";
-import { m, p } from "../styles/Spacing";
-import { typography } from "../styles/Typography";
+import {m, p} from "../styles/Spacing";
+import {typography} from "../styles/Typography";
 
 
 interface LevelInfoProps {

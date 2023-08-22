@@ -1,24 +1,23 @@
-import {View, StyleSheet} from "react-native";
+import {StyleSheet, View} from "react-native";
 import {
-  flex,
-  m,
-  p,
-  Screen,
-  Sol,
-  spacing,
-  Text,
-  typography,
-  useCrypto,
-  useTicker,
-  CryptoNumpadInput,
-  ButtonClick, RippleClick
+    ButtonClick,
+    CryptoNumpadInput,
+    flex,
+    m,
+    p,
+    RippleClick,
+    Screen,
+    Sol,
+    spacing,
+    Text,
+    typography,
+    useCrypto,
+    useTicker
 } from "@/lib";
-import { theme } from "@/util/Theme"
+import {theme} from "@/util/Theme"
 import {FontAwesome} from "@expo/vector-icons";
-import {Button, IconButton, TouchableRipple} from "react-native-paper";
-import {CommonActions} from "@react-navigation/native";
 import {useMemo, useState} from "react";
-import { Withdraw2Props } from "./Withdraw";
+import {Withdraw2Props} from "./Withdraw";
 
 function toFixedAtMost(x: number, digits: number) {
   const e = Math.pow(10, digits);

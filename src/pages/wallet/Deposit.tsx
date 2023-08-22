@@ -1,25 +1,16 @@
-import {View, StyleSheet, Share, Alert, Pressable} from "react-native";
-import {
-  p,
-  Screen,
-  spacing,
-  Text,
-  m,
-  border,
-  flex,
-  typography, useCrypto
-} from "@/lib";
+import {Alert, Pressable, Share, StyleSheet, View} from "react-native";
+import {border, flex, m, p, Screen, spacing, Text, typography, useCrypto} from "@/lib";
 
-import { theme } from "@/util/Theme"
-import { shortAddress} from "@/util/TextUtil"
+import {theme} from "@/util/Theme"
+import {shortAddress} from "@/util/TextUtil"
 
 import QRCodeStyled from 'react-native-qrcode-styled';
 import {Button, IconButton, TouchableRipple} from "react-native-paper";
-import {FontAwesome, MaterialIcons} from "@expo/vector-icons";
+import {MaterialIcons} from "@expo/vector-icons";
 import * as Clipboard from 'expo-clipboard';
 import {useNavigation} from "@react-navigation/native";
-import {useSpring, useTransition, animated} from "@react-spring/native";
-import { useState } from "react"
+import {animated, useSpring, useTransition} from "@react-spring/native";
+import {useState} from "react"
 
 const AnimatedText = animated(Text)
 const AnimatedIcon = animated(MaterialIcons)

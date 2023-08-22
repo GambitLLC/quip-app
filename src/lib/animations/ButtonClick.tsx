@@ -1,6 +1,6 @@
-import { Button } from "react-native-paper";
+import {Button} from "react-native-paper";
 import React, {useState} from "react";
-import { animated, easings, useSpring } from "@react-spring/native";
+import {animated, easings, useSpring} from "@react-spring/native";
 
 interface ButtonClickProps extends React.ComponentPropsWithRef<typeof Button> {
   duration?: number

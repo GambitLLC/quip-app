@@ -1,15 +1,19 @@
-import { View, StyleSheet, StyleProp, ViewStyle } from "react-native";
-import { theme } from "@/util/Theme"
+import {StyleProp, StyleSheet, View, ViewStyle} from "react-native";
+import {theme} from "@/util/Theme"
 import NavItem from "./NavItem";
-import { p } from "../styles/Spacing";
+import {p} from "../styles/Spacing";
 import {
+  CommonActions,
+  createNavigatorFactory,
   DefaultNavigatorOptions,
-  ParamListBase, TabNavigationState,
+  ParamListBase,
+  TabActionHelpers,
+  TabNavigationState,
   TabRouter,
+  TabRouterOptions,
   useNavigationBuilder,
-  TabRouterOptions, createNavigatorFactory, TabActionHelpers, CommonActions,
 } from "@react-navigation/native";
-import {useTransition, animated, easings} from "@react-spring/native";
+import {animated, easings, useTransition} from "@react-spring/native";
 import {useMemo} from "react";
 
 type QuipTab = "games" | "wallet" | "settings"

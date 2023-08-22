@@ -1,10 +1,10 @@
-import { View, StyleSheet } from "react-native";
-import { flex } from "../styles/Flex"
-import { p } from "../styles/Spacing"
-import { Text } from "../text/Text"
-import { theme } from "@/util/Theme"
-import { typography } from "../styles/Typography"
-import { IconButton, Button } from "react-native-paper";
+import {StyleSheet, View} from "react-native";
+import {flex} from "../styles/Flex"
+import {p} from "../styles/Spacing"
+import {Text} from "../text/Text"
+import {theme} from "@/util/Theme"
+import {typography} from "../styles/Typography"
+import {Button, IconButton} from "react-native-paper";
 import React from "react";
 
 interface WalletModalHeaderProps {

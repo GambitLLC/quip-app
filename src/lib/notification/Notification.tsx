@@ -1,15 +1,15 @@
-import { View, StyleSheet } from "react-native"
+import {StyleSheet, View} from "react-native"
 import {m, p} from "../styles/Spacing";
 import {Text} from "../text/Text";
-import { theme } from "@/util/Theme"
+import {theme} from "@/util/Theme"
 import {TouchableRipple} from "react-native-paper";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import LinearProgress from "../progress/LinearProgress";
-import React, {useMemo} from "react";
+import React from "react";
 import {INotification, useNotificationStore} from "../store/NotificationStore";
-import {easings, animated} from '@react-spring/native'
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { flex } from "../styles/Flex"
+import {animated, easings} from '@react-spring/native'
+import {flex} from "../styles/Flex"
+
 interface NotificationProps {
   notification: INotification,
   style?: any,

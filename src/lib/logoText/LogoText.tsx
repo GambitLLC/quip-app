@@ -1,4 +1,4 @@
-import Svg, { G, Path, SvgProps } from "react-native-svg";
+import Svg, {G, Path, SvgProps} from "react-native-svg";
 
 export function LogoText(props: SvgProps) {
   return (

@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import {StyleSheet} from "react-native";
 import React, {createContext, useContext, useMemo, useState} from "react";
 
 const WSS_BINANCE = 'wss://ws-api.binance.us:443/ws-api/v3'

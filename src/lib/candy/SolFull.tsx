@@ -1,5 +1,5 @@
 import * as React from "react"
-import Svg, { Path, Defs, LinearGradient, Stop, SvgProps } from "react-native-svg"
+import Svg, {Defs, LinearGradient, Path, Stop, SvgProps} from "react-native-svg"
 
 interface SolFullProps extends SvgProps {
 

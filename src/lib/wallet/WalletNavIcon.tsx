@@ -1,10 +1,9 @@
-import { View, StyleSheet, Pressable } from "react-native";
-import { theme } from "@/util/Theme"
-import { Text } from "../text/Text";
-import { m } from "../styles/Spacing"
+import {StyleSheet, View} from "react-native";
+import {theme} from "@/util/Theme"
+import {Text} from "../text/Text";
+import {m} from "../styles/Spacing"
 import MaterialIcons from "@expo/vector-icons/MaterialIcons"
-import { CommonActions, useNavigation } from "@react-navigation/native";
-import {TouchableRipple} from "react-native-paper";
+import {CommonActions, useNavigation} from "@react-navigation/native";
 import RippleClick from "../animations/RippleClick";
 
 interface WalletNavIconProps {

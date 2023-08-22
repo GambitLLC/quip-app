@@ -1,5 +1,5 @@
-import { ImageSourcePropType } from "react-native";
-import Svg, { Defs, LinearGradient, Path, Pattern, Stop, SvgProps, Use, Image } from "react-native-svg";
+import {ImageSourcePropType} from "react-native";
+import Svg, {Defs, Image, LinearGradient, Path, Pattern, Stop, SvgProps, Use} from "react-native-svg";
 
 interface InfoImageProps {
   imgSrc: ImageSourcePropType,

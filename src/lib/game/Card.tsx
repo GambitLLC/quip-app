@@ -1,13 +1,13 @@
-import { ColorValue, ImageSourcePropType, StyleSheet, View } from "react-native";
-import Svg, { Defs, LinearGradient, Path, Pattern, Stop, SvgProps, Use, Image} from "react-native-svg";
-import { m, p } from "../styles/Spacing";
-import { theme } from "@/util/Theme"
+import {ColorValue, ImageSourcePropType, StyleSheet, View} from "react-native";
+import Svg, {Defs, Image, LinearGradient, Path, Pattern, Stop, SvgProps, Use} from "react-native-svg";
+import {m} from "../styles/Spacing";
+import {theme} from "@/util/Theme"
 import {IconButton, TouchableRipple} from "react-native-paper";
-import { Text } from "../text/Text"
-import { typography } from "../styles/Typography";
-import { LogoText } from "../logoText/LogoText";
-import { CommonActions, ParamListBase, useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import {Text} from "../text/Text"
+import {typography} from "../styles/Typography";
+import {LogoText} from "../logoText/LogoText";
+import {CommonActions, ParamListBase, useNavigation} from "@react-navigation/native";
+import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import PlayerCountLabel from "./PlayerCountLabel";
 import {useNotificationStore} from "../store/NotificationStore";
 

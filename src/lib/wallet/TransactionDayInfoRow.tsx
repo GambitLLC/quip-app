@@ -1,8 +1,8 @@
-import { View, StyleSheet } from "react-native";
-import { m } from "../styles/Spacing";
-import { Text } from "../text/Text"
-import { TransactionDay } from "../store/TransactionStore";
-import { theme } from "@/util/Theme"
+import {StyleSheet, View} from "react-native";
+import {m} from "../styles/Spacing";
+import {Text} from "../text/Text"
+import {TransactionDay} from "../store/TransactionStore";
+import {theme} from "@/util/Theme"
 
 interface TransactionDayInfoRowProps {
   day: TransactionDay

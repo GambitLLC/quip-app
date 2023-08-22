@@ -1,9 +1,9 @@
-import { typography } from "../styles/Typography"
-import { p } from "../styles/Spacing"
-import { IconButton } from "react-native-paper";
-import { theme } from "@/util/Theme"
-import { StyleSheet, View } from "react-native";
-import { Text } from "../text/Text"
+import {typography} from "../styles/Typography"
+import {p} from "../styles/Spacing"
+import {IconButton} from "react-native-paper";
+import {theme} from "@/util/Theme"
+import {StyleSheet, View} from "react-native";
+import {Text} from "../text/Text"
 
 export function PlayerCountLabel({ numPlayers }: {numPlayers: string}) {
   return (<View style={[styles.numPlayers, p('x', 3), p('l', 2)]}>

@@ -1,9 +1,9 @@
-import { View, StyleSheet, ColorValue } from "react-native";
-import Svg, { Path } from "react-native-svg";
-import { Text } from "../text/Text";
-import { typography } from "../styles/Typography";
-import { theme } from "@/util/Theme"
-import { m, p } from "../styles/Spacing";
+import {ColorValue, StyleSheet, View} from "react-native";
+import Svg, {Path} from "react-native-svg";
+import {Text} from "../text/Text";
+import {typography} from "../styles/Typography";
+import {theme} from "@/util/Theme"
+import {m} from "../styles/Spacing";
 import * as React from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialCommunityIcons"
 

@@ -1,9 +1,9 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { ParamListBase } from "@react-navigation/native";
-import {Avatar, LevelInfo, p, Screen, spacing, typography, Text, m, Achievement, border} from "@/lib";
-import { theme } from "@/util/Theme"
-import {View, StyleSheet, ScrollView, useWindowDimensions} from "react-native";
-import { IconButton } from "react-native-paper";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
+import {ParamListBase} from "@react-navigation/native";
+import {Achievement, Avatar, LevelInfo, m, p, Screen, spacing, Text, typography} from "@/lib";
+import {theme} from "@/util/Theme"
+import {ScrollView, StyleSheet, useWindowDimensions, View} from "react-native";
+import {IconButton} from "react-native-paper";
 
 function Profile({navigation}: NativeStackScreenProps<ParamListBase, "profile">) {
   const windowDim = useWindowDimensions();

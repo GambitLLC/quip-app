@@ -1,10 +1,10 @@
 import 'react-native-get-random-values';
 import 'react-native-url-polyfill/auto';
 
-import { registerRootComponent } from 'expo';
+import {registerRootComponent} from 'expo';
 import App from '@/app/App'
-import { useFonts } from 'expo-font';
-import { useCallback } from 'react';
+import {useFonts} from 'expo-font';
+import {useCallback} from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import {View} from "react-native";
 

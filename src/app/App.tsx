@@ -2,19 +2,19 @@
 import React from 'react';
 
 // -- theme --
-import { theme } from "@/util/Theme"
+import {theme} from "@/util/Theme"
 
 // -- providers --
-import { PaperProvider } from "react-native-paper";
-import { CryptoProvider } from "@/lib/context/CryptoContext"
-import { TickerProvider } from "@/lib/context/TickerContext"
+import {PaperProvider} from "react-native-paper";
+import {CryptoProvider} from "@/lib/context/CryptoContext"
+import {TickerProvider} from "@/lib/context/TickerContext"
 
 // -- notifications --
-import { NotificationBar } from "@/lib/notification/NotificationBar"
+import {NotificationBar} from "@/lib/notification/NotificationBar"
 
 // -- navigations
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {NavigationContainer} from "@react-navigation/native";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
 
 // -- pages --
 import Home from "@/pages/game/Home";

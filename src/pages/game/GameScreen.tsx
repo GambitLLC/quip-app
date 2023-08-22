@@ -1,5 +1,5 @@
-import { View, StyleSheet } from "react-native";
-import { Screen, spacing, p } from "@/lib";
+import {StyleSheet, View} from "react-native";
+import {p, Screen, spacing} from "@/lib";
 import React from "react";
 
 export function GameScreen() {

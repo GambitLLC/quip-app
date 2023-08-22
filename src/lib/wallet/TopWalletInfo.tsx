@@ -1,13 +1,12 @@
-import { View, StyleSheet } from 'react-native';
-import { theme } from "@/util/Theme"
+import {StyleSheet, View} from 'react-native';
+import {theme} from "@/util/Theme"
 import Sol from '../candy/Sol';
 import WalletNavIcon from "./WalletNavIcon";
 import FontAwesome from "@expo/vector-icons/FontAwesome"
-import { Text } from "../text/Text"
-import { p, m } from "../styles/Spacing"
+import {Text} from "../text/Text"
+import {m, p} from "../styles/Spacing"
 import {useCrypto} from "../context/CryptoContext";
 import {useTicker} from "../context/TickerContext";
-import {useEffect, useMemo} from "react";
 
 interface TopWalletInfoProps {}
 

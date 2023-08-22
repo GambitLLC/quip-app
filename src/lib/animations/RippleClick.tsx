@@ -1,6 +1,6 @@
-import { TouchableRipple } from "react-native-paper";
+import {TouchableRipple} from "react-native-paper";
 import React, {useState} from "react";
-import { animated, easings, useSpring } from "@react-spring/native";
+import {animated, easings, useSpring} from "@react-spring/native";
 
 interface RippleClickProps extends React.ComponentPropsWithRef<typeof TouchableRipple> {
   duration?: number

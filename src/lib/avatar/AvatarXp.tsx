@@ -1,11 +1,11 @@
-import { Pressable, PressableProps, View, ViewProps } from "react-native";
-import Avatar, { AvatarProps } from "./Avatar";
-import { theme } from "@/util/Theme"
-import { typography } from "../styles/Typography";
-import { p } from "../styles/Spacing";
+import {Pressable, PressableProps, View, ViewProps} from "react-native";
+import Avatar, {AvatarProps} from "./Avatar";
+import {theme} from "@/util/Theme"
+import {typography} from "../styles/Typography";
+import {p} from "../styles/Spacing";
 import React from "react";
-import Svg, { Circle } from "react-native-svg";
-import { Text } from "../text/Text"
+import Svg, {Circle} from "react-native-svg";
+import {Text} from "../text/Text"
 
 interface AvatarXpProps extends AvatarProps {
   percentage: number,

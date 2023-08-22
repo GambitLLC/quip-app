@@ -1,5 +1,5 @@
 import * as React from "react"
-import Svg, { Path, Defs, LinearGradient, Stop, SvgProps } from "react-native-svg"
+import Svg, {Path} from "react-native-svg"
 
 interface ScanProps {
 

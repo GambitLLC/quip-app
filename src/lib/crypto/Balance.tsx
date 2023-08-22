@@ -1,13 +1,12 @@
-import { View, ViewProps, StyleSheet, PressableProps, Pressable } from "react-native";
-import { Text } from "../text/Text"
-import { theme } from "@/util/Theme"
-import Sol from "../candy/Sol";
-import { m, p } from "../styles/Spacing";
-import { typography } from "../styles/Typography";
-import { useCrypto } from "../context/CryptoContext";
-import { useTicker } from "../context/TickerContext";
-import { TouchableRipple } from "react-native-paper";
-import { useMemo } from "react";
+import {StyleSheet, View} from "react-native";
+import {Text} from "../text/Text"
+import {theme} from "@/util/Theme"
+import {m, p} from "../styles/Spacing";
+import {typography} from "../styles/Typography";
+import {useCrypto} from "../context/CryptoContext";
+import {useTicker} from "../context/TickerContext";
+import {TouchableRipple} from "react-native-paper";
+import {useMemo} from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 interface BalanceProps {

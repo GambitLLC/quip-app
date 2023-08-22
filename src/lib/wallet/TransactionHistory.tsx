@@ -1,10 +1,10 @@
-import { View, StyleSheet, ScrollView } from "react-native";
-import { m, } from "../styles/Spacing";
-import { useTransactionStore } from "../store/TransactionStore";
-import { TransactionDayInfoRow } from "./TransactionDayInfoRow";
-import { border } from "../styles/Border";
-import { TransactionItemView } from "./TransactionItem";
-import { theme } from "@/util/Theme"
+import {ScrollView, StyleSheet, View} from "react-native";
+import {m,} from "../styles/Spacing";
+import {useTransactionStore} from "../store/TransactionStore";
+import {TransactionDayInfoRow} from "./TransactionDayInfoRow";
+import {border} from "../styles/Border";
+import {TransactionItemView} from "./TransactionItem";
+import {theme} from "@/util/Theme"
 
 interface TransactionHistoryProps {
 

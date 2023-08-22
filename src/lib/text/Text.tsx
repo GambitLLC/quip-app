@@ -1,6 +1,6 @@
-import { TextProps } from "react-native";
-import { theme } from "@/util/Theme"
-import { Text as PaperText } from "react-native-paper";
+import {TextProps} from "react-native";
+import {theme} from "@/util/Theme"
+import {Text as PaperText} from "react-native-paper";
 
 
 export function Text(props: TextProps) {

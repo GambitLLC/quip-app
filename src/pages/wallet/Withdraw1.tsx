@@ -1,14 +1,13 @@
-import { spacing, Screen, Text, typography, flex, m, border, PasteItem, p, ButtonClick } from "@/lib";
-import { theme } from "@/util/Theme"
-import { StyleSheet, TextInput, View } from "react-native";
-import { Withdraw1Props } from "./Withdraw";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Keyboard } from "react-native"
-import { PublicKey } from "@solana/web3.js";
-import { FontAwesome } from "@expo/vector-icons";
-import { TouchableRipple } from "react-native-paper";
+import {ButtonClick, flex, m, p, PasteItem, Screen, spacing, Text, typography} from "@/lib";
+import {theme} from "@/util/Theme"
+import {Keyboard, StyleSheet, TextInput, View} from "react-native";
+import {Withdraw1Props} from "./Withdraw";
+import {useEffect, useMemo, useRef, useState} from "react";
+import {PublicKey} from "@solana/web3.js";
+import {FontAwesome} from "@expo/vector-icons";
+import {TouchableRipple} from "react-native-paper";
 import * as Clipboard from 'expo-clipboard';
-import { animated, useSpring } from "@react-spring/native";
+import {animated, useSpring} from "@react-spring/native";
 
 const AnimatedTextInput = animated(TextInput)
 const AnimatedFontAwesome = animated(FontAwesome)

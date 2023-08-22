@@ -1,11 +1,10 @@
-import { View, StyleSheet, ViewProps, Alert } from "react-native";
-import { useEffect, useState } from "react";
-import { BarCodeEvent, BarCodeScanner } from "expo-barcode-scanner";
-import { spacing, Screen, Text, flex, Sol, typography, m, SolFull, Scan } from "@/lib";
-import { theme } from "@/util/Theme"
-import { PublicKey } from "@solana/web3.js";
-import { CommonActions, useNavigation } from "@react-navigation/native";
-import { ScannerProps, Withdraw1Props } from "./Withdraw";
+import {Alert, StyleSheet, View} from "react-native";
+import {useEffect, useState} from "react";
+import {BarCodeEvent, BarCodeScanner} from "expo-barcode-scanner";
+import {flex, m, Scan, Screen, SolFull, spacing, Text, typography} from "@/lib";
+import {theme} from "@/util/Theme"
+import {PublicKey} from "@solana/web3.js";
+import {ScannerProps} from "./Withdraw";
 
 export function Scanner({navigation}: ScannerProps) {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);

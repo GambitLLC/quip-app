@@ -1,4 +1,4 @@
-import { Image, ImageSourcePropType, ViewProps } from "react-native";
+import {Image, ImageSourcePropType, ViewProps} from "react-native";
 
 export interface AvatarProps {
   source: ImageSourcePropType

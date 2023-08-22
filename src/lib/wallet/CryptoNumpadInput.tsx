@@ -1,11 +1,11 @@
-import { View, StyleSheet } from "react-native";
-import { Text } from "../text/Text";
-import { p, m } from "../styles/Spacing";
-import { border } from "../styles/Border";
-import { typography } from "../styles/Typography";
-import { TouchableRipple } from "react-native-paper";
+import {StyleSheet, View} from "react-native";
+import {Text} from "../text/Text";
+import {m, p} from "../styles/Spacing";
+import {border} from "../styles/Border";
+import {typography} from "../styles/Typography";
 import FontAwesome from "@expo/vector-icons/FontAwesome5"
 import RippleClick from "../animations/RippleClick";
+
 interface CryptoNumpadInputProps {
   onInput: (n: number) => void,
   onDelete: () => void,

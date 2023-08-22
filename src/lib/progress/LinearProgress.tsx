@@ -1,6 +1,6 @@
-import { View } from "react-native";
-import { theme } from "@/util/Theme"
-import {useSpring, animated, UseSpringProps} from "@react-spring/native";
+import {View} from "react-native";
+import {theme} from "@/util/Theme"
+import {animated, useSpring, UseSpringProps} from "@react-spring/native";
 
 interface LinearProgressProps {
   percentage: number,

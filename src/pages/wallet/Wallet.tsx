@@ -1,7 +1,7 @@
-import { p, Screen, spacing, TopWalletInfo, TransactionHistory } from "@/lib";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { ParamListBase } from "@react-navigation/native";
-import { StyleSheet, View } from "react-native";
+import {p, Screen, spacing, TopWalletInfo, TransactionHistory} from "@/lib";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
+import {ParamListBase} from "@react-navigation/native";
+import {StyleSheet, View} from "react-native";
 
 export default function Wallet({route, navigation}: NativeStackScreenProps<ParamListBase, "wallet">) {
   return (

@@ -1,8 +1,8 @@
-import { View, StyleSheet, NativeSyntheticEvent, TextInputSubmitEditingEventData } from "react-native";
-import { m, p, Screen, spacing, Text, useCrypto } from "@/lib";
-import { Button, TextInput } from "react-native-paper";
+import {NativeSyntheticEvent, StyleSheet, TextInputSubmitEditingEventData, View} from "react-native";
+import {m, Screen, spacing, Text, useCrypto} from "@/lib";
+import {Button, TextInput} from "react-native-paper";
 import {useEffect, useState} from "react";
-import { CommonActions, useNavigation } from "@react-navigation/native";
+import {CommonActions, useNavigation} from "@react-navigation/native";
 
 
 interface AuthProps {

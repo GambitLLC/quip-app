@@ -1,7 +1,7 @@
-import { StatusBar } from "expo-status-bar";
+import {StatusBar} from "expo-status-bar";
 import {ColorValue, StyleProp, View, ViewStyle} from "react-native";
-import { p, spacing } from "../styles/Spacing";
-import { theme } from "@/util/Theme"
+import {p, spacing} from "../styles/Spacing";
+import {theme} from "@/util/Theme"
 import React from "react";
 
 export function Screen({ children, style, screenStyle, containerStyle, pointerEvents, hasSafeArea=true, backgroundColor=theme.colors.background}: {

@@ -1,5 +1,5 @@
 import {StyleSheet} from "react-native";
-import { theme } from "@/util/Theme"
+import {theme} from "@/util/Theme"
 
 const border = StyleSheet.create({
   quip: {

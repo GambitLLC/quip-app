@@ -1,12 +1,11 @@
-import { View, StyleSheet, ViewProps } from "react-native";
-import { border } from "../styles/Border";
-import { p, m } from "../styles/Spacing";
+import {StyleSheet, View, ViewProps} from "react-native";
+import {border} from "../styles/Border";
+import {m, p} from "../styles/Spacing";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { theme } from "@/util/Theme"
-import { flex } from "../styles/Flex";
-import { Text } from "../text/Text";
-import { typography } from "../styles/Typography";
-import { TouchableRipple } from "react-native-paper";
+import {theme} from "@/util/Theme"
+import {flex} from "../styles/Flex";
+import {Text} from "../text/Text";
+import {typography} from "../styles/Typography";
 import RippleClick from "../animations/RippleClick";
 
 interface PasteItemProps extends ViewProps {

@@ -14,12 +14,11 @@ import {
   useGameStore,
   useNotificationStore
 } from "@/lib";
-import { theme } from "@/util/Theme";
-import { capitalize } from "@/util/TextUtil";
+import {theme} from "@/util/Theme";
+import {capitalize} from "@/util/TextUtil";
 import {StyleSheet, View} from "react-native";
 import {Button} from "react-native-paper";
 import {CommonActions, ParamListBase} from "@react-navigation/native";
-import { TransitionPresets } from "@react-navigation/stack";
 import Wallet from "../wallet/Wallet";
 import Settings from "../settings/Settings";
 import React from "react";

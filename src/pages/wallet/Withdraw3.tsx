@@ -1,24 +1,24 @@
-import {View, StyleSheet} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {
+  border,
+  ButtonClick,
+  flex,
+  m,
+  p,
+  Screen,
+  Sol,
   spacing,
   Text,
-  Screen,
-  flex,
-  useTicker,
-  Sol,
   typography,
-  m,
-  border,
-  p,
-  ButtonClick,
   useCrypto,
   useNotificationStore,
+  useTicker,
 } from "@/lib";
 import {theme} from "@/util/Theme"
-import { Withdraw3Props } from "./Withdraw";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-import { PublicKey } from "@solana/web3.js";
-import { CommonActions } from "@react-navigation/native";
+import {Withdraw3Props} from "./Withdraw";
+import {FontAwesome, FontAwesome5} from "@expo/vector-icons";
+import {PublicKey} from "@solana/web3.js";
+import {CommonActions} from "@react-navigation/native";
 
 export function Withdraw3({navigation, route}: Withdraw3Props) {
   const { usdPrice } = useTicker()

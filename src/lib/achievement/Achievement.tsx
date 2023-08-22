@@ -1,11 +1,11 @@
-import { View, StyleSheet, ColorValue } from "react-native";
-import { border } from "../styles/Border";
+import {ColorValue, StyleSheet, View} from "react-native";
+import {border} from "../styles/Border";
 import AchievementBadge from "./AchievementBadge";
-import { m, p } from "../styles/Spacing";
-import { Text } from "../text/Text"
+import {m, p} from "../styles/Spacing";
+import {Text} from "../text/Text"
 import LinearProgress from "../progress/LinearProgress";
-import { typography } from "../styles/Typography";
-import { theme } from "@/util/Theme"
+import {typography} from "../styles/Typography";
+import {theme} from "@/util/Theme"
 
 interface AchievementProps {
   name: string,

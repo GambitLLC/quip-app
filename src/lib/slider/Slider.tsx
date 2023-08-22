@@ -1,19 +1,11 @@
-import {
-  Animated,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  ScrollView,
-  StyleSheet,
-  View,
-  ViewProps
-} from "react-native";
-import React, {useMemo, useRef, useState} from "react";
-import { p } from "../styles/Spacing";
+import {Animated, NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, View, ViewProps} from "react-native";
+import React, {useMemo, useRef} from "react";
+import {p} from "../styles/Spacing";
 import Card from "../game/Card";
-import { theme } from "@/util/Theme"
-import { ParamListBase, useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useGameStore } from "../store/GameStore";
+import {theme} from "@/util/Theme"
+import {ParamListBase} from "@react-navigation/native";
+import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+import {useGameStore} from "../store/GameStore";
 
 const scrollOffset = 0
 

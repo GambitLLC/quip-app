@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { ColorValue } from "react-native";
-import { theme } from "@/util/Theme"
+import {create} from "zustand";
+import {ColorValue} from "react-native";
+import {theme} from "@/util/Theme"
 
 interface Quip {
   name: string,

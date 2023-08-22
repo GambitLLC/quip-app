@@ -7,7 +7,7 @@ import {
   m,
   border,
   flex,
-  typography
+  typography, useCrypto
 } from "@/lib";
 
 import { theme } from "@/util/Theme"
@@ -30,11 +30,12 @@ interface DepositProps {
 
 export function Deposit(props: DepositProps) {
   const navigation = useNavigation()
-  const address = "HJ7MqeXQL1MLfVEh4qZeUzExKg8RUS9Pxiu98oXruG6j";
+  const { address } = useCrypto()
   const [showCopySuccess, setShowCopySuccess] = useState(false)
   const [isHovering, setIsHovering] = useState(false)
 
   const copyToClipboard = async () => {
+    if (address === null) return
     await Clipboard.setStringAsync(address);
   };
 
@@ -65,6 +66,8 @@ export function Deposit(props: DepositProps) {
   }), [isHovering])
 
   const onShare = async () => {
+    if (address === null) return
+
     try {
       const result = await Share.share({
         message: address
@@ -136,7 +139,7 @@ export function Deposit(props: DepositProps) {
               ]}
             >
               <Text style={styles.addressText}>
-                {shortAddress(address, 8)}
+                { address === null ? "Missing Address!" : shortAddress(address, 8)}
               </Text>
             </TouchableRipple>
           </View>

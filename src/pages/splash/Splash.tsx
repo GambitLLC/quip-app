@@ -1,5 +1,5 @@
 import {
-  Arrow,
+  Arrow, ButtonClick,
   Circle,
   Diamond1,
   Diamond2,
@@ -38,7 +38,8 @@ export default function Splash({navigation}: NativeStackScreenProps<ParamListBas
         </View>
         <View style={styles.buttonContainer}>
           <View style={m('b', 2)}>
-            <Button
+            <ButtonClick
+              minScale={.85}
               onPress={() => {
                 navigation.dispatch({
                   ...CommonActions.navigate("auth"),
@@ -49,10 +50,11 @@ export default function Splash({navigation}: NativeStackScreenProps<ParamListBas
               mode="contained"
             >
               Log In
-            </Button>
+            </ButtonClick>
           </View>
           <View>
-            <Button
+            <ButtonClick
+                minScale={.85}
               onPress={() => {
                 navigation.dispatch({
                   ...CommonActions.navigate("auth"),
@@ -63,7 +65,7 @@ export default function Splash({navigation}: NativeStackScreenProps<ParamListBas
               mode="text"
             >
               Get Started
-            </Button>
+            </ButtonClick>
           </View>
         </View>
       </View>

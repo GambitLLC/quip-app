@@ -8,7 +8,7 @@ import {
   SystemProgram,
   Transaction,
 } from '@solana/web3.js';
-import React, { createContext, useContext, useState } from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 import { MagicSDKAdditionalConfiguration } from "@magic-sdk/provider/dist/types/core/sdk";
 import { AuthExtension } from "@magic-ext/auth";
 
@@ -32,13 +32,11 @@ type CryptoContextType = {
   magic: Magic<MagicSDKExtensionsOption<"solana">>,
   metadata: MagicUserMetadata | null,
   isLoggedIn: boolean,
-  connection: Connection | null,
+  connection: Connection,
   pubKey: PublicKey | null,
   balance: number | null,
   address: string | null,
-  shortAddress: string | null
   send: (destinationAddress: string, sol: number) => Promise<string | null>,
-  init: () => Promise<void>,
 }
 
 // Create the context with default values
@@ -47,13 +45,11 @@ const CryptoContext = createContext<CryptoContextType>({
   magic,
   metadata: null,
   isLoggedIn: false,
-  connection: null,
+  connection: new Connection(RPC_URL),
   pubKey: null,
   balance: null,
   address: null,
-  shortAddress: null,
   send: async () => { return null },
-  init: async () => {},
 })
 
 // Custom hook to use the Web3 context
@@ -64,17 +60,15 @@ interface CryptoProviderProps {
   children: React.ReactNode
 }
 
+const connection = new Connection(RPC_URL)
+
 export function CryptoProvider(props: CryptoProviderProps) {
   const [metadata, setMetadata] = useState<MagicUserMetadata | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
-  const [connection, setConnection] = useState<Connection | null>(null)
   const [pubKey, setPubKey] = useState<PublicKey | null>(null)
   const [balance, setBalance] = useState<number | null>(null)
 
   const address = metadata?.publicAddress ?? null
-  const shortAddress = address !== null ?
-    address.substring(0, 4) + "..." + address.slice(-4)
-    : null
 
   magic.user.isLoggedIn().on("done", (result: boolean) => {
     setIsLoggedIn(result)
@@ -133,8 +127,6 @@ export function CryptoProvider(props: CryptoProviderProps) {
 
     console.log(`Destination: ${destinationAddress} | SOL: ${sol} | Fee: ${feeInLamports / LAMPORTS_PER_SOL}`)
 
-    console.log(magic.solana)
-
     const signedTransaction = await magic.solana.signTransaction(transactionMagic, serializeConfig).then((res: any) => {
       console.log("Signed transaction")
       console.log(res)
@@ -152,22 +144,26 @@ export function CryptoProvider(props: CryptoProviderProps) {
   }
 
 
-
   async function init() {
-    const metadata = (await magic?.user.getInfo()) ?? null
-    setMetadata(metadata)
-    setConnection(new Connection(RPC_URL))
-    setPubKey(new PublicKey(metadata?.publicAddress!!))
+    const met = (await magic?.user.getInfo()) ?? null
+    const pub = new PublicKey(met?.publicAddress!!)
+    const bal = await connection.getBalance(pub) / LAMPORTS_PER_SOL
 
-    const balance = await getBalance()
-    setBalance(balance)
+    setMetadata(met)
+    setPubKey(pub)
+    setBalance(bal)
 
-    if (pubKey) connection?.onAccountChange(pubKey, async (accountInfo) => {
+    connection.onAccountChange(pub, async (accountInfo) => {
       setBalance(accountInfo.lamports / LAMPORTS_PER_SOL)
     })
 
     console.log("Initialized Crypto!")
   }
+
+  useEffect(() => {
+    if (!isLoggedIn) return
+    init()
+  }, [isLoggedIn])
 
   return (
     <CryptoContext.Provider
@@ -180,16 +176,12 @@ export function CryptoProvider(props: CryptoProviderProps) {
         pubKey,
         balance,
         address,
-        shortAddress,
         send,
-        init
       }}
     >
       {props.children}
     </CryptoContext.Provider>
   )
 }
-
-const styles = StyleSheet.create({});
 
 export default CryptoProvider;

@@ -91,12 +91,10 @@ export function QuipNavigator({
   })
 
   const memoKeys = useMemo(() => {
-    console.log("memoKey")
     return state.routes.map((e) => e.key)
   }, [])
 
   const memoRenders = useMemo(() => {
-    console.log("memoRender")
     return memoKeys.map(k => descriptors[k].render())
   }, [])
 

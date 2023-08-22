@@ -122,9 +122,6 @@ export function Slider(props: ViewProps & SliderProps) {
   return (
     <View style={[styles.container]} {...props}>
       <Animated.ScrollView
-        onContentSizeChange={(width, height) => {
-          console.log(width, height)
-        }}
         ref={scrollRef}
         horizontal={true}
         decelerationRate={0}

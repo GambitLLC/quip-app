@@ -15,9 +15,6 @@ export function TopWalletInfo(props: TopWalletInfoProps) {
   const crypto = useCrypto()
   const {usdPrice} = useTicker()
 
-  useEffect(() => {
-    console.log(crypto.balance)
-  }, [crypto])
   return (
     <View style={[styles.topWalletInfo, p('a', 6)]}>
       {/*Top Part of Wallet Info*/}

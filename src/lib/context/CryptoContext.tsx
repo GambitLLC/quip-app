@@ -79,8 +79,6 @@ export function CryptoProvider(props: CryptoProviderProps) {
     const lamports = sol * LAMPORTS_PER_SOL;
     if (!connection || !pubKey || !balance) return null;
 
-    console.log(pubKey)
-
     const recipientPubKey = new PublicKey(destinationAddress);
     const hash = await connection.getLatestBlockhash()
     let transactionMagic = new Transaction({
@@ -120,16 +118,7 @@ export function CryptoProvider(props: CryptoProviderProps) {
 
     console.log(`Destination: ${destinationAddress} | SOL: ${sol} | Fee: ${feeInLamports / LAMPORTS_PER_SOL}`)
 
-    const signedTransaction = await magic.solana.signTransaction(transactionMagic, serializeConfig).then((res: any) => {
-      console.log("Signed transaction")
-      console.log(res)
-      return res
-    }).catch((e: any) => {
-      console.log("Error signing transaction")
-      console.log(e)
-      return null
-    });
-
+    const signedTransaction = await magic.solana.signTransaction(transactionMagic, serializeConfig)
     const tx = Transaction.from(signedTransaction.rawTransaction);
 
     console.log("Sending transaction")

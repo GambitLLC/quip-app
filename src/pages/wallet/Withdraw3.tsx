@@ -26,7 +26,7 @@ export function Withdraw3({navigation, route}: Withdraw3Props) {
   const { send } = useCrypto()
   const { address, amountSol } = route.params
 
-  function sendCrypto() {
+  async function sendCrypto() {
     let isValid: boolean
     try {
       const pubKey = new PublicKey(address)
@@ -38,27 +38,22 @@ export function Withdraw3({navigation, route}: Withdraw3Props) {
     if (isValid) {
       console.log("Sending", amountSol, "to", address)
 
-      send(address, amountSol).then(() => {
-        console.log("Sent!")
+      const res = await send(address, amountSol)
+      console.log(`Send: ${res}!`)
 
-        notifications.add({
-          id: performance.now().toString(),
-          message: "Transaction sent!",
-          type: "success",
-        })
-
-        navigation.dispatch({
-          ...CommonActions.navigate('wallet')
-        })
-      }).catch((e) => {
+      if (res === null) {
         notifications.add({
           id: performance.now().toString(),
           message: "Transaction failed!",
           type: "error",
         })
-
-        alert(e)
-      })
+      } else {
+        notifications.add({
+          id: performance.now().toString(),
+          message: "Transaction sent!",
+          type: "success",
+        })
+      }
     }
   }
 

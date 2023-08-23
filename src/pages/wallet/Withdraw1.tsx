@@ -1,6 +1,6 @@
 import {ButtonClick, flex, m, p, PasteItem, Screen, spacing, Text, typography} from "@/lib";
 import {theme} from "@/util/Theme"
-import {Keyboard, StyleSheet, TextInput, View} from "react-native";
+import {AppState, Keyboard, StyleSheet, TextInput, View} from "react-native";
 import {Withdraw1Props} from "./Withdraw";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {PublicKey} from "@solana/web3.js";
@@ -49,7 +49,28 @@ export function Withdraw1({route, navigation}: Withdraw1Props) {
 
   const [clipboardString, setClipboardString] = useState("")
 
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
   useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (
+          appState.current.match(/inactive|background/) &&
+          nextAppState === 'active'
+      ) {
+        getClipboardString()
+      }
+
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  function getClipboardString() {
     Clipboard.getStringAsync().then((res) => {
       try {
         const pubKey = new PublicKey(res)
@@ -62,6 +83,10 @@ export function Withdraw1({route, navigation}: Withdraw1Props) {
         setClipboardString("")
       }
     })
+  }
+
+  useEffect(() => {
+    getClipboardString()
   }, [])
 
   return (

@@ -1,22 +1,38 @@
-import {ScrollView, StyleSheet, View} from "react-native";
+import {RefreshControl, ScrollView, StyleSheet, View} from "react-native";
 import {m,} from "../styles/Spacing";
-import {useTransactionStore} from "../store/TransactionStore";
 import {TransactionDayInfoRow} from "./TransactionDayInfoRow";
 import {border} from "../styles/Border";
 import {TransactionItemView} from "./TransactionItem";
 import {theme} from "@/util/Theme"
+import {useState, useCallback} from "react";
+import { useCrypto } from "../context/CryptoContext";
 
 interface TransactionHistoryProps {
 
 }
 
 export function TransactionHistory(props: TransactionHistoryProps) {
-  const history = useTransactionStore()
+  const {transactions} = useCrypto()
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
 
   return (
-    <ScrollView decelerationRate={0} showsVerticalScrollIndicator={false}>
-      {history.transactions.map((d, i) => {
+    <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        decelerationRate={0}
+        showsVerticalScrollIndicator={false}
+    >
+      {transactions.map((d, i) => {
         return (
           <View key={i} style={[m('t', 4)]}>
             <TransactionDayInfoRow day={d}/>

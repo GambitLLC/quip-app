@@ -1,6 +1,5 @@
 //store
 export * from './store/GameStore'
-export * from './store/TransactionStore'
 export * from './store/NotificationStore'
 
 //styles

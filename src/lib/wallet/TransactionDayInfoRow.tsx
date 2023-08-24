@@ -1,21 +1,24 @@
 import {StyleSheet, View} from "react-native";
 import {m} from "../styles/Spacing";
 import {Text} from "../text/Text"
-import {TransactionDay} from "../store/TransactionStore";
 import {theme} from "@/util/Theme"
+import { TransactionDay } from "../context/CryptoContext";
+import { useTicker } from "../context/TickerContext"
 
 interface TransactionDayInfoRowProps {
   day: TransactionDay
 }
 
 export function TransactionDayInfoRow(props: TransactionDayInfoRowProps) {
+  const {usdPrice} = useTicker()
+
   const dateString = new Date(props.day.date).toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
   })
 
   const daySum = props.day.items.reduce((acc, t) => {
-    return acc + (t.amount * t.priceInUSD)
+    return acc + (t.amount * usdPrice)
   }, 0)
 
   return (

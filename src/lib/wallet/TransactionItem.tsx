@@ -3,8 +3,9 @@ import {m, p} from "../styles/Spacing";
 import {shortAddress} from "../../util/TextUtil";
 import {Text} from "../text/Text"
 import {theme} from "@/util/Theme"
-import {TransactionItem} from "../store/TransactionStore";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { TransactionItem } from "../context/CryptoContext";
+import { useTicker } from "../context/TickerContext";
 
 interface TransactionItemProps {
   transaction: TransactionItem
@@ -12,6 +13,8 @@ interface TransactionItemProps {
 
 export function TransactionItemView(props: TransactionItemProps) {
   const icon = props.transaction.amount >= 0 ? 'arrow-downward' : 'arrow-upward';
+
+  const {usdPrice} = useTicker()
 
   return (
     <View style={[p('y', 6), p('x', 4), styles.transaction]}>
@@ -44,7 +47,7 @@ export function TransactionItemView(props: TransactionItemProps) {
         </Text>
         <Text style={styles.subtext}>
           {props.transaction.amount >= 0 ? "+" : ''}
-          {(props.transaction.priceInUSD * props.transaction.amount).toFixed(2)} USD
+          {(usdPrice * props.transaction.amount).toFixed(2)} USD
         </Text>
       </View>
     </View>
@@ -74,12 +77,12 @@ const styles = StyleSheet.create({
   },
 
   mainText: {
-    fontSize: 16,
+    fontSize: 14,
   },
 
   subtext: {
     color: theme.colors.s4,
-    fontSize: 14,
+    fontSize: 12,
   }
 });
 

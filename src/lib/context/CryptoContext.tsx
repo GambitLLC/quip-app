@@ -116,12 +116,9 @@ export function CryptoProvider(props: CryptoProviderProps) {
       verifySignatures: true,
     }
 
-    console.log(`Destination: ${destinationAddress} | SOL: ${sol} | Fee: ${feeInLamports / LAMPORTS_PER_SOL}`)
-
     const signedTransaction = await magic.solana.signTransaction(transactionMagic, serializeConfig)
     const tx = Transaction.from(signedTransaction.rawTransaction);
 
-    console.log("Sending transaction")
     return connection.sendRawTransaction(tx.serialize());
   }
 

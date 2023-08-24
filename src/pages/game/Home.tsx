@@ -1,18 +1,18 @@
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {
-  AvatarXp,
-  Balance,
-  createQuipNavigator,
-  LogoText,
-  m,
-  p,
-  Screen,
-  Slider,
-  spacing,
-  Text,
-  typography,
-  useGameStore,
-  useNotificationStore
+    AvatarXp,
+    Balance,
+    createQuipNavigator,
+    LogoText,
+    m,
+    p,
+    Screen,
+    Slider,
+    spacing,
+    Text,
+    typography,
+    useGameStore,
+    useNotificationStore
 } from "@/lib";
 import {theme} from "@/util/Theme";
 import {capitalize} from "@/util/TextUtil";

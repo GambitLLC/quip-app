@@ -1,18 +1,18 @@
 import {
-  Arrow,
-  ButtonClick,
-  Circle,
-  Diamond1,
-  Diamond2,
-  LogoIcon,
-  LogoText,
-  m,
-  p,
-  Screen,
-  spacing,
-  Squiggle,
-  Star,
-  typography
+    Arrow,
+    ButtonClick,
+    Circle,
+    Diamond1,
+    Diamond2,
+    LogoIcon,
+    LogoText,
+    m,
+    p,
+    Screen,
+    spacing,
+    Squiggle,
+    Star,
+    typography
 } from "@/lib";
 import {theme} from "@/util/Theme"
 import {NativeStackScreenProps} from "@react-navigation/native-stack";

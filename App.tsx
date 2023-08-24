@@ -6,7 +6,8 @@ import App from '@/app/App'
 import {useFonts} from 'expo-font';
 import {useCallback} from 'react';
 import * as SplashScreen from 'expo-splash-screen';
-import {View} from "react-native";
+import {SafeAreaProvider} from "react-native-safe-area-context";
+import {magic} from "@/lib";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,9 +31,10 @@ export default function Main() {
   }
 
   return (
-      <View style={{flex: 1, height: "100%", width: "100%" }} onLayout={onLayoutRootView}>
+      <SafeAreaProvider onLayout={onLayoutRootView}>
+        <magic.Relayer/>
         <App/>
-      </View>
+      </SafeAreaProvider>
   );
 }
 

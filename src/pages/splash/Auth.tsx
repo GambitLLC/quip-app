@@ -57,7 +57,6 @@ export function Auth(props: AuthProps) {
 
   return (
     <Screen style={[spacing.fill, styles.container]}>
-      <magic.Relayer/>
       <View style={[spacing.fill]}>
         <View style={[m('a', 6)]}>
           <Text style={[m('b', 2)]}>Auth!</Text>

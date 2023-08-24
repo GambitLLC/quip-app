@@ -3,15 +3,15 @@ import {theme} from "@/util/Theme"
 import NavItem from "./NavItem";
 import {p} from "../styles/Spacing";
 import {
-  CommonActions,
-  createNavigatorFactory,
-  DefaultNavigatorOptions,
-  ParamListBase,
-  TabActionHelpers,
-  TabNavigationState,
-  TabRouter,
-  TabRouterOptions,
-  useNavigationBuilder,
+    CommonActions,
+    createNavigatorFactory,
+    DefaultNavigatorOptions,
+    ParamListBase,
+    TabActionHelpers,
+    TabNavigationState,
+    TabRouter,
+    TabRouterOptions,
+    useNavigationBuilder,
 } from "@react-navigation/native";
 import {animated, easings, useTransition} from "@react-spring/native";
 import {useMemo} from "react";

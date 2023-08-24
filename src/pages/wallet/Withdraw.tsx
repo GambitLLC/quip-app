@@ -5,10 +5,10 @@ import {Withdraw2} from "./Withdraw2";
 import {Withdraw3} from "./Withdraw3";
 import {WalletModalHeader} from "@/lib";
 import {
-    createNavigationContainerRef,
-    NavigationContainer,
-    useNavigation,
-    useNavigationState
+  createNavigationContainerRef,
+  NavigationContainer,
+  useNavigation,
+  useNavigationState
 } from "@react-navigation/native";
 import {StyleSheet} from "react-native";
 import Scanner from "./Scanner";

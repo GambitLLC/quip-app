@@ -26,6 +26,7 @@ import Buy from "@/pages/wallet/Buy";
 import Splash from "@/pages/splash/Splash";
 import Auth from "@/pages/splash/Auth";
 import GameScreen from "@/pages/game/GameScreen";
+import {rootNavRef} from "@/lib/nav/RootNav";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,7 +35,7 @@ export const App = () => {
         <PaperProvider theme={theme}>
             <TickerProvider>
                 <CryptoProvider>
-                    <NavigationContainer>
+                    <NavigationContainer ref={rootNavRef}>
                         <NotificationBar>
                             <Stack.Navigator initialRouteName="splash" screenOptions={{headerShown: false}}>
                                 <Stack.Group>

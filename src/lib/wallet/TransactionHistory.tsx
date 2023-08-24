@@ -1,11 +1,13 @@
 import {RefreshControl, ScrollView, StyleSheet, View} from "react-native";
-import {m,} from "../styles/Spacing";
+import {m, spacing,} from "../styles/Spacing";
 import {TransactionDayInfoRow} from "./TransactionDayInfoRow";
 import {border} from "../styles/Border";
 import {TransactionItemView} from "./TransactionItem";
 import {theme} from "@/util/Theme"
 import {useState, useCallback} from "react";
 import { useCrypto } from "../context/CryptoContext";
+import {FlashList} from "@shopify/flash-list";
+import {flex} from "@/lib";
 
 interface TransactionHistoryProps {
 
@@ -25,31 +27,36 @@ export function TransactionHistory(props: TransactionHistoryProps) {
 
 
   return (
-    <ScrollView
+    <View style={spacing.fill}>
+      <FlashList
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         decelerationRate={0}
         showsVerticalScrollIndicator={false}
-    >
-      {transactions.map((d, i) => {
-        return (
-          <View key={i} style={[m('t', 4)]}>
-            <TransactionDayInfoRow day={d}/>
-            <View style={[styles.dayContainer, border.quip]}>
-              {d.items.map((t, i) => {
-                return (
-                  <View key={i}>
-                    <TransactionItemView transaction={t}/>
-                    {i < (d.items.length-1) && <View style={[styles.divider]}/>}
-                  </View>
-                )
-              })}
+
+        data={transactions}
+        estimatedItemSize={100}
+        renderItem={({ item }) => {
+          const d = item
+          return (
+            <View style={[m('t', 4)]}>
+              <TransactionDayInfoRow day={item}/>
+              <View style={[styles.dayContainer, border.quip]}>
+                {d.items.map((t, i) => {
+                  return (
+                      <View key={i}>
+                        <TransactionItemView transaction={t}/>
+                        {i < (d.items.length-1) && <View style={[styles.divider]}/>}
+                      </View>
+                  )
+                })}
+              </View>
             </View>
-          </View>
-        )
-      })}
-    </ScrollView>
+          )
+        }}
+      />
+    </View>
   );
 }
 

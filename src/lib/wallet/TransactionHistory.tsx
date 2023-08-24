@@ -34,9 +34,8 @@ export function TransactionHistory(props: TransactionHistoryProps) {
         }
         decelerationRate={0}
         showsVerticalScrollIndicator={false}
-
         data={transactions}
-        estimatedItemSize={100}
+        estimatedItemSize={500}
         renderItem={({ item }) => {
           const d = item
           return (

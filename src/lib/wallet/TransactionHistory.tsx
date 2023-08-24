@@ -44,10 +44,10 @@ export function TransactionHistory(props: TransactionHistoryProps) {
               <View style={[styles.dayContainer, border.quip]}>
                 {d.items.map((t, i) => {
                   return (
-                      <View key={i}>
-                        <TransactionItemView transaction={t}/>
-                        {i < (d.items.length-1) && <View style={[styles.divider]}/>}
-                      </View>
+                    <View key={i}>
+                      <TransactionItemView transaction={t}/>
+                      {i < (d.items.length-1) && <View style={[styles.divider]}/>}
+                    </View>
                   )
                 })}
               </View>

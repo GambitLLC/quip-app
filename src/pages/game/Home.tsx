@@ -21,8 +21,8 @@ import {Button} from "react-native-paper";
 import {CommonActions, ParamListBase} from "@react-navigation/native";
 import Wallet from "../wallet/Wallet";
 import Settings from "../settings/Settings";
-import React from "react";
-import Animated, {FadeIn, FadeOut} from "react-native-reanimated";
+import React, {useEffect, useReducer} from "react";
+import Animated, {FadeIn, FadeInLeft, FadeOut, FadeOutRight} from "react-native-reanimated";
 
 const Quip = createQuipNavigator();
 
@@ -30,14 +30,11 @@ function GameHome({navigation}: NativeStackScreenProps<ParamListBase, "games">) 
   const {quip} = useGameStore()
   const {add} = useNotificationStore()
 
-  // const transitions = useTransition(quip, {
-  //   key: quip.name,
-  //   from: { opacity: 0 },
-  //   enter: { opacity: 1 },
-  //   leave: { opacity: 0 },
-  //   config: { duration: 250 },
-  //   exitBeforeEnter: true,
-  // })
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
+
+  useEffect(() => {
+    forceUpdate()
+  }, [quip.name])
 
   return (<Screen screenStyle={[{backgroundColor: theme.colors.background}]} style={[spacing.fill]}>
     <View style={[styles.homeContainer]}>
@@ -66,39 +63,40 @@ function GameHome({navigation}: NativeStackScreenProps<ParamListBase, "games">) 
         <Slider navigation={navigation}/>
       </View>
       {/*Quip Info*/}
-      <Animated.View style={[p('x', 6)]} entering={FadeIn} exiting={FadeOut}>
-        <View style={[{display: "flex", flexDirection: "row"}]}>
-          <LogoText fill={quip.color} width={66} height={29}/>
-          <Text style={[m('l', 1), typography.h5, {color: theme.colors.s1}]}>
-            {capitalize(quip.name)}
-          </Text>
+      <Animated.View key={quip.name} entering={FadeInLeft} exiting={FadeOutRight}>
+        <View style={[p('x', 6)]}>
+          <View style={[{display: "flex", flexDirection: "row"}]}>
+            <LogoText fill={quip.color} width={66} height={29}/>
+            <Text style={[m('l', 1), typography.h5, {color: theme.colors.s1}]}>
+              {capitalize(quip.name)}
+            </Text>
+          </View>
+          <View style={[m('t', 2)]}>
+            <Text style={[typography.t2]}>
+              {quip.description}
+            </Text>
+          </View>
         </View>
-        <View style={[m('t', 2)]}>
-          <Text style={[typography.t2]}>
-            {quip.description}
-          </Text>
+        {/*Play Now*/}
+        <View style={[{flexGrow: 1}]}/>
+        <View style={[p('x', 6), p('t', 4)]}>
+          <ButtonClick onPress={() => {
+            add({
+              id: performance.now().toString(),
+              type: (() => {
+                //return a random type
+                const types = ["success", "error", "warning", "info"] as const
+                return types[Math.floor(Math.random() * types.length)]
+              })(),
+              message: "Coming Soon!",
+              timeout: 3000,
+            })
+          }} buttonColor={(quip.color as string)} labelStyle={typography.button1} contentStyle={styles.playButton} mode="contained">
+            Play Now
+          </ButtonClick>
         </View>
+        <View style={[{flexGrow: 1}]}/>
       </Animated.View>
-      {/*Play Now*/}
-      <View style={[{flexGrow: 1}]}/>
-      <Animated.View style={[p('x', 6)]} entering={FadeIn} exiting={FadeOut}>
-        <ButtonClick onPress={() => {
-          add({
-            id: performance.now().toString(),
-            type: (() => {
-              //return a random type
-              const types = ["success", "error", "warning", "info"] as const
-              return types[Math.floor(Math.random() * types.length)]
-            })(),
-            message: "Coming Soon!",
-            timeout: 3000,
-          })
-        }} buttonColor={(quip.color as string)} labelStyle={typography.button1} contentStyle={styles.playButton} mode="contained">
-          Play Now
-        </ButtonClick>
-      </Animated.View>
-      <View style={[{flexGrow: 1}]}/>
-      <View/>
     </View>
   </Screen>)
 }

@@ -110,7 +110,7 @@ export function Withdraw1({route, navigation}: Withdraw1Props) {
           selectionColor={theme.colors.p1}
           clearButtonMode={"always"}
         />
-        <TouchableRipple rippleColor={isSelected ? "#AE50FD20" : undefined} borderless onPress={ !isValidAddress ? () => {
+        <TouchableRipple rippleColor="#AE50FD20" borderless onPress={ address.length === 0 ? () => {
           Keyboard.dismiss()
           navigation.navigate("scanner")
         } : undefined} style={[styles.iconButton, flex.row, flex.center, m('x', 3)]}>

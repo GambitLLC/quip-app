@@ -1,19 +1,25 @@
 import {Alert, Pressable, Share, StyleSheet, View} from "react-native";
-import {border, flex, m, p, Screen, spacing, Text, typography, useCrypto} from "@/lib";
+import {border, ButtonClick, flex, m, p, RippleClick, Screen, spacing, Text, typography, useCrypto} from "@/lib";
 
 import {theme} from "@/util/Theme"
 import {shortAddress} from "@/util/TextUtil"
 
 import QRCodeStyled from 'react-native-qrcode-styled';
-import {Button, IconButton, TouchableRipple} from "react-native-paper";
+import {IconButton} from "react-native-paper";
 import {MaterialIcons} from "@expo/vector-icons";
 import * as Clipboard from 'expo-clipboard';
 import {useNavigation} from "@react-navigation/native";
-import {animated, useSpring, useTransition} from "@react-spring/native";
-import {useState} from "react"
+import React, {Ref, useState} from "react"
+import Animated, {FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated"
 
-const AnimatedText = animated(Text)
-const AnimatedIcon = animated(MaterialIcons)
+const TextWrapper = React.forwardRef((props: React.ComponentPropsWithRef<typeof Text>, ref: Ref<Text>) => {
+  return <Text ref={ref} {...props}>
+    {props.children}
+  </Text>
+})
+
+const AnimatedText = Animated.createAnimatedComponent(TextWrapper)
+const AnimatedIcon = Animated.createAnimatedComponent(MaterialIcons)
 
 interface DepositProps {
 
@@ -23,7 +29,6 @@ export function Deposit(props: DepositProps) {
   const navigation = useNavigation()
   const { address } = useCrypto()
   const [showCopySuccess, setShowCopySuccess] = useState(false)
-  const [isHovering, setIsHovering] = useState(false)
 
   const copyToClipboard = async () => {
     if (address === null) return
@@ -36,25 +41,10 @@ export function Deposit(props: DepositProps) {
     }, 1000)
   }
 
-  const transitions = useTransition(showCopySuccess, {
-    from: {
-      opacity: 0
-    },
-    enter: {
-      opacity: 1
-    },
-    leave: {
-      opacity: 0
-    },
-    exitBeforeEnter: true,
-    config: {
-      duration: 200
-    }
-  })
-
-  const [hoverStyle, api] = useSpring(() => ({
-    opacity: isHovering ? 0.4 : 1.0
-  }), [isHovering])
+  const hover = useSharedValue(1.0)
+  const hoverStyle = useAnimatedStyle(() => ({
+    opacity: withSpring(hover.value)
+  }))
 
   const onShare = async () => {
     if (address === null) return
@@ -116,7 +106,7 @@ export function Deposit(props: DepositProps) {
                 errorCorrectionLevel='H'
               />
             </View>
-            <TouchableRipple
+            <RippleClick
               borderless
               onPress={() => {
                 copyToClipboard()
@@ -132,7 +122,7 @@ export function Deposit(props: DepositProps) {
               <Text style={styles.addressText}>
                 { address === null ? "Missing Address!" : shortAddress(address, 8)}
               </Text>
-            </TouchableRipple>
+            </RippleClick>
           </View>
         </View>
         <Text style={{width: 288}}>
@@ -142,46 +132,39 @@ export function Deposit(props: DepositProps) {
         <View>
           <Pressable
             onPressIn={() => {
-              setIsHovering(true)
+              hover.value = 0.4
             }}
-
-
             onPressOut={() => {
-              setIsHovering(false)
+              hover.value = 1.0
             }}
-
             onPress={() => {
               copyToClipboard()
               if (!showCopySuccess) setShowCopySuccess(true)
             }}
 
             style={[{height: 56}, m('b', 4), flex.row, flex.center, flex.shrink]}>
-            {transitions((tStyle, doShow) =>
-              <animated.View style={tStyle}>
-                {
-                  doShow ?
-                    <View style={[flex.row, flex.center]}>
-                      <Text style={[typography.button1, {color: theme.colors.p2}]}>
-                        Address copied
-                      </Text>
-                      <MaterialIcons name="check" size={24} color={theme.colors.p2} style={[m('l', 2), m('b', 1)]}/>
-                    </View>
-                    :
-                    <View style={[flex.row, flex.center]}>
-                      <AnimatedIcon name="content-copy" size={24} color={theme.colors.p1} style={[m('r', 2), m('b', 1), hoverStyle]}/>
-                      <AnimatedText style={[typography.button1, {color: theme.colors.p1}, hoverStyle]}>
-                        Copy to clipboard
-                      </AnimatedText>
-                    </View>
-                }
-              </animated.View>
-            )}
+            {
+              showCopySuccess ?
+                <Animated.View entering={FadeIn} exiting={FadeOut} style={[flex.row, flex.center]}>
+                  <Text style={[typography.button1, {color: theme.colors.p2}]}>
+                    Address copied
+                  </Text>
+                  <MaterialIcons name="check" size={24} color={theme.colors.p2} style={[m('l', 2), m('b', 1)]}/>
+                </Animated.View>
+                :
+                <Animated.View entering={FadeIn} exiting={FadeOut} style={[flex.row, flex.center]}>
+                  <AnimatedIcon name="content-copy" size={24} color={theme.colors.p1} style={[m('r', 2), m('b', 1), hoverStyle]}/>
+                  <AnimatedText style={[typography.button1, {color: theme.colors.p1}, hoverStyle]}>
+                    Copy to clipboard
+                  </AnimatedText>
+                </Animated.View>
+            }
           </Pressable>
-          <Button onPress={onShare} mode={"contained"} style={{width: 300}} contentStyle={{height: 56}}>
+          <ButtonClick onPress={onShare} mode={"contained"} style={{width: 300}} contentStyle={{height: 56}}>
             <Text style={[typography.button1, {color: theme.colors.white}]}>
               Share Address
             </Text>
-          </Button>
+          </ButtonClick>
         </View>
       </View>
     </Screen>

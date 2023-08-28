@@ -1,13 +1,20 @@
-import {StyleSheet, TouchableWithoutFeedbackProps, ViewProps} from "react-native";
-import {useState} from "react";
+import {StyleSheet, TouchableWithoutFeedbackProps, View, ViewProps} from "react-native";
+import React, {Ref, useEffect, useState} from "react";
 import {theme} from "@/util/Theme"
 import {IconButton, TouchableRipple} from "react-native-paper";
 import {typography} from "../styles/Typography";
 import {capitalize} from "../../util/TextUtil";
-import {animated, easings, useSpring} from "@react-spring/native";
+import { Text } from "../text/Text";
+import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
 
-const AnimatedIconButton = animated(IconButton)
-const animationTime = 280
+const TextWrapper = React.forwardRef((props: React.ComponentPropsWithRef<typeof Text>, ref: Ref<Text>) => {
+  return <Text ref={ref} {...props}>
+    {props.children}
+  </Text>
+})
+
+const AnimatedIconButton = Animated.createAnimatedComponent(IconButton)
+const AnimatedText = Animated.createAnimatedComponent(TextWrapper)
 
 interface NavItemProps {
   active: boolean,
@@ -16,62 +23,72 @@ interface NavItemProps {
 }
 
 export function NavItem(props: ViewProps & NavItemProps & TouchableWithoutFeedbackProps) {
-  const [isPressedIn, setIsPressedIn] = useState(false)
+  const isActive = useSharedValue(props.active)
 
-  // const [rippleProps, rippleApi] = useSpring({
-  //   opacity: isPressedIn ? 1 : 0,
-  //   width: isPressedIn ? "100%" : "0%",
-  //   height: isPressedIn ? "100%" : "0%",
+  useEffect(() => {
+    isActive.value = props.active
+  }, [props.active])
+
+  const springStyle = useAnimatedStyle(() => ({
+    backgroundColor: withTiming(isActive.value ? theme.colors.s2 : theme.colors.s5),
+    borderColor: withTiming(isActive.value ? theme.colors.s3 : theme.colors.s5)
+  }))
+
+  const colorStyle = useAnimatedStyle(() => ({
+    color: withTiming(isActive.value ? theme.colors.primary : theme.colors.s4)
+  }))
+
+  const textStyle = useAnimatedStyle(() => ({
+    maxWidth: withTiming(isActive.value ? 100 : 0),
+    marginRight: withTiming(isActive.value ? 24 : 0),
+    opacity: withTiming(isActive.value ? 1 : 0)
+  }))
+
+  // const [springProps, api] = useSpring({
+  //   backgroundColor: props.active ? theme.colors.s2 : theme.colors.s5,
+  //   borderColor: props.active ? theme.colors.s3 : theme.colors.s5,
   //   config: {
-  //     duration: 10,
+  //     duration: animationTime,
+  //     friction: 12,
+  //     tension: 180,
+  //     easing: easings.easeInOutCubic
+  //   },
+  // }, [props.active])
+
+  // const [colorProps, colorApi] = useSpring({
+  //   color: props.active ? theme.colors.primary : theme.colors.s4,
+  //   config: {
+  //     duration: animationTime,
   //     friction: 12,
   //     tension: 180,
   //     easing: easings.easeInOutCubic
   //   }
-  // }, [isPressedIn])
+  // }, [props.active])
 
-  const [springProps, api] = useSpring({
-    backgroundColor: props.active ? theme.colors.s2 : theme.colors.s5,
-    borderColor: props.active ? theme.colors.s3 : theme.colors.s5,
-    config: {
-      duration: animationTime,
-      friction: 12,
-      tension: 180,
-      easing: easings.easeInOutCubic
-    },
-  }, [props.active])
-
-  const [colorProps, colorApi] = useSpring({
-    color: props.active ? theme.colors.primary : theme.colors.s4,
-    config: {
-      duration: animationTime,
-      friction: 12,
-      tension: 180,
-      easing: easings.easeInOutCubic
-    }
-  }, [props.active])
-
-  const [textProps, textApi] = useSpring({
-    maxWidth: props.active ? 100 : 0,
-    marginRight: props.active? 24 : 0,
-    opacity: props.active ? 1 : 0,
-    config: {
-      duration: animationTime,
-      friction: 12,
-      tension: 180,
-      easing: easings.easeOutCubic
-    }
-  }, [props.active])
+  // const [textProps, textApi] = useSpring({
+  //   maxWidth: props.active ? 100 : 0,
+  //   marginRight: props.active? 24 : 0,
+  //   opacity: props.active ? 1 : 0,
+  //   config: {
+  //     duration: animationTime,
+  //     friction: 12,
+  //     tension: 180,
+  //     easing: easings.easeOutCubic
+  //   }
+  // }, [props.active])
 
   return (
-    <TouchableRipple borderless style={{borderRadius: 9999}} onPressIn={() => setIsPressedIn(true)} onPressOut={() => setIsPressedIn(false)} {...props as TouchableWithoutFeedbackProps}>
-      <animated.View style={[springProps, styles.navItem]} key={props.label} {...props}>
+    <TouchableRipple
+      borderless
+      style={{borderRadius: 9999}}
+      {...props as TouchableWithoutFeedbackProps}>
+      <Animated.View style={[springStyle, styles.navItem]} key={props.label} {...props}>
         {/*<animated.View style={[rippleProps, styles.rippleEffect]}/>*/}
         <AnimatedIconButton icon={props.icon} iconColor={props.active ? theme.colors.primary : theme.colors.s4}/>
-        <animated.Text style={[colorProps, textProps, typography.button1]}>
+        <AnimatedText style={[colorStyle, textStyle, typography.button1]}>
           {capitalize(props.label)}
-        </animated.Text>
-      </animated.View>
+        </AnimatedText>
+      </Animated.View>
     </TouchableRipple>
   )
 }

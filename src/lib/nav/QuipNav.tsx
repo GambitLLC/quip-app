@@ -13,8 +13,8 @@ import {
     TabRouterOptions,
     useNavigationBuilder,
 } from "@react-navigation/native";
-import {animated, easings, useTransition} from "@react-spring/native";
 import {useMemo} from "react";
+import Animated, {FadeIn, FadeInLeft, FadeOut, FadeOutRight, SlideInLeft, SlideOutRight} from "react-native-reanimated";
 
 type QuipTab = "games" | "wallet" | "settings"
 type QuipTabIcon = "gamepad-variant" | "wallet" | "cog"
@@ -77,23 +77,6 @@ export function QuipNavigator({
       initialRouteName,
     });
 
-  const transitions = useTransition(state.index, {
-    from: {
-      opacity: 0,
-    },
-    enter: {
-      opacity: 1,
-    },
-    leave: {
-      opacity: 0,
-    },
-    exitBeforeEnter: true,
-    config: {
-      duration: 300,
-      easing: easings.easeOutCubic
-    }
-  })
-
   const memoKeys = useMemo(() => {
     return state.routes.map((e) => e.key)
   }, [])
@@ -106,19 +89,14 @@ export function QuipNavigator({
     <NavigationContent>
       <View style={styles.navContainer}>
         <View style={[{ flex: 1 }, contentStyle]}>
-          {
-            transitions((style, i) => (
-              <animated.View
-                key={state.routes[i].key}
-                style={[
-                  style,
-                  StyleSheet.absoluteFill,
-                ]}
-              >
-                {memoRenders[i]}
-              </animated.View>
-            ))
-          }
+          <Animated.View
+            entering={FadeInLeft}
+            exiting={FadeOutRight}
+            key={state.routes[state.index].key}
+            style={[StyleSheet.absoluteFill]}
+          >
+            {memoRenders[state.index]}
+          </Animated.View>
         </View>
         <View style={[styles.quipNav, p('x', 6), quipNavBarStyle]}>
           {state.routes.map((route, i) => {

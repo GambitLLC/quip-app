@@ -1,18 +1,18 @@
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {
-    AvatarXp,
-    Balance,
-    createQuipNavigator,
-    LogoText,
-    m,
-    p,
-    Screen,
-    Slider,
-    spacing,
-    Text,
-    typography,
-    useGameStore,
-    useNotificationStore
+  AvatarXp,
+  Balance, ButtonClick,
+  createQuipNavigator,
+  LogoText,
+  m,
+  p,
+  Screen,
+  Slider,
+  spacing,
+  Text,
+  typography,
+  useGameStore,
+  useNotificationStore
 } from "@/lib";
 import {theme} from "@/util/Theme";
 import {capitalize} from "@/util/TextUtil";
@@ -22,7 +22,7 @@ import {CommonActions, ParamListBase} from "@react-navigation/native";
 import Wallet from "../wallet/Wallet";
 import Settings from "../settings/Settings";
 import React from "react";
-import {animated, useTransition} from "@react-spring/native"
+import Animated, {FadeIn, FadeOut} from "react-native-reanimated";
 
 const Quip = createQuipNavigator();
 
@@ -30,14 +30,14 @@ function GameHome({navigation}: NativeStackScreenProps<ParamListBase, "games">) 
   const {quip} = useGameStore()
   const {add} = useNotificationStore()
 
-  const transitions = useTransition(quip, {
-    key: quip.name,
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-    config: { duration: 250 },
-    exitBeforeEnter: true,
-  })
+  // const transitions = useTransition(quip, {
+  //   key: quip.name,
+  //   from: { opacity: 0 },
+  //   enter: { opacity: 1 },
+  //   leave: { opacity: 0 },
+  //   config: { duration: 250 },
+  //   exitBeforeEnter: true,
+  // })
 
   return (<Screen screenStyle={[{backgroundColor: theme.colors.background}]} style={[spacing.fill]}>
     <View style={[styles.homeContainer]}>
@@ -66,45 +66,37 @@ function GameHome({navigation}: NativeStackScreenProps<ParamListBase, "games">) 
         <Slider navigation={navigation}/>
       </View>
       {/*Quip Info*/}
-      {
-        transitions((style, item) => (
-          <animated.View style={[p('x', 6), style]}>
-            <View style={[{display: "flex", flexDirection: "row"}]}>
-              <LogoText fill={item.color} width={66} height={29}/>
-              <Text style={[m('l', 1), typography.h5, {color: theme.colors.s1}]}>
-                {capitalize(item.name)}
-              </Text>
-            </View>
-            <View style={[m('t', 2)]}>
-              <Text style={[typography.t2]}>
-                {item.description}
-              </Text>
-            </View>
-          </animated.View>
-        ))
-      }
+      <Animated.View style={[p('x', 6)]} entering={FadeIn} exiting={FadeOut}>
+        <View style={[{display: "flex", flexDirection: "row"}]}>
+          <LogoText fill={quip.color} width={66} height={29}/>
+          <Text style={[m('l', 1), typography.h5, {color: theme.colors.s1}]}>
+            {capitalize(quip.name)}
+          </Text>
+        </View>
+        <View style={[m('t', 2)]}>
+          <Text style={[typography.t2]}>
+            {quip.description}
+          </Text>
+        </View>
+      </Animated.View>
       {/*Play Now*/}
       <View style={[{flexGrow: 1}]}/>
-      {
-        transitions((style, item) => (
-          <animated.View style={[p('x', 6), style]}>
-            <Button onPress={() => {
-              add({
-                id: performance.now().toString(),
-                type: (() => {
-                  //return a random type
-                  const types = ["success", "error", "warning", "info"] as const
-                  return types[Math.floor(Math.random() * types.length)]
-                })(),
-                message: "Coming Soon!",
-                timeout: 3000,
-              })
-            }} buttonColor={(item.color as string)} labelStyle={typography.button1} contentStyle={styles.playButton} mode="contained">
-              Play Now
-            </Button>
-          </animated.View>
-        ))
-      }
+      <Animated.View style={[p('x', 6)]} entering={FadeIn} exiting={FadeOut}>
+        <ButtonClick onPress={() => {
+          add({
+            id: performance.now().toString(),
+            type: (() => {
+              //return a random type
+              const types = ["success", "error", "warning", "info"] as const
+              return types[Math.floor(Math.random() * types.length)]
+            })(),
+            message: "Coming Soon!",
+            timeout: 3000,
+          })
+        }} buttonColor={(quip.color as string)} labelStyle={typography.button1} contentStyle={styles.playButton} mode="contained">
+          Play Now
+        </ButtonClick>
+      </Animated.View>
       <View style={[{flexGrow: 1}]}/>
       <View/>
     </View>

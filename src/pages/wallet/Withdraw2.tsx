@@ -217,7 +217,7 @@ export function Withdraw2({navigation, route}: Withdraw2Props) {
       <View style={[spacing.fill, p('a', 4), p('t', 10)]}>
         <View style={[p('a', 6), styles.depositHeader]}>
           <View style={styles.depositHeaderRow}>
-            <RippleClick minScale={.8} borderless onPress={max} style={styles.depositButton}>
+            <RippleClick borderless onPress={max} style={styles.depositButton}>
               <Text style={styles.maxText}>MAX</Text>
             </RippleClick>
             <View style={styles.info}>
@@ -245,7 +245,7 @@ export function Withdraw2({navigation, route}: Withdraw2Props) {
                 <Text style={styles.subtext}>{input.length !== 0 ? `${memoPrice}` : '0'} {mode !== 'usd' ? 'USD' : 'SOL'}</Text>
               </View>
             </View>
-            <RippleClick minScale={.8} borderless onPress={swap} style={styles.depositButton}>
+            <RippleClick borderless onPress={swap} style={styles.depositButton}>
               <FontAwesome color={theme.colors.p1} size={16} name="refresh"/>
             </RippleClick>
           </View>
@@ -259,7 +259,6 @@ export function Withdraw2({navigation, route}: Withdraw2Props) {
         </View>
         <View style={m('b', 8)}>
           <ButtonClick
-            minScale={.85}
             disabled={!isValid} onPress={() => {
             navigation.navigate("withdraw3", {
               address: address,

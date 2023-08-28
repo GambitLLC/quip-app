@@ -15,7 +15,7 @@ interface PasteItemProps extends ViewProps {
 
 export function PasteItem(props: PasteItemProps) {
   return (
-    <RippleClick minScale={.85} borderless onPress={props.onPress} style={[border.quip, p('a', 4), props.style, styles.pasteItem]}>
+    <RippleClick borderless onPress={props.onPress} style={[border.quip, p('a', 4), props.style, styles.pasteItem]}>
       <View style={[flex.row, flex.alignCenter]}>
         <FontAwesome style={m('r', 4)} name="paste" color={theme.colors.p1} size={24}/>
         <View style={flex.shrink}>

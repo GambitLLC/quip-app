@@ -7,7 +7,6 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import LinearProgress from "../progress/LinearProgress";
 import React from "react";
 import {INotification, useNotificationStore} from "../store/NotificationStore";
-import {animated, easings} from '@react-spring/native'
 import {flex} from "../styles/Flex"
 
 interface NotificationProps {
@@ -33,7 +32,7 @@ export default function Notification(props: NotificationProps) {
   })()
 
   return (
-    <animated.View
+    <View
       pointerEvents="auto"
       style={[
         props.style,
@@ -76,20 +75,9 @@ export default function Notification(props: NotificationProps) {
           color={theme.colors.white}
           backgroundColor={"rgba(255, 255, 255, 0.2)"}
           borderRadius={2}
-          spring={{
-            from: {width: "100%"},
-            to: {width: "0%"},
-            onRest: () => {
-              remove(notification)
-            },
-            config: {
-              duration: notification.timeout ?? 3000,
-              easing: easings.linear,
-            }
-          }}
         />
       </View>
-    </animated.View>
+    </View>
   )
 }
 

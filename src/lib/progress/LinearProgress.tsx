@@ -1,6 +1,8 @@
 import {View} from "react-native";
 import {theme} from "@/util/Theme"
-import {animated, useSpring, UseSpringProps} from "@react-spring/native";
+import {useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
+import {useEffect} from "react";
+import Animated from "react-native-reanimated";
 
 interface LinearProgressProps {
   percentage: number,
@@ -8,13 +10,17 @@ interface LinearProgressProps {
   backgroundColor?: string,
   height?: number,
   borderRadius?: number,
-  spring?: UseSpringProps,
 }
 
 export function LinearProgress(props: LinearProgressProps) {
-  const [style, api] = useSpring(() => (props.spring ?? {
-    width: `${props.percentage}%`,
-  }), [props.percentage])
+  const width = useSharedValue<`${number}%`>(`${props.percentage}%`)
+  const style = useAnimatedStyle(() => ({
+    width: withTiming(width.value)
+  }))
+
+  useEffect(() => {
+    width.value = `${props.percentage}%`
+  }, [props.percentage])
 
   return (
     <View style={{
@@ -25,7 +31,7 @@ export function LinearProgress(props: LinearProgressProps) {
       borderRadius: props.borderRadius ?? 9999,
       overflow: "hidden",
     }}>
-      <animated.View style={[{
+      <Animated.View style={[{
         position: "absolute",
         height: "100%",
         backgroundColor: props.color ?? theme.colors.primary,

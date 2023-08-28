@@ -40,7 +40,6 @@ export default function Splash({navigation}: NativeStackScreenProps<ParamListBas
         <View style={styles.buttonContainer}>
           <View style={m('b', 2)}>
             <ButtonClick
-              minScale={.85}
               onPress={() => {
                 navigation.dispatch({
                   ...CommonActions.navigate("auth"),
@@ -55,7 +54,6 @@ export default function Splash({navigation}: NativeStackScreenProps<ParamListBas
           </View>
           <View>
             <ButtonClick
-                minScale={.85}
               onPress={() => {
                 navigation.dispatch({
                   ...CommonActions.navigate("auth"),

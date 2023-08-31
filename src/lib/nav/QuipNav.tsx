@@ -14,6 +14,7 @@ import {
     useNavigationBuilder,
 } from "@react-navigation/native";
 import {useMemo} from "react";
+import { Freeze } from "react-freeze";
 import Animated, {FadeIn, FadeInLeft, FadeOut, FadeOutRight, SlideInLeft, SlideOutRight} from "react-native-reanimated";
 
 type QuipTab = "games" | "wallet" | "settings"
@@ -89,14 +90,20 @@ export function QuipNavigator({
     <NavigationContent>
       <View style={styles.navContainer}>
         <View style={[{ flex: 1 }, contentStyle]}>
-          <Animated.View
-            entering={FadeInLeft}
-            exiting={FadeOutRight}
-            key={state.routes[state.index].key}
-            style={[StyleSheet.absoluteFill]}
-          >
-            {memoRenders[state.index]}
-          </Animated.View>
+          {
+            memoRenders.map((render, i) =>
+              <Freeze key={i} freeze={state.index !== i}>
+                <Animated.View
+                  entering={SlideInLeft}
+                  exiting={SlideOutRight}
+                  key={state.index}
+                  style={[StyleSheet.absoluteFill, styles.viewContainer]}
+                >
+                  {render}
+                </Animated.View>
+              </Freeze>
+            )
+          }
         </View>
         <View style={[styles.quipNav, p('x', 6), quipNavBarStyle]}>
           {state.routes.map((route, i) => {
@@ -142,6 +149,9 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     backgroundColor: theme.colors.background
+  },
+  viewContainer: {
+    overflow: "hidden",
   }
 })
 

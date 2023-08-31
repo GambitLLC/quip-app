@@ -1,11 +1,18 @@
-import {Animated, NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, View, ViewProps} from "react-native";
-import React, {useMemo, useRef} from "react";
+import {StyleSheet, View, ViewProps} from "react-native";
+import React, {useMemo} from "react";
 import {p} from "../styles/Spacing";
 import Card from "../game/Card";
 import {theme} from "@/util/Theme"
 import {ParamListBase} from "@react-navigation/native";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import {useGameStore} from "../store/GameStore";
+import Animated, {
+  interpolate, runOnJS, scrollTo,
+  useAnimatedRef,
+  useAnimatedScrollHandler,
+  useAnimatedStyle, useDerivedValue,
+  useSharedValue
+} from "react-native-reanimated";
 
 const scrollOffset = 0
 
@@ -15,71 +22,68 @@ interface SliderProps {
 }
 
 export function Slider(props: ViewProps & SliderProps) {
+  const scrollRef = useAnimatedRef<Animated.ScrollView>()
+
   const snapOffsets = [...Array(5).keys()].map(index => (index * 274) - 50).slice(1, 4)
 
-  const scrollRef = useRef<ScrollView>(null);
-  const dragStartOffset = useRef<number>(0);
-  const scrollX = useRef(new Animated.Value(snapOffsets[1])).current;
+  const dragStartOffset = useSharedValue(0)
+  const scrollX = useSharedValue(snapOffsets[1])
 
-  const { quipIdx, left, right} = useGameStore()
+  const { quipIdx, setQuipIdx } = useGameStore()
 
-  function onScrollBeginDrag(e: NativeSyntheticEvent<NativeScrollEvent>) {
-    dragStartOffset.current = e.nativeEvent.contentOffset.x;
-  }
-
-  function onScrollEndDrag(e: NativeSyntheticEvent<NativeScrollEvent>) {
-    //if the drag offset was positive (dragged right) then we want to snap to the next page
-    if (dragStartOffset.current - e.nativeEvent.contentOffset.x < -scrollOffset) {
-      //if the current page is not the last page
-      if (quipIdx < snapOffsets.length - 1) {
-        scrollRef.current?.scrollTo({
-          x: snapOffsets[quipIdx + 1],
-          y: 0,
-          animated: true,
-        });
-        right()
-      } else {
-        scrollRef.current?.scrollTo({
-          x: snapOffsets[quipIdx],
-          y: 0,
-          animated: true,
-        });
-      }
+  useDerivedValue(() => {
+    const idx = Math.round(interpolate(scrollX.value, snapOffsets, [0, 1, 2]))
+    if (idx !== quipIdx) {
+      runOnJS(setQuipIdx)(idx)
     }
+  })
 
-    if (dragStartOffset.current - e.nativeEvent.contentOffset.x > scrollOffset) {
-      //if the current page is not the first page
-      if (quipIdx > 0) {
-        scrollRef.current?.scrollTo({
-          x: snapOffsets[quipIdx - 1],
-          y: 0,
-          animated: true,
-        });
-        left()
-      } else {
-        scrollRef.current?.scrollTo({
-          x: snapOffsets[quipIdx],
-          y: 0,
-          animated: true,
-        });
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollX.value = event.contentOffset.x
+    },
+    onBeginDrag: (e) => {
+      dragStartOffset.value = e.contentOffset.x;
+    },
+    onMomentumEnd: (e) => {
+      console.log("momentum end")
+      const dx = dragStartOffset.value - e.contentOffset.x
+
+      console.log(quipIdx)
+
+      if (dx < -scrollOffset) {
+        if (quipIdx < snapOffsets.length - 1) {
+          console.log("right")
+          scrollTo(scrollRef, snapOffsets[quipIdx + 1], 0, true)
+        } else {
+          console.log("snapBack")
+          scrollTo(scrollRef, snapOffsets[quipIdx], 0, true)
+        }
       }
-    }
-  }
 
-  const rotateCard1 = scrollX.interpolate({
-    inputRange: [0, 224, 1370],
-    outputRange: ["20deg", "0deg", "-20deg"]
+      else if (dx > scrollOffset) {
+        if (quipIdx > 0) {
+          console.log("left")
+          scrollTo(scrollRef, snapOffsets[quipIdx - 1], 0, true)
+        } else {
+          console.log("snapBack")
+          scrollTo(scrollRef, snapOffsets[quipIdx], 0, true)
+        }
+      }
+    },
   })
 
-  const rotateCard2 = scrollX.interpolate({
-    inputRange: [0, 498, 1370],
-    outputRange: ["20deg", "0deg","-20deg"]
-  })
+  const rotateCard1 = useAnimatedStyle(() => ({
+    transform: [{rotateZ: `${interpolate(scrollX.value, [0, 224, 1370], [20, 0, -20])}deg`}]
+  }))
 
-  const rotateCard3 = scrollX.interpolate({
-    inputRange: [0, 772, 1370],
-    outputRange: ["20deg", "0deg","-20deg"]
-  })
+  const rotateCard2 = useAnimatedStyle(() => ({
+    transform: [{rotateZ: `${interpolate(scrollX.value, [0, 498, 1370], [20, 0, -20])}deg`}]
+  }))
+
+  const rotateCard3 = useAnimatedStyle(() => ({
+    transform: [{rotateZ: `${interpolate(scrollX.value, [0, 772, 1370], [20, 0, -20])}deg`}]
+  }))
 
   const card1 = useMemo(() => (<Card
     imgSrc={require('../../../assets/game1.jpg')}
@@ -121,28 +125,18 @@ export function Slider(props: ViewProps & SliderProps) {
         disableIntervalMomentum={true}
         showsHorizontalScrollIndicator={false}
         contentOffset={{x: snapOffsets[1], y: 0}}
-        onScrollBeginDrag={onScrollBeginDrag}
-        onScrollEndDrag={onScrollEndDrag}
-        onScroll={Animated.event([
-          {
-            nativeEvent: {
-              contentOffset: {
-                x: scrollX,
-              },
-            },
-          },
-        ],{useNativeDriver: true})}
+        onScroll={scrollHandler}
         bounces={false}
         scrollEventThrottle={1}
       >
         <View style={{width: 274, height: 300}}/>
-        <Animated.View style={[{transform: [{rotateZ: rotateCard1}]}, p('x', 3)]}>
+        <Animated.View style={[rotateCard1, p('x', 3)]}>
           {card1}
         </Animated.View>
-        <Animated.View style={[{transform: [{rotateZ: rotateCard2}]}, p('x', 3)]}>
+        <Animated.View style={[rotateCard2, p('x', 3)]}>
           {card2}
         </Animated.View>
-        <Animated.View style={[{transform: [{rotateZ: rotateCard3}]}, p('x', 3)]}>
+        <Animated.View style={[rotateCard3, p('x', 3)]}>
           {card3}
         </Animated.View>
         <View style={{width: 274, height: 300}}/>

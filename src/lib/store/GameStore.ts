@@ -37,25 +37,18 @@ const quips: Quip[] = [
 interface GameStore {
   quipIdx: number,
   quip: Quip,
-  left: () => void,
-  right: () => void,
+  setQuipIdx: (idx: number) => void,
 }
 
 const useGameStore = create<GameStore>((set) => ({
   quipIdx: 1,
   quip: quips[1],
-  left: () => set((state) => (
+  setQuipIdx: (idx: number) => set((state) => (
     {
-      quipIdx: state.quipIdx > 0 ? state.quipIdx - 1 : state.quipIdx,
-      quip: quips[state.quipIdx > 0 ? state.quipIdx - 1 : state.quipIdx]
+        quipIdx: idx,
+        quip: quips[idx]
     }
   )),
-  right: () => set((state) => (
-    {
-      quipIdx: state.quipIdx < quips.length - 1 ? state.quipIdx + 1 : state.quipIdx,
-      quip: quips[state.quipIdx < quips.length - 1 ? state.quipIdx + 1 : state.quipIdx]
-    }
-  ))
 }))
 
 export {

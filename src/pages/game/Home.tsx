@@ -17,24 +17,16 @@ import {
 import {theme} from "@/util/Theme";
 import {capitalize} from "@/util/TextUtil";
 import {StyleSheet, View} from "react-native";
-import {Button} from "react-native-paper";
 import {CommonActions, ParamListBase} from "@react-navigation/native";
 import Wallet from "../wallet/Wallet";
 import Settings from "../settings/Settings";
-import React, {useEffect, useReducer} from "react";
-import Animated, {FadeIn, FadeInLeft, FadeOut, FadeOutRight} from "react-native-reanimated";
+import Animated, {FadeInLeft, FadeOutRight} from "react-native-reanimated";
 
 const Quip = createQuipNavigator();
 
 function GameHome({navigation}: NativeStackScreenProps<ParamListBase, "games">) {
   const {quip} = useGameStore()
   const {add} = useNotificationStore()
-
-  const [, forceUpdate] = useReducer(x => x + 1, 0);
-
-  useEffect(() => {
-    forceUpdate()
-  }, [quip.name])
 
   return (<Screen screenStyle={[{backgroundColor: theme.colors.background}]} style={[spacing.fill]}>
     <View style={[styles.homeContainer]}>
@@ -106,9 +98,9 @@ export default function Home({navigation}: NativeStackScreenProps<ParamListBase,
     <Quip.Navigator id="quip" initialRouteName={"home"} quipNavBarStyle={{}} contentStyle={{
       height: "100%",
     }}>
-      <Quip.Screen name="games" component={GameHome} />
-      <Quip.Screen name="wallet" component={Wallet} />
-      <Quip.Screen name="settings" component={Settings} />
+      <Quip.Screen name="games" component={GameHome}/>
+      <Quip.Screen name="wallet" component={Wallet}/>
+      <Quip.Screen name="settings" component={Settings}/>
     </Quip.Navigator>
   )
 }

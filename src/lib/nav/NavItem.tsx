@@ -4,17 +4,10 @@ import {theme} from "@/util/Theme"
 import {IconButton, TouchableRipple} from "react-native-paper";
 import {typography} from "../styles/Typography";
 import {capitalize} from "../../util/TextUtil";
-import { Text } from "../text/Text";
+import Text from "../text/Text";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
 
-const TextWrapper = React.forwardRef((props: React.ComponentPropsWithRef<typeof Text>, ref: Ref<Text>) => {
-  return <Text ref={ref} {...props}>
-    {props.children}
-  </Text>
-})
-
 const AnimatedIconButton = Animated.createAnimatedComponent(IconButton)
-const AnimatedText = Animated.createAnimatedComponent(TextWrapper)
 
 interface NavItemProps {
   active: boolean,
@@ -83,11 +76,10 @@ export function NavItem(props: ViewProps & NavItemProps & TouchableWithoutFeedba
       style={{borderRadius: 9999}}
       {...props as TouchableWithoutFeedbackProps}>
       <Animated.View style={[springStyle, styles.navItem]} key={props.label} {...props}>
-        {/*<animated.View style={[rippleProps, styles.rippleEffect]}/>*/}
         <AnimatedIconButton icon={props.icon} iconColor={props.active ? theme.colors.primary : theme.colors.s4}/>
-        <AnimatedText style={[colorStyle, textStyle, typography.button1]}>
+        <Animated.Text style={[typography.button1, colorStyle, textStyle]}>
           {capitalize(props.label)}
-        </AnimatedText>
+        </Animated.Text>
       </Animated.View>
     </TouchableRipple>
   )

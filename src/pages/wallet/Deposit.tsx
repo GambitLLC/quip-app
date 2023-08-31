@@ -9,16 +9,9 @@ import {IconButton} from "react-native-paper";
 import {MaterialIcons} from "@expo/vector-icons";
 import * as Clipboard from 'expo-clipboard';
 import {useNavigation} from "@react-navigation/native";
-import React, {Ref, useState} from "react"
+import React, {useState} from "react"
 import Animated, {FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated"
 
-const TextWrapper = React.forwardRef((props: React.ComponentPropsWithRef<typeof Text>, ref: Ref<Text>) => {
-  return <Text ref={ref} {...props}>
-    {props.children}
-  </Text>
-})
-
-const AnimatedText = Animated.createAnimatedComponent(TextWrapper)
 const AnimatedIcon = Animated.createAnimatedComponent(MaterialIcons)
 
 interface DepositProps {
@@ -154,9 +147,9 @@ export function Deposit(props: DepositProps) {
                 :
                 <Animated.View entering={FadeIn} exiting={FadeOut} style={[flex.row, flex.center]}>
                   <AnimatedIcon name="content-copy" size={24} color={theme.colors.p1} style={[m('r', 2), m('b', 1), hoverStyle]}/>
-                  <AnimatedText style={[typography.button1, {color: theme.colors.p1}, hoverStyle]}>
+                  <Animated.Text style={[typography.button1, {color: theme.colors.p1}, hoverStyle]}>
                     Copy to clipboard
-                  </AnimatedText>
+                  </Animated.Text>
                 </Animated.View>
             }
           </Pressable>

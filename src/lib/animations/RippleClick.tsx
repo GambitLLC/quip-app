@@ -1,21 +1,14 @@
 import {TouchableRipple} from "react-native-paper";
-import React, {forwardRef, Ref} from "react";
-import {EasingFunction, View} from "react-native";
-import Animated, {Easing, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
+import React from "react";
+import {EasingFunction} from "react-native";
+import {Easing, useSharedValue, withTiming} from "react-native-reanimated";
+import {AnimatedRipple} from "../animations/AnimatedRipple";
 
 interface RippleClickProps extends React.ComponentPropsWithRef<typeof TouchableRipple> {
   duration?: number
   minScale?: number
   easing?: EasingFunction
 }
-
-const RippleWrapper = React.forwardRef((props: React.ComponentPropsWithRef<typeof TouchableRipple>, ref: Ref<View>) => {
-  return <TouchableRipple ref={ref} {...props}>
-    {props.children}
-  </TouchableRipple>
-})
-
-const AnimatedTouchableRipple = Animated.createAnimatedComponent(RippleWrapper)
 
 export function RippleClick(props: RippleClickProps) {
   const scale = useSharedValue(1.0)
@@ -24,7 +17,7 @@ export function RippleClick(props: RippleClickProps) {
   const easing = props.easing ?? Easing.elastic(3.5)
 
   return (
-    <AnimatedTouchableRipple
+    <AnimatedRipple
       {...props}
       style={[props.style, {
         transform: [
@@ -41,7 +34,7 @@ export function RippleClick(props: RippleClickProps) {
       }}
     >
       {props.children}
-    </AnimatedTouchableRipple>
+    </AnimatedRipple>
   );
 }
 

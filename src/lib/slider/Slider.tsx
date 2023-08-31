@@ -1,4 +1,4 @@
-import {StyleSheet, View, ViewProps} from "react-native";
+import {StyleSheet, useWindowDimensions, View, ViewProps} from "react-native";
 import React, {useMemo} from "react";
 import {p} from "../styles/Spacing";
 import Card from "../game/Card";
@@ -10,7 +10,7 @@ import Animated, {
   interpolate, runOnJS, scrollTo,
   useAnimatedRef,
   useAnimatedScrollHandler,
-  useAnimatedStyle, useDerivedValue,
+  useAnimatedStyle, useDerivedValue, useScrollViewOffset,
   useSharedValue
 } from "react-native-reanimated";
 
@@ -22,67 +22,46 @@ interface SliderProps {
 }
 
 export function Slider(props: ViewProps & SliderProps) {
-  const scrollRef = useAnimatedRef<Animated.ScrollView>()
+  const {width} = useWindowDimensions()
 
-  const snapOffsets = [...Array(5).keys()].map(index => (index * 274) - 50).slice(1, 4)
-
-  const dragStartOffset = useSharedValue(0)
-  const scrollX = useSharedValue(snapOffsets[1])
+  const cardWidth = 250
+  const gap = 12
+  const offset = useMemo(() => (width - 274) / 2, [width])
 
   const { quipIdx, setQuipIdx } = useGameStore()
+  const snapOffsets = [
+    0,
+    offset + gap + cardWidth + gap - offset,
+    offset + gap + cardWidth + gap + cardWidth + gap + gap - offset
+  ]
 
-  useDerivedValue(() => {
-    const idx = Math.round(interpolate(scrollX.value, snapOffsets, [0, 1, 2]))
-    if (idx !== quipIdx) {
-      runOnJS(setQuipIdx)(idx)
+  const scrollX = useSharedValue(snapOffsets[1])
+
+  //track the selected quip based off of the scrollX value
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (e) => {
+      scrollX.value = e.contentOffset.x
+
+      const validIdx = [0, 1, 2]
+      const idx = Math.round(interpolate(e.contentOffset.x, snapOffsets, [0, 1, 2]))
+      if (!validIdx.includes(idx)) return
+
+      if (idx !== quipIdx) {
+        runOnJS(setQuipIdx)(idx)
+      }
     }
   })
 
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollX.value = event.contentOffset.x
-    },
-    onBeginDrag: (e) => {
-      dragStartOffset.value = e.contentOffset.x;
-    },
-    onMomentumEnd: (e) => {
-      console.log("momentum end")
-      const dx = dragStartOffset.value - e.contentOffset.x
-
-      console.log(quipIdx)
-
-      if (dx < -scrollOffset) {
-        if (quipIdx < snapOffsets.length - 1) {
-          console.log("right")
-          scrollTo(scrollRef, snapOffsets[quipIdx + 1], 0, true)
-        } else {
-          console.log("snapBack")
-          scrollTo(scrollRef, snapOffsets[quipIdx], 0, true)
-        }
-      }
-
-      else if (dx > scrollOffset) {
-        if (quipIdx > 0) {
-          console.log("left")
-          scrollTo(scrollRef, snapOffsets[quipIdx - 1], 0, true)
-        } else {
-          console.log("snapBack")
-          scrollTo(scrollRef, snapOffsets[quipIdx], 0, true)
-        }
-      }
-    },
-  })
-
   const rotateCard1 = useAnimatedStyle(() => ({
-    transform: [{rotateZ: `${interpolate(scrollX.value, [0, 224, 1370], [20, 0, -20])}deg`}]
+    transform: [{rotateZ: `${interpolate(scrollX.value, [-274, 0, 274], [10, 0, -10])}deg`}]
   }))
 
   const rotateCard2 = useAnimatedStyle(() => ({
-    transform: [{rotateZ: `${interpolate(scrollX.value, [0, 498, 1370], [20, 0, -20])}deg`}]
+    transform: [{rotateZ: `${interpolate(scrollX.value, [0, 274, 548], [10, 0, -10])}deg`}]
   }))
 
   const rotateCard3 = useAnimatedStyle(() => ({
-    transform: [{rotateZ: `${interpolate(scrollX.value, [0, 772, 1370], [20, 0, -20])}deg`}]
+    transform: [{rotateZ: `${interpolate(scrollX.value, [274, 548, 822], [10, 0, -10])}deg`}]
   }))
 
   const card1 = useMemo(() => (<Card
@@ -93,7 +72,6 @@ export function Slider(props: ViewProps & SliderProps) {
     isComingSoon={true}
     navigation={props.navigation}
   />), [])
-
   const card2 = useMemo(() => (
     <Card
       imgSrc={require('../../../assets/game1.jpg')}
@@ -103,7 +81,6 @@ export function Slider(props: ViewProps & SliderProps) {
       navigation={props.navigation}
     />
   ), [])
-
   const card3 = useMemo(() => (
     <Card
       imgSrc={require('../../../assets/game1.jpg')}
@@ -118,28 +95,28 @@ export function Slider(props: ViewProps & SliderProps) {
   return (
     <View style={[styles.container]} {...props}>
       <Animated.ScrollView
-        ref={scrollRef}
+        onScroll={scrollHandler}
+        scrollEventThrottle={1}
         horizontal={true}
-        decelerationRate={0}
+        snapToOffsets={snapOffsets}
+        contentOffset={{x: snapOffsets[1], y: 0}}
+        snapToAlignment="start"
+        decelerationRate="fast"
         style={styles.scroller}
         disableIntervalMomentum={true}
         showsHorizontalScrollIndicator={false}
-        contentOffset={{x: snapOffsets[1], y: 0}}
-        onScroll={scrollHandler}
-        bounces={false}
-        scrollEventThrottle={1}
+        bounces={true}
+        contentContainerStyle={{paddingLeft: offset, paddingRight: offset}}
       >
-        <View style={{width: 274, height: 300}}/>
-        <Animated.View style={[rotateCard1, p('x', 3)]}>
+        <Animated.View style={[p('x', 3), rotateCard1]}>
           {card1}
         </Animated.View>
-        <Animated.View style={[rotateCard2, p('x', 3)]}>
+        <Animated.View style={[p('x', 3), rotateCard2]}>
           {card2}
         </Animated.View>
-        <Animated.View style={[rotateCard3, p('x', 3)]}>
+        <Animated.View style={[p('x', 3), rotateCard3]}>
           {card3}
         </Animated.View>
-        <View style={{width: 274, height: 300}}/>
       </Animated.ScrollView>
     </View>
   );

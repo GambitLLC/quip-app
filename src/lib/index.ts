@@ -45,4 +45,6 @@ export * from './wallet/WalletModalHeader'
 export * from './notification/NotificationBar'
 export * from './animations/RippleClick'
 export * from './animations/ButtonClick'
+export * from './animations/AnimatedButton'
+export * from './animations/AnimatedRipple'
 

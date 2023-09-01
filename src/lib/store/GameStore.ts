@@ -1,4 +1,3 @@
-import {create} from "zustand";
 import {ColorValue} from "react-native";
 import {theme} from "@/util/Theme"
 
@@ -34,24 +33,7 @@ const quips: Quip[] = [
   },
 ]
 
-interface GameStore {
-  quipIdx: number,
-  quip: Quip,
-  setQuipIdx: (idx: number) => void,
-}
-
-const useGameStore = create<GameStore>((set) => ({
-  quipIdx: 1,
-  quip: quips[1],
-  setQuipIdx: (idx: number) => set((state) => (
-    {
-        quipIdx: idx,
-        quip: quips[idx]
-    }
-  )),
-}))
 
 export {
-  useGameStore,
   quips
 }

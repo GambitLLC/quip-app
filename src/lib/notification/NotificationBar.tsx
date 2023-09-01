@@ -24,7 +24,7 @@ export default function NotificationBar(props: NotificationBarProps) {
                   <Notification
                     key={notification.id}
                     notification={notification}
-                    style={{ height: 72 }}
+                    style={{ height: 72, borderRadius: 16}}
                   />
                 )
               }

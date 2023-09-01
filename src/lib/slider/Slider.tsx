@@ -5,12 +5,10 @@ import Card from "../game/Card";
 import {theme} from "@/util/Theme"
 import {ParamListBase} from "@react-navigation/native";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
-import {useGameStore} from "../store/GameStore";
 import Animated, {
-  interpolate, runOnJS, scrollTo,
-  useAnimatedRef,
+  interpolate,
   useAnimatedScrollHandler,
-  useAnimatedStyle, useDerivedValue, useScrollViewOffset,
+  useAnimatedStyle,
   useSharedValue
 } from "react-native-reanimated";
 
@@ -18,7 +16,7 @@ const scrollOffset = 0
 
 interface SliderProps {
   navigation:  NativeStackNavigationProp<ParamListBase>,
-
+  onScroll: (scrollX: number) => void
 }
 
 export function Slider(props: ViewProps & SliderProps) {
@@ -28,7 +26,6 @@ export function Slider(props: ViewProps & SliderProps) {
   const gap = 12
   const offset = useMemo(() => (width - 274) / 2, [width])
 
-  const { quipIdx, setQuipIdx } = useGameStore()
   const snapOffsets = [
     0,
     offset + gap + cardWidth + gap - offset,
@@ -41,14 +38,7 @@ export function Slider(props: ViewProps & SliderProps) {
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (e) => {
       scrollX.value = e.contentOffset.x
-
-      const validIdx = [0, 1, 2]
-      const idx = Math.round(interpolate(e.contentOffset.x, snapOffsets, [0, 1, 2]))
-      if (!validIdx.includes(idx)) return
-
-      if (idx !== quipIdx) {
-        runOnJS(setQuipIdx)(idx)
-      }
+      props.onScroll(e.contentOffset.x)
     }
   })
 

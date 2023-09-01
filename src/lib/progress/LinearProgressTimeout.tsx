@@ -1,25 +1,35 @@
 import {View} from "react-native";
 import {theme} from "@/util/Theme"
-import Animated, {useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
+import Animated, {Easing, runOnJS, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 import {useEffect} from "react";
 
-interface LinearProgressProps {
+interface LinearProgressTimeoutProps {
   percentage: number,
   color?: string,
   backgroundColor?: string,
   height?: number,
   borderRadius?: number,
+  timeout?: number,
+  onTimeout?: () => void,
 }
 
-export function LinearProgress(props: LinearProgressProps) {
+export function LinearProgressTimeout(props: LinearProgressTimeoutProps) {
   const width = useSharedValue<`${number}%`>(`${props.percentage}%`)
+
   const style = useAnimatedStyle(() => ({
-    width: withTiming(width.value)
-  }))
+    width: withTiming(width.value, {
+      duration: props.timeout ?? 5000,
+      easing: Easing.linear
+    }, (done) => {
+      if (done && props.onTimeout) {
+        runOnJS(props.onTimeout)()
+      }
+    })
+  }), [])
 
   useEffect(() => {
-    width.value = `${props.percentage}%`
-  }, [props.percentage])
+    width.value = `0%`
+  }, [])
 
   return (
     <View style={{
@@ -40,4 +50,4 @@ export function LinearProgress(props: LinearProgressProps) {
   )
 }
 
-export default LinearProgress
+export default LinearProgressTimeout

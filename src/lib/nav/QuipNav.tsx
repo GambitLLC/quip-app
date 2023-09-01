@@ -3,32 +3,24 @@ import {theme} from "@/util/Theme"
 import NavItem from "./NavItem";
 import {p} from "../styles/Spacing";
 import {
-    CommonActions,
-    createNavigatorFactory,
-    DefaultNavigatorOptions,
-    ParamListBase,
-    TabActionHelpers,
-    TabNavigationState,
-    TabRouter,
-    TabRouterOptions,
-    useNavigationBuilder,
+  CommonActions,
+  createNavigatorFactory,
+  DefaultNavigatorOptions,
+  ParamListBase,
+  TabActionHelpers,
+  TabNavigationState,
+  TabRouter,
+  TabRouterOptions,
+  useNavigationBuilder,
 } from "@react-navigation/native";
 import {useEffect, useMemo, useState} from "react";
 import Animated, {
-  FadeIn,
-  FadeOut,
-  SlideInLeft,
-  SlideOutRight,
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
   withDelay,
   withSpring,
-  WithSpringConfig,
-  withTiming,
-  WithTimingConfig
+  WithSpringConfig
 } from "react-native-reanimated";
-import {Freeze} from "react-freeze";
 
 type QuipTab = "games" | "wallet" | "settings"
 type QuipTabIcon = "gamepad-variant" | "wallet" | "cog"

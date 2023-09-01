@@ -1,8 +1,8 @@
 import {Button} from "react-native-paper";
-import React, {Ref} from "react";
-import Animated, {Easing, useSharedValue, withTiming} from 'react-native-reanimated';
-import {EasingFunction, View} from "react-native";
-import { AnimatedButton } from "../animations/AnimatedButton";
+import React from "react";
+import {Easing, useSharedValue, withTiming} from 'react-native-reanimated';
+import {EasingFunction} from "react-native";
+import {AnimatedButton} from "../animations/AnimatedButton";
 
 interface ButtonClickProps extends React.ComponentPropsWithRef<typeof Button> {
   duration?: number

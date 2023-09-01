@@ -1,18 +1,18 @@
 import {StyleSheet, View} from "react-native";
 import {
-    ButtonClick,
-    CryptoNumpadInput,
-    flex,
-    m,
-    p,
-    RippleClick,
-    Screen,
-    Sol,
-    spacing,
-    Text,
-    typography,
-    useCrypto,
-    useTicker
+  ButtonClick,
+  CryptoNumpadInput,
+  flex,
+  m,
+  p,
+  RippleClick,
+  Screen,
+  Sol,
+  spacing,
+  Text,
+  typography,
+  useCrypto,
+  useTicker
 } from "@/lib";
 import {theme} from "@/util/Theme"
 import {FontAwesome} from "@expo/vector-icons";

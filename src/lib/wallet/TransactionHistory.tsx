@@ -4,8 +4,8 @@ import {TransactionDayInfoRow} from "./TransactionDayInfoRow";
 import {border} from "../styles/Border";
 import {TransactionItemView} from "./TransactionItem";
 import {theme} from "@/util/Theme"
-import {useState, useCallback} from "react";
-import { useCrypto } from "../context/CryptoContext";
+import {useCallback, useState} from "react";
+import {useCrypto} from "../context/CryptoContext";
 import {FlashList} from "@shopify/flash-list";
 
 interface TransactionHistoryProps {

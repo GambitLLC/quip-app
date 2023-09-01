@@ -1,13 +1,6 @@
 import {SolanaExtension} from "@magic-ext/solana";
 import {Magic, MagicSDKExtensionsOption, MagicUserMetadata} from "@magic-sdk/react-native-expo";
-import {
-  ConfirmedSignatureInfo,
-  Connection,
-  LAMPORTS_PER_SOL, ParsedTransactionWithMeta,
-  PublicKey,
-  SystemProgram,
-  Transaction,
-} from '@solana/web3.js';
+import {Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction,} from '@solana/web3.js';
 import React, {createContext, useContext, useEffect, useState} from "react";
 import {MagicSDKAdditionalConfiguration} from "@magic-sdk/provider/dist/types/core/sdk";
 import {AuthExtension} from "@magic-ext/auth";

@@ -96,6 +96,7 @@ export function Deposit(props: DepositProps) {
                   padding: 8,
                   scale: .8,
                 }}
+                // @ts-ignore
                 errorCorrectionLevel='H'
               />
             </View>

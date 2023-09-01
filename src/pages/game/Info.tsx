@@ -1,12 +1,13 @@
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {ParamListBase} from "@react-navigation/native";
-import {InfoImage, m, p, PlayerCountLabel, quips, Screen, spacing, Text, typography} from "@/lib";
+import {InfoImage, m, p, PlayerCountLabel, quips, Screen, spacing, Text, typography, useGameStore} from "@/lib";
 import {theme} from "@/util/Theme"
 import {Button, IconButton} from "react-native-paper";
 import {StyleSheet, View} from "react-native";
 
 export default function Info({navigation}: NativeStackScreenProps<ParamListBase, "gameInfo">) {
-  const quip = quips[1]
+  const {quipIdx} = useGameStore()
+  const quip = quips[quipIdx]
 
   return (
     <Screen hasSafeArea={false} style={[spacing.fill, {backgroundColor: quip.bgColor}]}>

@@ -6,11 +6,12 @@ import {theme} from "@/util/Theme"
 import {ParamListBase} from "@react-navigation/native";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import Animated, {
-  interpolate,
+  interpolate, runOnJS,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue
 } from "react-native-reanimated";
+import {QuipIDX, useGameStore, ValidQuipIDXs} from "../store/GameStore";
 
 const scrollOffset = 0
 
@@ -34,11 +35,20 @@ export function Slider(props: ViewProps & SliderProps) {
 
   const scrollX = useSharedValue(snapOffsets[1])
 
+  const {quipIdx, setQuipIdx} = useGameStore()
+
   //track the selected quip based off of the scrollX value
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (e) => {
       scrollX.value = e.contentOffset.x
       props.onScroll(e.contentOffset.x)
+
+      const idx = Math.round(interpolate(e.contentOffset.x, snapOffsets, ValidQuipIDXs)) as QuipIDX
+      if (!ValidQuipIDXs.includes(idx)) return
+
+      if (idx !== quipIdx) {
+        runOnJS(setQuipIdx)(idx)
+      }
     }
   })
 

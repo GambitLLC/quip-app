@@ -10,6 +10,7 @@ import {CommonActions, ParamListBase, useNavigation} from "@react-navigation/nat
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import PlayerCountLabel from "./PlayerCountLabel";
 import {useNotificationStore} from "../store/NotificationStore";
+import Animated from "react-native-reanimated";
 
 interface CardProps {
   imgSrc: ImageSourcePropType,
@@ -31,7 +32,7 @@ export function Card(props: SvgProps & CardProps) {
   }
 
   return (
-    <View style={styles.container}>
+    <Animated.View sharedTransitionTag="sharedTag" style={styles.container}>
       <Svg {...props} width={props.width ?? "250"} height={props.height ?? "300"} viewBox="0 0 250 300" fill="none">
         <Path d="M2.37581 33.5854C2.72499 16.4755 16.4742 2.66867 33.5825 2.24797L125 0L216.417 2.24797C233.526 2.66867 247.275 16.4755 247.624 33.5854L250 150L247.624 266.415C247.275 283.525 233.526 297.331 216.417 297.752L125 300L33.5825 297.752C16.4742 297.331 2.72499 283.525 2.37581 266.415L0 150L2.37581 33.5854Z" fill="#D9D9D9"/>
         <Path d="M2.37581 33.5854C2.72499 16.4755 16.4742 2.66867 33.5825 2.24797L125 0L216.417 2.24797C233.526 2.66867 247.275 16.4755 247.624 33.5854L250 150L247.624 266.415C247.275 283.525 233.526 297.331 216.417 297.752L125 300L33.5825 297.752C16.4742 297.331 2.72499 283.525 2.37581 266.415L0 150L2.37581 33.5854Z" fill="url(#pattern0)"/>
@@ -77,7 +78,7 @@ export function Card(props: SvgProps & CardProps) {
           </TouchableRipple>
         </View>
       </View>
-    </View>
+    </Animated.View>
   )
 }
 

@@ -36,39 +36,6 @@ export function NavItem(props: ViewProps & NavItemProps & TouchableWithoutFeedba
     opacity: withTiming(isActive.value ? 1 : 0)
   }))
 
-  // const [springProps, api] = useSpring({
-  //   backgroundColor: props.active ? theme.colors.s2 : theme.colors.s5,
-  //   borderColor: props.active ? theme.colors.s3 : theme.colors.s5,
-  //   config: {
-  //     duration: animationTime,
-  //     friction: 12,
-  //     tension: 180,
-  //     easing: easings.easeInOutCubic
-  //   },
-  // }, [props.active])
-
-  // const [colorProps, colorApi] = useSpring({
-  //   color: props.active ? theme.colors.primary : theme.colors.s4,
-  //   config: {
-  //     duration: animationTime,
-  //     friction: 12,
-  //     tension: 180,
-  //     easing: easings.easeInOutCubic
-  //   }
-  // }, [props.active])
-
-  // const [textProps, textApi] = useSpring({
-  //   maxWidth: props.active ? 100 : 0,
-  //   marginRight: props.active? 24 : 0,
-  //   opacity: props.active ? 1 : 0,
-  //   config: {
-  //     duration: animationTime,
-  //     friction: 12,
-  //     tension: 180,
-  //     easing: easings.easeOutCubic
-  //   }
-  // }, [props.active])
-
   return (
     <TouchableRipple
       borderless

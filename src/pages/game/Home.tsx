@@ -23,7 +23,9 @@ import {CommonActions, ParamListBase} from "@react-navigation/native";
 import Wallet from "../wallet/Wallet";
 import Settings from "../settings/Settings";
 import Animated, {interpolate, useAnimatedStyle, useSharedValue} from "react-native-reanimated";
-import {useMemo} from "react";
+import React, {useMemo} from "react";
+import Info from "@/pages/game/Info";
+import Profile from "@/pages/profile/Profile";
 
 const Quip = createQuipNavigator();
 
@@ -128,41 +130,6 @@ function GameHome({navigation}: NativeStackScreenProps<ParamListBase, "games">) 
           })
         }
       </Animated.View>
-      {/*Quip Info*/}
-      {/*<Animated.View key={quip.name} entering={FadeInLeft} exiting={FadeOutRight}>*/}
-      {/*  <View style={[p('x', 6)]}>*/}
-      {/*    <View style={[{display: "flex", flexDirection: "row"}]}>*/}
-      {/*      <LogoText fill={quip.color} width={66} height={29}/>*/}
-      {/*      <Text style={[m('l', 1), typography.h5, {color: theme.colors.s1}]}>*/}
-      {/*        {capitalize(quip.name)}*/}
-      {/*      </Text>*/}
-      {/*    </View>*/}
-      {/*    <View style={[m('t', 2)]}>*/}
-      {/*      <Text style={[typography.t2]}>*/}
-      {/*        {quip.description}*/}
-      {/*      </Text>*/}
-      {/*    </View>*/}
-      {/*  </View>*/}
-      {/*  /!*Play Now*!/*/}
-      {/*  <View style={[{flexGrow: 1}]}/>*/}
-      {/*  <View style={[p('x', 6), p('t', 4)]}>*/}
-      {/*    <ButtonClick onPress={() => {*/}
-      {/*      add({*/}
-      {/*        id: performance.now().toString(),*/}
-      {/*        type: (() => {*/}
-      {/*          //return a random type*/}
-      {/*          const types = ["success", "error", "warning", "info"] as const*/}
-      {/*          return types[Math.floor(Math.random() * types.length)]*/}
-      {/*        })(),*/}
-      {/*        message: "Coming Soon!",*/}
-      {/*        timeout: 3000,*/}
-      {/*      })*/}
-      {/*    }} buttonColor={(quip.color as string)} labelStyle={typography.button1} contentStyle={styles.playButton} mode="contained">*/}
-      {/*      Play Now*/}
-      {/*    </ButtonClick>*/}
-      {/*  </View>*/}
-      {/*  <View style={[{flexGrow: 1}]}/>*/}
-      {/*</Animated.View>*/}
     </View>
   </Screen>)
 }
@@ -175,6 +142,8 @@ export default function Home({navigation}: NativeStackScreenProps<ParamListBase,
       <Quip.Screen name="games" component={GameHome}/>
       <Quip.Screen name="wallet" component={Wallet}/>
       <Quip.Screen name="settings" component={Settings}/>
+      <Quip.Screen name="gameInfo" component={Info}/>
+      <Quip.Screen name="profile" component={Profile} />
     </Quip.Navigator>
   )
 }

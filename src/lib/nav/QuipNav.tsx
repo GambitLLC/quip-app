@@ -19,7 +19,7 @@ import Animated, {
   useSharedValue,
   withDelay,
   withSpring,
-  WithSpringConfig
+  WithSpringConfig, withTiming
 } from "react-native-reanimated";
 
 type QuipTab = "games" | "wallet" | "settings"
@@ -131,17 +131,21 @@ export function QuipNavigator({
               opacity: withSpring(0, outConfig),
               transform: [
                 {translateX: withSpring(-100, outConfig)}
-              ]
+              ],
+              overflow: "visible"
             }
           }
 
           //isTo
           else if (transitioningTo.value === i) {
             return {
-              opacity: withDelay(halfDuration, withSpring(1, inConfig)),
+              opacity: withDelay(halfDuration, withSpring(1, inConfig, (done) => {
+                if (done) isTransitioning.value = false
+              })),
               transform: [
                 {translateX: withDelay(halfDuration, withSpring(0, inConfig))}
-              ]
+              ],
+              overflow: "visible"
             }
           }
 
@@ -151,7 +155,8 @@ export function QuipNavigator({
               opacity: 0,
               transform: [
                 {translateX: -100}
-              ]
+              ],
+              overflow: "hidden"
             }
           }
         } else {
@@ -159,14 +164,26 @@ export function QuipNavigator({
             opacity: transitioningTo.value === i ? 1 : 0,
             transform: [
               {translateX: transitioningTo.value === i ? 0 : -100}
-            ]
+            ],
+            overflow: "hidden"
           }
         }
       })
     ] as const
   }, [memoRenders])
 
+  const shownRoutes = [
+    "games",
+    "wallet",
+    "settings"
+  ]
+
   useEffect(() => {
+    //decide if we should hide navbar
+    const name = state.routes[state.index].name
+    isHidden.value = !shownRoutes.includes(name)
+
+    //determine the rest of the transition
     transitioningTo.value = state.index
     setTo(state.index)
 
@@ -178,6 +195,38 @@ export function QuipNavigator({
     }
   }, [state.index])
 
+  const isHidden = useSharedValue(false)
+
+  const navBarStyle = useAnimatedStyle(() => ({
+    transform: [
+      {translateY: withSpring(isHidden.value ? 100 : 0, {overshootClamping: true})}
+    ]
+  }))
+
+  const fillerStyle = useAnimatedStyle(() => {
+    if (isTransitioning.value) {
+      if (isHidden.value) {
+        return {
+          height: 0,
+          width: "100%",
+          backgroundColor: "transparent"
+        }
+      } else {
+        return {
+          height: withDelay(halfDuration+150, withTiming(100, {duration: 0})),
+          width: "100%",
+          backgroundColor: "transparent"
+        }
+      }
+    } else {
+      return {
+        height: isHidden.value ? 0 : 100,
+        width: "100%",
+        backgroundColor: "transparent"
+      }
+    }
+  })
+
   return (
     <NavigationContent>
       <View style={styles.navContainer}>
@@ -186,7 +235,7 @@ export function QuipNavigator({
             transitions.map(([render, style], i) =>
               <Animated.View
                 key={i}
-                style={[StyleSheet.absoluteFill, styles.viewContainer, style]}
+                style={[StyleSheet.absoluteFill, style]}
                 pointerEvents={i === to ? "auto" : "none"}
               >
                 {render}
@@ -194,8 +243,11 @@ export function QuipNavigator({
             )
           }
         </View>
-        <View style={[styles.quipNav, p('x', 6), quipNavBarStyle]}>
+        <Animated.View style={[fillerStyle]}/>
+        <Animated.View style={[styles.quipNav, navBarStyle, p('x', 6), quipNavBarStyle]}>
           {state.routes.map((route, i) => {
+            if (route.name === "gameInfo" || route.name === "profile") return null
+
             return (<NavItem onPress={() => {
               const event = navigation.emit({
                 type: 'tabPress',
@@ -214,14 +266,26 @@ export function QuipNavigator({
               }
             }} key={i} active={state.routes[state.index].name === route.name} icon={ icons[route.name as QuipTab] } label={route.name}/>)
           })}
-        </View>
+        </Animated.View>
       </View>
     </NavigationContent>
   )
 }
 
 const styles = StyleSheet.create({
+  filler: {
+    height: 100,
+    width: "100%",
+    backgroundColor: "red"
+  },
+  hidden: {
+    height: 0,
+    width: "100%",
+    backgroundColor: "red"
+  },
   quipNav: {
+    position: "absolute",
+    bottom: 0,
     height: 100,
     width: "100%",
     backgroundColor: theme.colors.s5,
@@ -237,11 +301,9 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     height: "100%",
     width: "100%",
+    position: "relative",
     backgroundColor: theme.colors.background
   },
-  viewContainer: {
-    overflow: "hidden",
-  }
 })
 
 export const createQuipNavigator = createNavigatorFactory<

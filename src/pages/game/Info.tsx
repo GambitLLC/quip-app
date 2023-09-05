@@ -22,7 +22,7 @@ export default function Info({navigation}: NativeStackScreenProps<ParamListBase,
             </View>
           </View>
         </View>
-        <View style={[m('t', 6), m('x', 6)]}>
+        <View style={[m('x', 6)]}>
           <Text style={[typography.h6, m('b', 2)]}>
             The Game
           </Text>

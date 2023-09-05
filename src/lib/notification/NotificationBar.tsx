@@ -9,7 +9,7 @@ interface NotificationBarProps {
   children: React.ReactNode,
 }
 
-export default function NotificationBar(props: NotificationBarProps) {
+export function NotificationBar(props: NotificationBarProps) {
   const {notifications, remove} = useNotificationStore()
 
   return (
@@ -45,6 +45,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export {
-  NotificationBar
-}
+export default NotificationBar

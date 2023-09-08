@@ -1,6 +1,7 @@
 //store
 export * from './store/GameStore'
 export * from './store/NotificationStore'
+export * from './store/StripeCryptoOnrampStore'
 
 //styles
 export * from './styles/Spacing'

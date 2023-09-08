@@ -1,6 +1,6 @@
-import {create} from "zustand";
 import {ColorValue} from "react-native";
 import {theme} from "@/util/Theme"
+import {create} from "zustand";
 
 interface Quip {
   name: string,
@@ -34,31 +34,26 @@ const quips: Quip[] = [
   },
 ]
 
-interface GameStore {
-  quipIdx: number,
-  quip: Quip,
-  left: () => void,
-  right: () => void,
+const ValidQuipIDXs = [0, 1, 2] as const
+type QuipIDX = typeof ValidQuipIDXs[number]
+
+interface QuipStore {
+  quipIdx: QuipIDX,
+  setQuipIdx: (idx: QuipIDX) => void,
 }
 
-const useGameStore = create<GameStore>((set) => ({
-  quipIdx: 1,
-  quip: quips[1],
-  left: () => set((state) => (
-    {
-      quipIdx: state.quipIdx > 0 ? state.quipIdx - 1 : state.quipIdx,
-      quip: quips[state.quipIdx > 0 ? state.quipIdx - 1 : state.quipIdx]
-    }
-  )),
-  right: () => set((state) => (
-    {
-      quipIdx: state.quipIdx < quips.length - 1 ? state.quipIdx + 1 : state.quipIdx,
-      quip: quips[state.quipIdx < quips.length - 1 ? state.quipIdx + 1 : state.quipIdx]
-    }
-  ))
+const useGameStore = create<QuipStore>((set) => ({
+  quipIdx: 0,
+  setQuipIdx: (idx: QuipIDX) => set((state) => ({
+    quipIdx: idx
+  }))
 }))
 
+
 export {
+  quips,
+  QuipStore,
   useGameStore,
-  quips
+  QuipIDX,
+  ValidQuipIDXs
 }

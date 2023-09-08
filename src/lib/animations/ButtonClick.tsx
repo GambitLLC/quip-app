@@ -1,45 +1,35 @@
 import {Button} from "react-native-paper";
-import React, {useState} from "react";
-import {animated, easings, useSpring} from "@react-spring/native";
+import React from "react";
+import {Easing, useSharedValue, withTiming} from 'react-native-reanimated';
+import {EasingFunction} from "react-native";
+import {AnimatedButton} from "../animations/AnimatedButton";
 
 interface ButtonClickProps extends React.ComponentPropsWithRef<typeof Button> {
   duration?: number
   minScale?: number
-  easing?: (t: number) => number
+  easing?: EasingFunction
 }
 
-const AnimatedButton = animated(Button)
-
 export function ButtonClick(props: ButtonClickProps) {
-  const [isHovering, setIsHovering] = useState(false)
-
-  const minScale = props.minScale ?? .75
-  const duration = props.duration ?? 1000
-  const easing = props.easing ?? easings.easeOutElastic
-
-  const {scale} = useSpring({
-    scale: isHovering ? minScale : 1,
-    config: {
-      duration: duration,
-      easing: easing
-    }
-  })
-
+  const scale = useSharedValue(1.0)
+  const minScale = props.minScale ?? .95
+  const duration = props.duration ?? 600
+  const easing = props.easing ?? Easing.elastic(3.5)
 
   return (
     <AnimatedButton
       {...props}
       style={[props.style, {
         transform: [
-          {scale: scale.to([0, 1], [minScale, 1])}
+          {scale: scale}
         ]
       }]}
       onPressIn={(e) => {
-        setIsHovering(true)
+        scale.value = withTiming(minScale, {duration, easing})
         props.onPressIn?.(e)
       }}
       onPressOut={(e) => {
-        setIsHovering(false)
+        scale.value = withTiming(1.0, {duration, easing})
         props.onPressOut?.(e)
       }}
     >

@@ -95,7 +95,7 @@ export function Withdraw3({navigation, route}: Withdraw3Props) {
         </Text>
         <View style={flex.grow}/>
         <View style={m('b', 12)}>
-          <ButtonClick minScale={.85} onPress={ sendCrypto } mode="contained" style={[{width: 320}]} contentStyle={{height: 56}}>
+          <ButtonClick onPress={ sendCrypto } mode="contained" style={[{width: 320}]} contentStyle={{height: 56}}>
             <Text style={[typography.button1, {color: theme.colors.white}]}>
               Send
             </Text>

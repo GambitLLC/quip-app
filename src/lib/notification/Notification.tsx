@@ -4,15 +4,51 @@ import {Text} from "../text/Text";
 import {theme} from "@/util/Theme"
 import {TouchableRipple} from "react-native-paper";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import LinearProgress from "../progress/LinearProgress";
 import React from "react";
 import {INotification, useNotificationStore} from "../store/NotificationStore";
-import {animated, easings} from '@react-spring/native'
 import {flex} from "../styles/Flex"
+import {LinearProgressTimeout} from "../progress/LinearProgressTimeout";
+import Animated, {CurvedTransition, withTiming} from "react-native-reanimated";
 
 interface NotificationProps {
   notification: INotification,
   style?: any,
+}
+
+function NotificationEnter(targetValues: any) {
+  'worklet'
+  const animations = {
+    opacity: withTiming(1),
+    height: withTiming(72),
+    borderRadius: withTiming(16),
+  };
+  const initialValues = {
+    opacity: 0,
+    height: 0,
+    borderRadius: 18,
+  };
+  return {
+    initialValues,
+    animations,
+  };
+}
+
+function NotificationExit(targetValues: any) {
+  'worklet';
+  const animations = {
+    opacity: withTiming(0),
+    height: withTiming(0),
+    borderRadius: withTiming(16),
+  };
+  const initialValues = {
+    opacity: 1,
+    height: 72,
+    borderRadius: 16,
+  };
+  return {
+    initialValues,
+    animations,
+  };
 }
 
 export default function Notification(props: NotificationProps) {
@@ -33,7 +69,7 @@ export default function Notification(props: NotificationProps) {
   })()
 
   return (
-    <animated.View
+    <Animated.View
       pointerEvents="auto"
       style={[
         props.style,
@@ -55,7 +91,11 @@ export default function Notification(props: NotificationProps) {
             }
           })()),
         },
-      ]}>
+      ]}
+      entering={NotificationEnter}
+      exiting={NotificationExit}
+      layout={CurvedTransition}
+    >
       <View style={[p('a', 4)]}>
         <View style={styles.notificationContent}>
           <View style={[flex.row, flex.alignCenter]}>
@@ -70,26 +110,19 @@ export default function Notification(props: NotificationProps) {
             </View>
           </TouchableRipple>
         </View>
-        <LinearProgress
+        <LinearProgressTimeout
           percentage={100}
           height={4}
           color={theme.colors.white}
           backgroundColor={"rgba(255, 255, 255, 0.2)"}
           borderRadius={2}
-          spring={{
-            from: {width: "100%"},
-            to: {width: "0%"},
-            onRest: () => {
-              remove(notification)
-            },
-            config: {
-              duration: notification.timeout ?? 3000,
-              easing: easings.linear,
-            }
+          timeout={notification.timeout}
+          onTimeout={() => {
+            remove(notification)
           }}
         />
       </View>
-    </animated.View>
+    </Animated.View>
   )
 }
 

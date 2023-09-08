@@ -1,6 +1,7 @@
 //store
 export * from './store/GameStore'
 export * from './store/NotificationStore'
+export * from './store/StripeCryptoOnrampStore'
 
 //styles
 export * from './styles/Spacing'
@@ -32,6 +33,7 @@ export * from './game/PlayerCountLabel'
 export * from './info/InfoImage'
 export * from './profile/LevelInfo'
 export * from './progress/LinearProgress'
+export * from './progress/LinearProgressTimeout'
 export * from './achievement/Achievement'
 export * from './achievement/AchievementBadge'
 export * from './wallet/TopWalletInfo'
@@ -45,4 +47,7 @@ export * from './wallet/WalletModalHeader'
 export * from './notification/NotificationBar'
 export * from './animations/RippleClick'
 export * from './animations/ButtonClick'
+export * from './animations/AnimatedButton'
+export * from './animations/AnimatedRipple'
+export * from './animations/AnimatedScreen'
 

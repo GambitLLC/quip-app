@@ -18,8 +18,6 @@ import {createNativeStackNavigator} from "@react-navigation/native-stack";
 
 // -- pages --
 import Home from "@/pages/game/Home";
-import Info from "@/pages/game/Info"
-import Profile from "@/pages/profile/Profile";
 import Withdraw from "@/pages/wallet/Withdraw";
 import Deposit from "@/pages/wallet/Deposit";
 import Buy from "@/pages/wallet/Buy";
@@ -31,35 +29,33 @@ import {rootNavRef} from "@/lib/nav/RootNav";
 const Stack = createNativeStackNavigator();
 
 export const App = () => {
-    return (
-        <PaperProvider theme={theme}>
-            <TickerProvider>
-                <CryptoProvider>
-                    <NavigationContainer ref={rootNavRef}>
-                        <NotificationBar>
-                            <Stack.Navigator initialRouteName="splash" screenOptions={{headerShown: false}}>
-                                <Stack.Group>
-                                    <Stack.Screen name="game" component={GameScreen} />
-                                    <Stack.Screen name="splash" component={Splash}/>
-                                    <Stack.Screen name="auth" component={Auth} />
-                                    <Stack.Screen name="gameHome" component={Home}/>
-                                    <Stack.Screen name="gameInfo" component={Info}/>
-                                    <Stack.Screen name="profile" component={Profile} />
-                                </Stack.Group>
-                                <Stack.Group screenOptions={{
-                                    presentation: 'modal',
-                                }}>
-                                    <Stack.Screen name="depositWallet" component={Deposit}/>
-                                    <Stack.Screen name="withdrawWallet" component={Withdraw}/>
-                                    <Stack.Screen name="buyWallet" component={Buy}/>
-                                </Stack.Group>
-                            </Stack.Navigator>
-                        </NotificationBar>
-                    </NavigationContainer>
-                </CryptoProvider>
-            </TickerProvider>
-        </PaperProvider>
-    );
+  return (
+    <PaperProvider theme={theme}>
+      <TickerProvider>
+        <CryptoProvider>
+          <NavigationContainer ref={rootNavRef}>
+            <NotificationBar>
+              <Stack.Navigator initialRouteName="splash" screenOptions={{headerShown: false}}>
+                <Stack.Group>
+                  <Stack.Screen name="splash" component={Splash}/>
+                  <Stack.Screen name="auth" component={Auth} />
+                  <Stack.Screen name="gameHome" component={Home}/>
+                  <Stack.Screen name="game" component={GameScreen} />
+                </Stack.Group>
+                <Stack.Group screenOptions={{
+                  presentation: 'modal',
+                }}>
+                  <Stack.Screen name="depositWallet" component={Deposit}/>
+                  <Stack.Screen name="withdrawWallet" component={Withdraw}/>
+                  <Stack.Screen name="buyWallet" component={Buy}/>
+                </Stack.Group>
+              </Stack.Navigator>
+            </NotificationBar>
+          </NavigationContainer>
+        </CryptoProvider>
+      </TickerProvider>
+    </PaperProvider>
+  );
 };
 
 export default App;

@@ -2,9 +2,10 @@ import {StatusBar} from "expo-status-bar";
 import {ColorValue, StyleProp, View, ViewStyle} from "react-native";
 import {p, spacing} from "../styles/Spacing";
 import {theme} from "@/util/Theme"
-import React from "react";
+import React, {forwardRef, Ref} from "react";
+import {Text} from "../text/Text"
 
-export function Screen({ children, style, screenStyle, containerStyle, pointerEvents, hasSafeArea=true, backgroundColor=theme.colors.background}: {
+interface ScreenProps {
   children: React.ReactNode,
   style?: StyleProp<ViewStyle>,
   screenStyle?: StyleProp<ViewStyle>,
@@ -12,15 +13,35 @@ export function Screen({ children, style, screenStyle, containerStyle, pointerEv
   pointerEvents?: "box-none" | "none" | "box-only" | "auto",
   hasSafeArea?: boolean,
   backgroundColor?: ColorValue
-}) {
+}
+
+export const Screen = forwardRef((props: ScreenProps, ref: Ref<View>) => {
+  const hasSafeArea = props.hasSafeArea ?? true
+  const backgroundColor = props.backgroundColor ?? theme.colors.background
+
   return (
-    <View pointerEvents={pointerEvents} style={[spacing.fill, containerStyle, {position: "relative", backgroundColor}]}>
+    <View
+      ref={ref}
+      pointerEvents={props.pointerEvents}
+      style={[
+        spacing.fill,
+        props.containerStyle,
+        {position: "relative", backgroundColor}
+      ]}
+    >
       <StatusBar style="dark"/>
-      <View pointerEvents={pointerEvents} style={[style ?? spacing.fill, screenStyle, hasSafeArea ? p('t', 12) : p('t', 0)]}>
-        {children}
+      <View
+        pointerEvents={props.pointerEvents}
+        style={[
+          props.style ?? spacing.fill,
+          props.screenStyle,
+          hasSafeArea ? p('t', 12) : p('t', 0)
+        ]}
+      >
+        {props.children}
       </View>
     </View>
   )
-}
+})
 
 export default Screen;

@@ -41,7 +41,7 @@ export function CryptoNumpadInput(props: CryptoNumpadInputProps) {
               {
                 row.map((num, j) => {
                   return (
-                    <RippleClick duration={600} minScale={.85 } borderless key={j} style={[styles.numpadKey, border.quip, m('x', 1)]} onPress={() => onPress(num)}>
+                    <RippleClick duration={400} borderless key={j} style={[styles.numpadKey, border.quip, m('x', 1)]} onPress={() => onPress(num)}>
                       {num === -1 || num === -2 ? <MapToIcon num={num}/> : <Text style={typography.h5}>{num.toString()}</Text>}
                     </RippleClick>
                   )

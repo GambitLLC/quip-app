@@ -1,13 +1,12 @@
-import {RefreshControl, ScrollView, StyleSheet, View} from "react-native";
+import {RefreshControl, StyleSheet, View} from "react-native";
 import {m, spacing,} from "../styles/Spacing";
 import {TransactionDayInfoRow} from "./TransactionDayInfoRow";
 import {border} from "../styles/Border";
 import {TransactionItemView} from "./TransactionItem";
 import {theme} from "@/util/Theme"
-import {useState, useCallback} from "react";
-import { useCrypto } from "../context/CryptoContext";
+import {useCallback, useState} from "react";
+import {useCrypto} from "../context/CryptoContext";
 import {FlashList} from "@shopify/flash-list";
-import {flex} from "@/lib";
 
 interface TransactionHistoryProps {
 

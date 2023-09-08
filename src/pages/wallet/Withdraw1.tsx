@@ -7,24 +7,20 @@ import {PublicKey} from "@solana/web3.js";
 import {FontAwesome} from "@expo/vector-icons";
 import {TouchableRipple} from "react-native-paper";
 import * as Clipboard from 'expo-clipboard';
-import {animated, useSpring} from "@react-spring/native";
-
-const AnimatedTextInput = animated(TextInput)
-const AnimatedFontAwesome = animated(FontAwesome)
+import Animated, {useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 
 export function Withdraw1({route, navigation}: Withdraw1Props) {
   const textInputRef = useRef<TextInput>(null)
   const [address, setAddress] = useState(route.params?.address ?? "")
   const [isSelected, setIsSelected] = useState(false)
 
-  const [textStyle, textApi] = useSpring(() => ({
-    borderColor: isSelected ? theme.colors.p1 : theme.colors.s3,
-    borderBottomWidth: isSelected ? 2 : 1,
-  }), [isSelected])
+  const borderColor = useSharedValue(theme.colors.s3)
+  const borderBottomWidth = useSharedValue(1)
 
-  const [qrStyle, qrApi] = useSpring(() => ({
-    color: isSelected ? theme.colors.p1 : theme.colors.s3,
-  }), [isSelected])
+  const textStyle = useAnimatedStyle(() => ({
+    borderColor: withTiming(borderColor.value),
+    borderBottomWidth: withTiming(borderBottomWidth.value)
+  }))
 
   useEffect(() => {
     if (!textInputRef.current || !route.params?.address) return
@@ -91,11 +87,19 @@ export function Withdraw1({route, navigation}: Withdraw1Props) {
 
   return (
     <Screen hasSafeArea={false} style={[spacing.fill]}>
-      <animated.View style={[flex.fillW, styles.textBorder, flex.row, flex.alignCenter, flex.spaceBetween, textStyle]}>
-        <AnimatedTextInput
+      <Animated.View style={[flex.fillW, styles.textBorder, flex.row, flex.alignCenter, flex.spaceBetween, textStyle]}>
+        <TextInput
           ref={textInputRef}
-          onFocus={() => setIsSelected(true)}
-          onBlur={() => setIsSelected(false)}
+          onFocus={() => {
+            borderBottomWidth.value = 2
+            borderColor.value = theme.colors.p1
+            setIsSelected(true)
+          }}
+          onBlur={() => {
+            borderBottomWidth.value = 1
+            borderColor.value = theme.colors.s3
+            setIsSelected(false)
+          }}
           onChangeText={setAddress}
           value={address}
           style={[styles.textInput, typography.p2, flex.grow, flex.shrink]}
@@ -106,23 +110,23 @@ export function Withdraw1({route, navigation}: Withdraw1Props) {
           selectionColor={theme.colors.p1}
           clearButtonMode={"always"}
         />
-        <TouchableRipple rippleColor={isSelected ? "#AE50FD20" : undefined} borderless onPress={ !isValidAddress ? () => {
+        <TouchableRipple rippleColor="#AE50FD20" borderless onPress={ address.length === 0 ? () => {
           Keyboard.dismiss()
           navigation.navigate("scanner")
         } : undefined} style={[styles.iconButton, flex.row, flex.center, m('x', 3)]}>
           {
             address.length === 0 ? (
-              <AnimatedFontAwesome size={24} color={theme.colors.p1} name="qrcode"/>
+              <FontAwesome size={24} color={theme.colors.p1} name="qrcode"/>
             ) : (
               isValidAddress ? (
-                <AnimatedFontAwesome name={"check-circle"} size={24} color={theme.colors.success}/>
+                <FontAwesome name={"check-circle"} size={24} color={theme.colors.success}/>
               ) : (
-                <AnimatedFontAwesome name={"exclamation-circle"} size={24} color={theme.colors.error}/>
+                <FontAwesome name={"exclamation-circle"} size={24} color={theme.colors.error}/>
               )
             )
           }
         </TouchableRipple>
-      </animated.View>
+      </Animated.View>
       <View style={[flex.fillH, flex.fillW, flex.col, flex.spaceBetween, flex.shrink, flex.alignCenter, p('b', 12)]}>
         {
           clipboardString.length > 0 ? (
@@ -148,7 +152,6 @@ export function Withdraw1({route, navigation}: Withdraw1Props) {
               address,
             })
           }}
-          minScale={.85}
         >
           <Text style={[typography.button1, {color: theme.colors.white}]}>Next</Text>
         </ButtonClick>

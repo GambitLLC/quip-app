@@ -51,6 +51,7 @@
     "react-native-svg-transformer": "^1.1.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-webview": "13.2.2",
+    "react-query": "^3.39.3",
     "zustand": "^4.4.1"
   },
   "devDependencies": {

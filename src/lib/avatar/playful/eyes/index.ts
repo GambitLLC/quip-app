@@ -1,0 +1,6 @@
+export * as Angry from './Angry'
+export * as Closed from './Closed'
+export * as Cynic from './Cynic'
+export * as Normal from './Normal'
+export * as Sad from './Sad'
+export * as Thin from './Thin'

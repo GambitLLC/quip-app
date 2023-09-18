@@ -50,4 +50,6 @@ export * from './animations/ButtonClick'
 export * from './animations/AnimatedButton'
 export * from './animations/AnimatedRipple'
 export * from './animations/AnimatedScreen'
+export * from './avatar/PlayfulAvatar'
+export * from './avatar/Selector'
 

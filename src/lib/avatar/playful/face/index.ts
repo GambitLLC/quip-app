@@ -1,0 +1,8 @@
+export * as Darker from './Darker'
+export * as DarkerBearded from './DarkerBearded'
+export * as Fair from './Fair'
+export * as FairBearded from './FairBearded'
+export * as Light from './Light'
+export * as LightBearded from './LightBearded'
+export * as Tanned from './Tanned'
+export * as TannedBearded from './TannedBearded'

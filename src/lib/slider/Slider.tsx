@@ -52,16 +52,27 @@ export function Slider(props: ViewProps & SliderProps) {
     }
   })
 
+  const minScale = 0.876
+
   const rotateCard1 = useAnimatedStyle(() => ({
-    transform: [{rotateZ: `${interpolate(scrollX.value, [-274, 0, 274], [10, 0, -10])}deg`}]
+    transform: [
+      {rotateZ: `${interpolate(scrollX.value, [-274, 0, 274], [10, 0, -10])}deg`},
+      {scale: interpolate(scrollX.value, [-274, 0, 274], [minScale, 1, minScale])}
+    ]
   }))
 
   const rotateCard2 = useAnimatedStyle(() => ({
-    transform: [{rotateZ: `${interpolate(scrollX.value, [0, 274, 548], [10, 0, -10])}deg`}]
+    transform: [
+      {rotateZ: `${interpolate(scrollX.value, [0, 274, 548], [10, 0, -10])}deg`},
+      {scale: interpolate(scrollX.value, [0, 274, 548], [minScale, 1, minScale])}
+    ]
   }))
 
   const rotateCard3 = useAnimatedStyle(() => ({
-    transform: [{rotateZ: `${interpolate(scrollX.value, [274, 548, 822], [10, 0, -10])}deg`}]
+    transform: [
+      {rotateZ: `${interpolate(scrollX.value, [274, 548, 822], [10, 0, -10])}deg`},
+      {scale: interpolate(scrollX.value, [274, 548, 822], [minScale, 1, minScale])}
+    ]
   }))
 
   const card1 = useMemo(() => (<Card

@@ -6,6 +6,8 @@ import {p} from "../styles/Spacing";
 import React from "react";
 import Svg, {Circle} from "react-native-svg";
 import {Text} from "../text/Text"
+import {PlayfulAvatar} from "../avatar/PlayfulAvatar";
+import {useAvatarStore} from "../store/AvatarStore";
 
 interface AvatarXpProps extends AvatarProps {
   percentage: number,
@@ -27,6 +29,8 @@ export function AvatarXp(props: ViewProps & AvatarXpProps & PressableProps) {
   const strokeWidth = 4
   const circum = radius * 2 * Math.PI
 
+  const {avatar} = useAvatarStore()
+
   return (
     <Pressable {...props}>
       <View style={[{
@@ -45,7 +49,9 @@ export function AvatarXp(props: ViewProps & AvatarXpProps & PressableProps) {
           alignItems: "center",
           justifyContent: "center",
         }}>
-          <Avatar style={{position: "absolute"}} source={props.source}/>
+          <View style={{position: "absolute"}}>
+            <PlayfulAvatar size={size} color={avatar.color} eye={avatar.eye} face={avatar.face} mouth={avatar.mouth} outfit={avatar.outfit} hair={avatar.hair} accessory={avatar.accessory}/>
+          </View>
         </View>
         <View style={{
           position: "absolute",
@@ -98,67 +104,6 @@ export function AvatarXp(props: ViewProps & AvatarXpProps & PressableProps) {
         </Svg>
       </View>
     </Pressable>
-  )
-
-  return (
-    <View style={{
-      width: 64,
-      height: 64,
-      backgroundColor: theme.colors.p1,
-      borderRadius: 9999,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      position: "relative"
-    }}>
-      <View style={{
-        position: "absolute",
-        width: "100%",
-        height: "100%",
-        borderRadius: 9999,
-        backgroundColor: "red",
-        zIndex: 3
-      }}/>
-      <View style={{
-        margin: 4,
-        width: "100%",
-        height: "100%",
-        backgroundColor: theme.colors.s2,
-        borderRadius: 9999,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 4,
-        position: "absolute",
-      }} {...props}>
-        <Avatar style={{position: "absolute"}} source={props.source}/>
-        <View style={{
-          position: "absolute",
-          padding: 2,
-          backgroundColor: theme.colors.background,
-          borderRadius: 9999,
-          right: -6,
-          bottom: -6,
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-        }}>
-          <View style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 9999,
-            backgroundColor: theme.colors.p1,
-          }}>
-            <Text style={[typography.p3, p('x', 2), { color: theme.colors.s2 }]}>
-              {props.level}
-            </Text>
-          </View>
-        </View>
-      </View>
-    </View>
   )
 }
 

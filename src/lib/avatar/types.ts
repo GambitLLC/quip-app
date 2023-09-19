@@ -1,3 +1,5 @@
+import {ColorValue} from "react-native";
+
 const accessories = ["Cap", "Circle_Earring", "Earphone", "Earring", "Futuristic_Glasses", "Glasses", "Mask", "Mask_Google", "Moustache", "Rounded_Glasses", "Simple_Earring", "Stylish_Glasses"] as const;
 type Accessory = typeof accessories[number];
 
@@ -27,7 +29,7 @@ interface AvatarProps {
   face: Face,
   mouth: Mouth,
   outfit: Outfit,
-  color: Color
+  color: ColorValue
 }
 
 export {

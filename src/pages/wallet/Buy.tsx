@@ -10,7 +10,7 @@ interface BuyProps {
 
 export function Buy(props: BuyProps) {
   const {address} = useCrypto()
-  const [redirectUrl, setRedirectUrl] = useState<string | null>(null)
+  const {redirectUrl, setRedirectUrl} = useStripeCryptoOnrampStore()
 
   useEffect(() => {
     if (address === null) return
@@ -32,9 +32,9 @@ export function Buy(props: BuyProps) {
   return (
     <Screen hasSafeArea={false}>
       {
-        redirectUrl === null ?
+        redirectUrl === undefined ?
           <ActivityIndicator style={[spacing.fill, spacing.center]} size={"large"}/> :
-          <WebView scrollEnabled={false} source={{uri: redirectUrl}}/>
+          <WebView cacheEnabled={true} cacheMode="LOAD_DEFAULT" scrollEnabled={false} source={{uri: redirectUrl}}/>
       }
     </Screen>
   );

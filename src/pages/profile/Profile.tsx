@@ -1,12 +1,14 @@
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {ParamListBase} from "@react-navigation/native";
-import {Achievement, Avatar, LevelInfo, m, p, Screen, spacing, Text, typography} from "@/lib";
+import {Achievement, Avatar, LevelInfo, m, p, PlayfulAvatar, Screen, spacing, Text, typography} from "@/lib";
 import {theme} from "@/util/Theme"
 import {ScrollView, StyleSheet, useWindowDimensions, View} from "react-native";
 import {IconButton} from "react-native-paper";
+import {useAvatarStore} from "@/lib/store/AvatarStore";
 
 function Profile({navigation}: NativeStackScreenProps<ParamListBase, "profile">) {
   const windowDim = useWindowDimensions();
+  const {avatar} = useAvatarStore()
 
   return (
     <Screen screenStyle={[{backgroundColor: theme.colors.background}]} style={[spacing.fill]}>
@@ -19,7 +21,7 @@ function Profile({navigation}: NativeStackScreenProps<ParamListBase, "profile">)
             <Text style={[typography.h6]}>Profile</Text>
             <IconButton style={{opacity: 0}} icon={"close"}/>
           </View>
-          <Avatar size={112} source={require('../../../assets/AvatarTest.png')}/>
+          <PlayfulAvatar size={112} color={avatar.color} eye={avatar.eye} face={avatar.face} mouth={avatar.mouth} accessory={avatar.accessory} hair={avatar.hair} outfit={avatar.outfit} />
           <Text style={[typography.h5, {color: theme.colors.p1}, m('t', 4), m('b', 6)]}>Username</Text>
           <LevelInfo level={10} currExp={200} totalExp={1000}/>
         </View>

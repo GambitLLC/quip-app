@@ -50,7 +50,7 @@ export function AvatarXp(props: ViewProps & AvatarXpProps & PressableProps) {
           justifyContent: "center",
         }}>
           <View style={{position: "absolute"}}>
-            <PlayfulAvatar size={size} color={avatar.color} eye={avatar.eye} face={avatar.face} mouth={avatar.mouth} outfit={avatar.outfit} hair={avatar.hair} accessory={avatar.accessory}/>
+            <PlayfulAvatar size={size-12} color={avatar.color} eye={avatar.eye} face={avatar.face} mouth={avatar.mouth} outfit={avatar.outfit} hair={avatar.hair} accessory={avatar.accessory}/>
           </View>
         </View>
         <View style={{

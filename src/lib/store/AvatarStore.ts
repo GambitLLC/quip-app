@@ -20,7 +20,7 @@ const useAvatarStore = create<AvatarStore>((set) => ({
     face: "Light",
     mouth: "Angry",
     outfit: "Outfit01",
-    color: "#1d1d1d",
+    color: "#d7d0ff",
     accessory: "Cap",
     hair: "Hair01"
   },

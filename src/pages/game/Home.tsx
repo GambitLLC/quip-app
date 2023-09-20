@@ -111,15 +111,8 @@ function GameHome({navigation}: NativeStackScreenProps<ParamListBase, "games">) 
                 </View>
                 <View style={[p('t', 4)]}>
                   <ButtonClick onPress={() => {
-                    add({
-                      id: performance.now().toString(),
-                      type: (() => {
-                        //return a random type
-                        const types = ["success", "error", "warning", "info"] as const
-                        return types[Math.floor(Math.random() * types.length)]
-                      })(),
-                      message: "Coming Soon!",
-                      timeout: 3000,
+                    navigation.dispatch({
+                      ...CommonActions.navigate('game')
                     })
                   }} buttonColor={(quip.color as string)} labelStyle={typography.button1} contentStyle={styles.playButton} mode="contained">
                     Play Now

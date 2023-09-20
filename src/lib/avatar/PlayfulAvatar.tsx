@@ -1,4 +1,4 @@
-import {ColorValue, View, StyleSheet, DimensionValue, ViewStyle} from "react-native";
+import {ColorValue, View, StyleSheet, ViewStyle} from "react-native";
 import {Accessory, Eye, Face, Hair, Mouth, Outfit} from "./types";
 import {flex} from "../styles/Flex";
 

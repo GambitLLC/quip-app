@@ -31,6 +31,12 @@ export function Card(props: SvgProps & CardProps) {
     })
   }
 
+  function navigateToGame() {
+    navigation.dispatch({
+      ...CommonActions.navigate('game')
+    })
+  }
+
   return (
     <Animated.View sharedTransitionTag="sharedTag" style={styles.container}>
       <Svg {...props} width={props.width ?? "250"} height={props.height ?? "300"} viewBox="0 0 250 300" fill="none">
@@ -62,18 +68,7 @@ export function Card(props: SvgProps & CardProps) {
               {props.cardTitle}
             </Text>
           </View>
-          <TouchableRipple borderless onPress={() => {
-            add({
-              id: performance.now().toString(),
-              type: (() => {
-                //return a random type
-                const types = ["success", "error", "warning", "info"] as const
-                return types[Math.floor(Math.random() * types.length)]
-              })(),
-              message: "Coming Soon!",
-              timeout: 3000,
-            })
-          }} style={[styles.playBtn, {backgroundColor: props.cardColor}]}>
+          <TouchableRipple borderless onPress={navigateToGame} style={[styles.playBtn, {backgroundColor: props.cardColor}]}>
             <IconButton icon={"play"} iconColor={theme.colors.white}/>
           </TouchableRipple>
         </View>

@@ -53,7 +53,7 @@ export function Auth(props: AuthProps) {
         })
       }
     })
-  })
+  }, [])
 
   return (
     <Screen style={[spacing.fill, styles.container]}>

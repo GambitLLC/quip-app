@@ -1,12 +1,30 @@
 import {StyleSheet, View} from "react-native";
 import {flex, p, Screen, spacing, Text} from "@/lib";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import WebView from "react-native-webview";
 import {TouchableRipple} from "react-native-paper";
 import {useNavigation} from "@react-navigation/native";
+import { Asset } from "expo-asset";
 
 export function GameScreen() {
   const navigation = useNavigation()
+
+  const [js, setJs] = useState("")
+
+  useEffect(() => {
+    (async () => {
+      const jsLoader = await fetch(Asset.fromModule(require("../../../assets/games/test/Build/build.loader.gjs")).uri).then(r => r.text())
+      const jsFramework = await fetch(Asset.fromModule(require("../../../assets/games/test/Build/build.framework.gjs")).uri).then(r => r.text())
+
+      setJs(`
+        ${jsLoader}
+        
+        ${jsFramework}
+      `)
+    })()
+  }, [])
+
+  console.log(js)
 
   return (
     <Screen hasSafeArea={true}>
@@ -24,7 +42,11 @@ export function GameScreen() {
           </TouchableRipple>
         </View>
         <WebView
-          source={{uri: 'http://192.168.1.111:3000'}}
+          onMessage={(e) => {
+            console.log(e.nativeEvent.data)
+          }}
+          source={require("../../../assets/games/test/index.html")}
+          injectedJavaScriptBeforeContentLoaded={js}
         />
       </View>
     </Screen>

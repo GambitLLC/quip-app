@@ -9,7 +9,7 @@ module.exports = (async () => {
 
     defaultConfig.resolver = {
         sourceExts: ['js', 'jsx', 'json', 'ts', 'tsx', 'cjs'],
-        assetExts: ['glb', 'gltf', 'png', 'jpg', 'svg', 'otf', 'ttf'],
+        assetExts: ['glb', 'gltf', 'png', 'jpg', 'svg', 'otf', 'ttf', "html", "css", "ico", "data", "wasm", "gjs"],
     }
 
     return defaultConfig;

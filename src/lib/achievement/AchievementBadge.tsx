@@ -20,7 +20,7 @@ export function AchievementBadge(props: AchievementBadgeProps) {
         <Path d="M0 8.3335C0 3.91522 3.58172 0.333496 8 0.333496H43.8621C48.2803 0.333496 51.8621 3.91522 51.8621 8.3335V47.298C51.8621 50.3038 50.1772 53.0559 47.5003 54.4229L29.5692 63.5791C27.2841 64.746 24.578 64.746 22.2928 63.5791L4.36178 54.4229C1.68483 53.0559 0 50.3038 0 47.298V8.3335Z" fill={props.color}/>
       </Svg>
       <View style={styles.container}>
-        <Text style={[typography.label2, styles.levelText]}>LVL {props.level}</Text>
+        <Text style={[typography.label2, styles.levelText, {letterSpacing: 0}]}>LVL {props.level}</Text>
         <View style={[m('t', 1)]}>
           <MaterialIcons color={theme.colors.background} name="trophy" size={24}/>
         </View>

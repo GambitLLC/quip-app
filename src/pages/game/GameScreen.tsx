@@ -1,56 +1,48 @@
-import {StyleSheet, View} from "react-native";
-import {flex, p, Screen, spacing, Text} from "@/lib";
-import React, {useEffect, useState} from "react";
-import WebView from "react-native-webview";
-import {TouchableRipple} from "react-native-paper";
-import {useNavigation} from "@react-navigation/native";
-import { Asset } from "expo-asset";
+import {StyleSheet} from "react-native";
+import {flex} from "@/lib";
+import React from "react";
+import {NavigationContainer, ParamListBase} from "@react-navigation/native";
+import {createNativeStackNavigator, NativeStackScreenProps} from "@react-navigation/native-stack";
+import GameModeSelect from "@/pages/game/GameModeSelect";
+import GameQueue from "@/pages/game/GameQueue";
+import GameLobby from "@/pages/game/GameLobby";
+import Game from "@/pages/game/Game";
+import GamePostGame from "@/pages/game/GamePostGame";
 
-export function GameScreen() {
-  const navigation = useNavigation()
+/*
+  modeSelect |-> Quick Match  -> Queue              |-> Game Screen -> Post Game
+             |-> Custom Match -> Custom Match Lobby |
+ */
 
-  const [js, setJs] = useState("")
+export type RootStackParamList = {
+  modeSelect: undefined,
+  queue: undefined,
+  lobby: undefined,
+  game: undefined,
+  postGame: undefined
+}
 
-  useEffect(() => {
-    (async () => {
-      const jsLoader = await fetch(Asset.fromModule(require("../../../assets/games/test/Build/build.loader.gjs")).uri).then(r => r.text())
-      const jsFramework = await fetch(Asset.fromModule(require("../../../assets/games/test/Build/build.framework.gjs")).uri).then(r => r.text())
+export type GameModeSelectProps = NativeStackScreenProps<RootStackParamList, "modeSelect">
+export type GameQueueProps = NativeStackScreenProps<RootStackParamList, "queue">
+export type GameLobbyProps = NativeStackScreenProps<RootStackParamList, "lobby">
+export type GameProps = NativeStackScreenProps<RootStackParamList, "game">
+export type GamePostGameProps = NativeStackScreenProps<RootStackParamList, "postGame">
 
-      setJs(`
-        ${jsLoader}
-        
-        ${jsFramework}
-      `)
-    })()
-  }, [])
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
-  console.log(js)
 
+export function GameScreen({navigation}: NativeStackScreenProps<ParamListBase, "gameScreen">) {
   return (
-    <Screen hasSafeArea={true}>
-      <View style={[spacing.fill, styles.gameView]}>
-        <View style={[{height: 100}, flex.row, flex.fillW]}>
-          <Text>
-            Test
-          </Text>
-          <TouchableRipple onPress={() => {
-            navigation.goBack()
-          }}>
-            <Text>
-              Back
-            </Text>
-          </TouchableRipple>
-        </View>
-        <WebView
-          onMessage={(e) => {
-            console.log(e.nativeEvent.data)
-          }}
-          source={require("../../../assets/games/test/index.html")}
-          injectedJavaScriptBeforeContentLoaded={js}
-        />
-      </View>
-    </Screen>
-  );
+    <Stack.Navigator initialRouteName={"modeSelect"} screenOptions={{headerShown: false}}>
+      <Stack.Group>
+        <Stack.Screen name={"modeSelect"} component={GameModeSelect}/>
+        <Stack.Screen name={"queue"} component={GameQueue}/>
+        <Stack.Screen name={"lobby"} component={GameLobby}/>
+        <Stack.Screen name={"game"} component={Game}/>
+        <Stack.Screen name={"postGame"} component={GamePostGame}/>
+      </Stack.Group>
+    </Stack.Navigator>
+  )
 }
 
 const styles = StyleSheet.create({

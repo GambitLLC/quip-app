@@ -33,7 +33,7 @@ export function Card(props: SvgProps & CardProps) {
 
   function navigateToGame() {
     navigation.dispatch({
-      ...CommonActions.navigate('game')
+      ...CommonActions.navigate("gameScreen")
     })
   }
 

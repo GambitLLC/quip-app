@@ -40,7 +40,7 @@ export const App = () => {
                   <Stack.Screen name="splash" component={Splash}/>
                   <Stack.Screen name="auth" component={Auth} />
                   <Stack.Screen name="gameHome" component={Home}/>
-                  <Stack.Screen name="game" component={GameScreen} />
+                  <Stack.Screen name="gameScreen" component={GameScreen} />
                 </Stack.Group>
                 <Stack.Group screenOptions={{
                   presentation: 'modal',

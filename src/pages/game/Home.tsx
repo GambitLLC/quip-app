@@ -112,7 +112,7 @@ function GameHome({navigation}: NativeStackScreenProps<ParamListBase, "games">) 
                 <View style={[p('t', 4)]}>
                   <ButtonClick onPress={() => {
                     navigation.dispatch({
-                      ...CommonActions.navigate('game')
+                      ...CommonActions.navigate("gameScreen")
                     })
                   }} buttonColor={(quip.color as string)} labelStyle={typography.button1} contentStyle={styles.playButton} mode="contained">
                     Play Now

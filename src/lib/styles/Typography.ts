@@ -109,7 +109,7 @@ const typography: Typography = {
   label2: {
     fontSize: 12,
     lineHeight: 1.4 * 12,
-    letterSpacing: 0,
+    letterSpacing: 12 * 0.2,
     fontFamily: 'Co-Headline-700'
   },
   button1: {

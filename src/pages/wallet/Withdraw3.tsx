@@ -70,7 +70,7 @@ export function Withdraw3({navigation, route}: Withdraw3Props) {
       <View style={[flex.fillH, flex.fillW, flex.col, flex.alignCenter]}>
         <View style={[border.quip, p('a', 6), m('a', 6), styles.address, flex.row, flex.alignCenter]}>
           <FontAwesome5 name="wallet" size={20} color={theme.colors.p1} style={p('r', 6)}/>
-          <Text style={[typography.label2, flex.shrink]}>
+          <Text style={[typography.label2, flex.shrink, {letterSpacing: 0}]}>
             {address}
           </Text>
         </View>

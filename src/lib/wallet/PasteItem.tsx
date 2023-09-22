@@ -20,7 +20,7 @@ export function PasteItem(props: PasteItemProps) {
         <FontAwesome style={m('r', 4)} name="paste" color={theme.colors.p1} size={24}/>
         <View style={flex.shrink}>
           <Text style={[typography.p3, {opacity: .4}]}>Paste from clipboard</Text>
-          <Text style={[typography.label2]}>{props.value}</Text>
+          <Text style={[typography.label2, {letterSpacing: 0}]}>{props.value}</Text>
         </View>
       </View>
     </RippleClick>

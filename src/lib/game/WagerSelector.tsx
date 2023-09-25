@@ -1,8 +1,13 @@
 import {View, StyleSheet, TextInput} from "react-native";
-import {border, flex, m, quips, Text, typography, useGameStore} from "@/lib";
+import {border} from "../styles/Border"
+import {flex} from  "../styles/Flex"
+import {m} from "../styles/Spacing"
+import {Text} from "../text/Text"
+import {typography} from "../styles/Typography"
+import {useGameStore, quips} from "../store/GameStore"
 import theme from "@/util/Theme";
 import {useState} from "react";
-import {Button, TouchableRipple} from "react-native-paper";
+import {Button} from "react-native-paper";
 
 type WagerType = "quick" | "custom"
 

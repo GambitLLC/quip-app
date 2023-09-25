@@ -1,6 +1,6 @@
 import {View, StyleSheet} from "react-native";
 import {GameModeSelectProps} from "@/pages/game/GameScreen";
-import {flex, m, p, quips, Screen, spacing, Text, typography, useGameStore, WagerSelector} from "@/lib";
+import {flex, m, p, quips, Screen, spacing, Text, typography, useGameStore, useTicker, WagerSelector} from "@/lib";
 import {useState} from "react";
 import {capitalize} from "@/util/TextUtil";
 import theme from "@/util/Theme";
@@ -36,10 +36,14 @@ function GameModeSelector() {
 }
 
 export function GameModeSelect({route, navigation}: GameModeSelectProps) {
+  const {usdPrice} = useTicker()
   const [mode, setMode] = useState<GameMode>("quick")
 
   const {quipIdx} = useGameStore()
   const quip = quips[quipIdx]
+
+  const wagerOptions = [1.00, 5.00, 20.00]
+  const [selectedWagerIdx, setSelectedWagerIdx] = useState(0)
 
   return (
     <Screen style={[spacing.fill, {backgroundColor: quip.bgColor}]} screenStyle={{
@@ -93,10 +97,15 @@ export function GameModeSelect({route, navigation}: GameModeSelectProps) {
           SELECT WAGER AMOUNT
         </Text>
         <View style={[p('x', 6)]}>
-          <WagerSelector type={mode} options={[1.00, 5.00, 20.00]}/>
+          <WagerSelector
+            initialIdx={selectedWagerIdx}
+            onChange={setSelectedWagerIdx}
+            type={mode}
+            options={wagerOptions}
+          />
         </View>
         <Text style={[typography.p2, {color: theme.colors.s4}]}>
-          5 USD ≈ 0.21445 SOL
+          {wagerOptions[selectedWagerIdx].toFixed(2)} USD ≈ {(wagerOptions[selectedWagerIdx] / usdPrice).toFixed(9)} SOL
         </Text>
         <View style={flex.grow}/>
         <View>

@@ -38,13 +38,14 @@ export function TickerProvider(props: TickerProviderProps) {
   const [klines, setKlines] = useState<Kline[]>([])
 
   const websocket = useMemo(() => new WebSocket(WSS_BINANCE), [])
+  const symbol = "SOLUSDT"
 
   const interval = useMemo(() => setInterval(async () => {
     websocket.send(JSON.stringify({
       "id": `price`,
       "method": "avgPrice",
       "params": {
-        "symbol": "SOLUSD"
+        "symbol": symbol
       }
     }))
 
@@ -52,7 +53,7 @@ export function TickerProvider(props: TickerProviderProps) {
       "id": `klines`,
       "method": "uiKlines",
       "params": {
-        "symbol": "SOLUSD",
+        "symbol": symbol,
         "interval": "15m",
         "limit": 96,
       }
@@ -64,7 +65,7 @@ export function TickerProvider(props: TickerProviderProps) {
       "id": `price`,
       "method": "avgPrice",
       "params": {
-        "symbol": "SOLUSD"
+        "symbol": symbol
       }
     }))
 
@@ -72,7 +73,7 @@ export function TickerProvider(props: TickerProviderProps) {
       "id": `klines`,
       "method": "uiKlines",
       "params": {
-        "symbol": "SOLUSD",
+        "symbol": symbol,
         "interval": "15m",
         "limit": 96,
       }

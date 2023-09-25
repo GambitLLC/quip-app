@@ -1,13 +1,15 @@
 import {View, StyleSheet, TextInput} from "react-native";
 import {border} from "../styles/Border"
 import {flex} from  "../styles/Flex"
-import {m} from "../styles/Spacing"
+import {m, p} from "../styles/Spacing"
 import {Text} from "../text/Text"
 import {typography} from "../styles/Typography"
 import {useGameStore, quips} from "../store/GameStore"
+import {SelectedWagerText} from "./SelectedWagerText"
 import theme from "@/util/Theme";
-import {useState} from "react";
+import {useMemo, useState} from "react";
 import {Button} from "react-native-paper";
+import Animated, {useAnimatedStyle, withTiming} from "react-native-reanimated";
 
 type WagerType = "quick" | "custom"
 
@@ -19,11 +21,25 @@ interface WagerSelectorProps {
 }
 
 export function WagerSelector(props: WagerSelectorProps) {
-  const [selectedIdx, setSelectedIdx] = useState<number>(0)
+  const [selectedIdx, setSelectedIdx] = useState<number>(props.initialIdx ?? 0)
   const [amt, setAmt] = useState<number>(props.options[0])
+  const [elemWidths, setElemWidths] = useState<number[]>(props.options.map(() => 0))
+
+  const computedLeftMargin = useMemo(() => {
+    return elemWidths.map((width, i) => {
+      //sum of previous widths + 16px margin
+      return elemWidths.slice(0, i).reduce((a, b) => a + b + 16, 0)
+    })
+  },[elemWidths])
 
   const {quipIdx} = useGameStore()
   const quip = quips[quipIdx]
+
+  const selectedStyle = useAnimatedStyle(() => ({
+    backgroundColor: quip.color,
+    width: withTiming(elemWidths[selectedIdx] ?? 0, {duration: 250}),
+    marginLeft: withTiming(computedLeftMargin[selectedIdx] ?? 0, {duration: 250}),
+  }), [selectedIdx, elemWidths])
 
   return (
     <View style={[
@@ -38,10 +54,30 @@ export function WagerSelector(props: WagerSelectorProps) {
     ]}>
       {
         props.type === 'quick' ? (
-          <View style={[flex.row, flex.fillW]}>
+          <View style={[flex.row, flex.fillW, {position: "relative"}]}>
+            <View
+              pointerEvents={"none"}
+              style={[{position: "absolute"}, p('a', 2), flex.fillH, flex.row, flex.fillW]}
+            >
+              <Animated.View style={[flex.fillH, flex.row, flex.center, selectedStyle, {borderRadius: 24}]}>
+                <Text style={[typography.button1, {opacity: 0}]}>
+                  ${props.options[selectedIdx].toFixed(2)}
+                </Text>
+              </Animated.View>
+            </View>
             {
-              props.options.map((opt, i) => (
-                <Button
+              props.options.map((opt, i) => {
+                return <Button
+                  onLayout={(e) => {
+                    const {width} = e.nativeEvent.layout
+
+                    setElemWidths((prev) => {
+                      const next = [...prev]
+                      next[i] = width
+                      // prev.map((n, idx) => idx == i ? width : n)
+                      return prev.map((n, idx) => idx == i ? width : n)
+                    })
+                  }}
                   theme={{
                     colors: {
                       primary: quip.color as string,
@@ -59,18 +95,15 @@ export function WagerSelector(props: WagerSelectorProps) {
                     m('x', 2),
                     {
                       borderRadius: 24,
-                      backgroundColor: i === selectedIdx ? quip.color : theme.colors.background,
                     },
                   ]}
                   contentStyle={[
                     flex.fillH,
                   ]}
                 >
-                  <Text style={[typography.button1, {color: i === selectedIdx ? theme.colors.background : theme.colors.s1}]}>
-                    ${opt.toFixed(2)}
-                  </Text>
+                  <SelectedWagerText key={i} selected={selectedIdx === i} text={`$${opt.toFixed(2)}`}/>
                 </Button>
-              ))
+              })
             }
           </View>
         ) : (

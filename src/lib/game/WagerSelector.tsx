@@ -7,7 +7,7 @@ import {typography} from "../styles/Typography"
 import {useGameStore, quips} from "../store/GameStore"
 import {SelectedWagerText} from "./SelectedWagerText"
 import theme from "@/util/Theme";
-import {useMemo, useState} from "react";
+import {useMemo, useRef, useState} from "react";
 import {Button} from "react-native-paper";
 import Animated, {useAnimatedStyle, withTiming} from "react-native-reanimated";
 
@@ -40,6 +40,8 @@ export function WagerSelector(props: WagerSelectorProps) {
     width: withTiming(elemWidths[selectedIdx] ?? 0, {duration: 250}),
     marginLeft: withTiming(computedLeftMargin[selectedIdx] ?? 0, {duration: 250}),
   }), [selectedIdx, elemWidths])
+
+  const textInputRef = useRef<TextInput>()
 
   return (
     <View style={[
@@ -107,9 +109,17 @@ export function WagerSelector(props: WagerSelectorProps) {
             }
           </View>
         ) : (
-          <View>
+          <View style={[flex.fillW]}>
             <TextInput
-              value={amt.toFixed(2)}
+              //@ts-ignore
+              ref={textInputRef}
+              keyboardType={"decimal-pad"}
+              inputMode={"decimal"}
+              style={[
+                p('x', 8),
+                flex.fillW,
+                flex.fillH,
+              ]}
               onChangeText={(text) => {
                 const num = parseFloat(text)
                 if (isNaN(num)) return

@@ -43,7 +43,7 @@ interface QuipStore {
 }
 
 const useGameStore = create<QuipStore>((set) => ({
-  quipIdx: 0,
+  quipIdx: 1,
   setQuipIdx: (idx: QuipIDX) => set((state) => ({
     quipIdx: idx
   }))

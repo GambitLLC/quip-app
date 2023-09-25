@@ -18,8 +18,6 @@ export function SelectedWagerText(props: SelectedWagerTextProps) {
     return props.selected
   }, [props.selected])
 
-  console.log(isSelected)
-
   const textStyle = useAnimatedStyle(() => ({
     color: withTiming(isSelected ? theme.colors.white : quip.color as string, {duration: 250})
   }), [isSelected])

@@ -18,6 +18,7 @@ export default function Main() {
     'Co-Headline-700': require('./assets/fonts/Co-Headline-Bold.otf'),
     'Lexend-300': require('./assets/fonts/Lexend-Light.ttf'),
     'Lexend-400': require('./assets/fonts/Lexend-Regular.ttf'),
+    'Lexend-700': require('./assets/fonts/Lexend-Bold.ttf'),
   });
 
   const onLayoutRootView = useCallback(async () => {

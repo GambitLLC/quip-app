@@ -10,6 +10,7 @@ import theme from "@/util/Theme";
 import {useMemo, useRef, useState} from "react";
 import {Button} from "react-native-paper";
 import Animated, {useAnimatedStyle, withTiming} from "react-native-reanimated";
+import {FontAwesome} from "@expo/vector-icons";
 
 type WagerType = "quick" | "custom"
 
@@ -17,7 +18,8 @@ interface WagerSelectorProps {
   type: WagerType,
   options: number[]
   initialIdx?: number,
-  onChange?: (idx: number) => void,
+  onChangeIdx?: (idx: number) => void,
+  onChangeAmt?: (amt: number) => void,
 }
 
 export function WagerSelector(props: WagerSelectorProps) {
@@ -88,7 +90,7 @@ export function WagerSelector(props: WagerSelectorProps) {
                   onPress={() => {
                     setSelectedIdx(i)
                     setAmt(opt)
-                    props.onChange?.(i)
+                    props.onChangeIdx?.(i)
                   }}
                   key={i}
                   style={[
@@ -110,6 +112,9 @@ export function WagerSelector(props: WagerSelectorProps) {
           </View>
         ) : (
           <View style={[flex.fillW]}>
+            <View style={[{position: "absolute", top: 0, left: 0}, flex.fill, flex.row, flex.alignCenter]}>
+              <FontAwesome style={[p('l', 4)]} size={16} name="usd"/>
+            </View>
             <TextInput
               //@ts-ignore
               ref={textInputRef}
@@ -119,13 +124,19 @@ export function WagerSelector(props: WagerSelectorProps) {
                 p('x', 8),
                 flex.fillW,
                 flex.fillH,
+                {
+                  fontFamily: 'Co-Headline-400',
+                  fontSize: 16,
+                }
               ]}
               onChangeText={(text) => {
                 const num = parseFloat(text)
                 if (isNaN(num)) return
                 setAmt(num)
+                props.onChangeAmt?.(num)
               }}
-            />
+            >
+            </TextInput>
           </View>
         )
       }

@@ -1,7 +1,14 @@
-import {View, StyleSheet, ScrollView, useWindowDimensions, ViewProps} from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  useWindowDimensions,
+  ViewProps,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback, Keyboard, LogBox
+} from "react-native";
 import {GameModeSelectProps} from "@/pages/game/GameScreen";
 import {
-  border,
   flex,
   m,
   p,
@@ -10,20 +17,26 @@ import {
   spacing,
   Text,
   typography,
-  useGameStore,
+  useGameStore, useNotificationStore,
   useTicker,
   WagerSelector
 } from "@/lib";
-import {forwardRef, Ref, useRef, useState} from "react";
+import {forwardRef, Ref, useEffect, useRef, useState} from "react";
 import {capitalize} from "@/util/TextUtil";
 import theme from "@/util/Theme";
 import Svg, {Defs, Image, LinearGradient, Path, Pattern, Stop, Use} from "react-native-svg";
 import {Button, TouchableRipple} from "react-native-paper";
-import {FontAwesome5, MaterialCommunityIcons} from "@expo/vector-icons";
-import {createDebounce, createThrottle} from "@/util/Debounce";
-import Animated, {runOnJS, useAnimatedScrollHandler} from "react-native-reanimated";
+import {FontAwesome5} from "@expo/vector-icons";
+import {createThrottle} from "@/util/Debounce";
+import Animated, {
+  FadeIn, FadeOut,
+  runOnJS,
+  useAnimatedScrollHandler,
+} from "react-native-reanimated";
 
 type GameMode = "quick" | "custom"
+
+LogBox.ignoreLogs(["Overriding previous layout animation with new one before the first began"])
 
 
 const GameCard = forwardRef((props: ViewProps, ref: Ref<View | undefined>) =>
@@ -48,6 +61,8 @@ const GameCard = forwardRef((props: ViewProps, ref: Ref<View | undefined>) =>
 )
 
 export function GameModeSelect({route, navigation}: GameModeSelectProps) {
+  const {add} = useNotificationStore()
+
   const {usdPrice} = useTicker()
   const [mode, setMode] = useState<GameMode>("quick")
 
@@ -56,6 +71,7 @@ export function GameModeSelect({route, navigation}: GameModeSelectProps) {
 
   const wagerOptions = [1.00, 5.00, 20.00]
   const [selectedWagerIdx, setSelectedWagerIdx] = useState(0)
+  const [amt, setAmt] = useState<number>(0.00)
 
   const {width} = useWindowDimensions()
   const computedWidth = ((width) / 2) - 125
@@ -91,132 +107,190 @@ export function GameModeSelect({route, navigation}: GameModeSelectProps) {
     }
   })
 
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true); // or some other action
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false); // or some other action
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
   return (
     <Screen style={[spacing.fill, {backgroundColor: quip.bgColor}]} screenStyle={{
       position: "relative",
     }}>
-      <View style={[flex.col, flex.alignCenter, flex.fillH, p('t', 6), p('b', 14)]}>
-        <Text style={[typography.label2, {color: quip.color}]}>SELECT MODE</Text>
-        <Text style={[typography.h5]}>
-          {capitalize(mode)} Match
-        </Text>
-        <View style={[m('y', 12), flex.fillW, flex.row, flex.justifyCenter]}>
-          <View pointerEvents="box-none" style={[styles.arrowsContainer, flex.row, flex.alignCenter, flex.spaceBetween]}>
-            <TouchableRipple
-              onPress={() => {
-                leftDebounce(() => {
-                  scrollViewRef.current?.scrollTo({x: 0, animated: true})
-                }, 250)
-              }}
-              borderless
-              style={[
-                flex.row,
-                flex.center,
+      <KeyboardAvoidingView enabled={true} behavior={"position"} style={[flex.fill]}>
+        <ScrollView scrollEnabled={false} contentContainerStyle={[flex.fill]} keyboardShouldPersistTaps="handled">
+          <View style={[flex.col, flex.alignCenter, flex.fillH, p('t', 6), p('b', 14)]}>
+            <Animated.View style={[flex.col, flex.center]} entering={FadeIn.delay(200)} exiting={FadeOut.duration(200)} key={mode}>
+              <Text style={[typography.label2, {color: quip.color}]}>SELECT MODE</Text>
+              <Text style={[typography.h5]}>{capitalize(mode)} Match</Text>
+            </Animated.View>
+            <View style={[m('y', 12), flex.fillW, flex.row, flex.justifyCenter]}>
+              <View pointerEvents="box-none" style={[styles.arrowsContainer, flex.row, flex.alignCenter, flex.spaceBetween]}>
+                <TouchableRipple
+                  onPress={() => {
+                    leftDebounce(() => {
+                      scrollViewRef.current?.scrollTo({x: 0, animated: true})
+                    }, 250)
+                  }}
+                  borderless
+                  style={[
+                    flex.row,
+                    flex.center,
+                    {
+                      width: 56,
+                      height: 56,
+                      backgroundColor: quip.color,
+                      borderBottomRightRadius: 56,
+                      borderTopRightRadius: 56,
+                    },
+                    p('r', 2)
+                  ]}>
+                  <FontAwesome5 size={24} color={theme.colors.white} name="angle-left"/>
+                </TouchableRipple>
+                <TouchableRipple
+                  onPress={() => {
+                    rightDebounce(() => {
+                      scrollViewRef.current?.scrollToEnd({animated: true})
+                    }, 250)
+                  }}
+                  borderless
+                  style={[
+                    flex.row,
+                    flex.center,
+                    {
+                      width: 56,
+                      height: 56,
+                      backgroundColor: quip.color,
+                      borderBottomLeftRadius: 56,
+                      borderTopLeftRadius: 56,
+                    },
+                    p('l', 2)
+                  ]}>
+                  <FontAwesome5 size={24} color={theme.colors.white} name="angle-right"/>
+                </TouchableRipple>
+              </View>
+              <Animated.ScrollView
+                //@ts-ignore
+                ref={scrollViewRef}
+                onScroll={scrollHandler}
+                scrollEventThrottle={1}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                snapToInterval={250}
+                decelerationRate="fast"
+                snapToAlignment="start"
+                contentContainerStyle={{
+                  paddingLeft: computedWidth,
+                  paddingRight: computedWidth,
+                }}
+              >
+                <GameCard ref={card1}/>
+                <GameCard ref={card2}/>
+              </Animated.ScrollView>
+            </View>
+            <Animated.View
+              entering={FadeIn.delay(200)}
+              exiting={FadeOut.duration(200)}
+              key={`${mode}-inner`}
+              style={[p('x', 6), flex.col, flex.alignCenter]}
+            >
+              <Text style={[typography.label2, {color: quip.color}]}>
+                SELECT WAGER AMOUNT
+              </Text>
+              <WagerSelector
+                initialIdx={selectedWagerIdx}
+                onChangeIdx={setSelectedWagerIdx}
+                onChangeAmt={setAmt}
+                type={mode}
+                options={wagerOptions}
+              />
+              <Text style={[typography.p2, {color: theme.colors.s4}]}>
                 {
-                  width: 56,
-                  height: 56,
-                  backgroundColor: quip.color,
-                  borderBottomRightRadius: 56,
-                  borderTopRightRadius: 56,
-                },
-                p('r', 2)
-              ]}>
-              <FontAwesome5 size={24} color={theme.colors.white} name="angle-left"/>
-            </TouchableRipple>
-            <TouchableRipple
-              onPress={() => {
-                rightDebounce(() => {
-                  scrollViewRef.current?.scrollToEnd({animated: true})
-                }, 250)
-              }}
-              borderless
-              style={[
-                flex.row,
-                flex.center,
-                {
-                  width: 56,
-                  height: 56,
-                  backgroundColor: quip.color,
-                  borderBottomLeftRadius: 56,
-                  borderTopLeftRadius: 56,
-                },
-                p('l', 2)
-              ]}>
-              <FontAwesome5 size={24} color={theme.colors.white} name="angle-right"/>
-            </TouchableRipple>
+                  mode === "quick" ? (
+                    `${wagerOptions[selectedWagerIdx].toFixed(2)} USD ≈ ${(wagerOptions[selectedWagerIdx] / usdPrice).toFixed(9)} SOL`
+                  ) : (
+                    `${amt.toFixed(2)} USD ≈ ${(amt / usdPrice).toFixed(9)} SOL`
+                  )
+                }
+              </Text>
+            </Animated.View>
+            <View style={flex.grow}/>
+            <View>
+              <Button
+                theme={{colors: {primary: quip.color as string}}}
+                onPress={() => {
+                  //check if the keyboard is open, if it is dismiss instead of navigation
+                  if (isKeyboardVisible) {
+                    Keyboard.dismiss()
+                    return
+                  }
+
+                  navigation.goBack()
+                }}
+                style={[{width: 327}, m('b', 5)]}
+                contentStyle={{height: 56}}
+                mode="text"
+              >
+                <Text style={[typography.button1, {color: quip.color}]}>
+                  Cancel
+                </Text>
+              </Button>
+              <Button
+                onPress={() => {
+                  if (isKeyboardVisible) {
+                    Keyboard.dismiss()
+                    return
+                  }
+
+                  switch (mode) {
+                    case "quick":
+                      navigation.navigate("queue")
+                      break
+                    case "custom":
+                      if (amt === 0) {
+                        add({
+                          type: "error",
+                          message: "Please set a wager amount",
+                          timeout: 3000,
+                          id: performance.now().toString()
+                        })
+                        return
+                      }
+                      navigation.navigate("lobby")
+                      break
+                  }
+                }}
+                style={{width: 327}}
+                contentStyle={{height: 56}}
+                buttonColor={quip.color as string}
+                mode="contained"
+              >
+                <Text style={[{color: theme.colors.white}, typography.button1]}>
+                  {
+                    mode === "quick" ? "Play Now" : "Create Lobby"
+                  }
+                </Text>
+              </Button>
+            </View>
           </View>
-          <Animated.ScrollView
-            //@ts-ignore
-            ref={scrollViewRef}
-            onScroll={scrollHandler}
-            scrollEventThrottle={1}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            snapToInterval={250}
-            decelerationRate="fast"
-            snapToAlignment="start"
-            contentContainerStyle={{
-              paddingLeft: computedWidth,
-              paddingRight: computedWidth,
-            }}
-          >
-            <GameCard ref={card1}/>
-            <GameCard ref={card2}/>
-          </Animated.ScrollView>
-        </View>
-        <Text style={[typography.label2, {color: quip.color}]}>
-          SELECT WAGER AMOUNT
-        </Text>
-        <View style={[p('x', 6)]}>
-          <WagerSelector
-            initialIdx={selectedWagerIdx}
-            onChange={setSelectedWagerIdx}
-            type={mode}
-            options={wagerOptions}
-          />
-        </View>
-        <Text style={[typography.p2, {color: theme.colors.s4}]}>
-          {wagerOptions[selectedWagerIdx].toFixed(2)} USD ≈ {(wagerOptions[selectedWagerIdx] / usdPrice).toFixed(9)} SOL
-        </Text>
-        <View style={flex.grow}/>
-        <View>
-          <Button
-            theme={{colors: {primary: quip.color as string}}}
-            onPress={() => {
-              navigation.goBack()
-            }}
-            style={[{width: 327}, m('b', 5)]}
-            contentStyle={{height: 56}}
-            mode="text"
-          >
-            <Text style={[typography.button1, {color: quip.color}]}>
-              Cancel
-            </Text>
-          </Button>
-          <Button
-            onPress={() => {
-              switch (mode) {
-                case "quick":
-                  navigation.navigate("queue")
-                  break
-                case "custom":
-                  navigation.navigate("lobby")
-                  break
-              }
-            }}
-            style={{width: 327}}
-            contentStyle={{height: 56}}
-            buttonColor={quip.color as string}
-            mode="contained"
-          >
-            <Text style={[{color: theme.colors.white}, typography.button1]}>
-              {
-                mode === "quick" ? "Play Now" : "Create Lobby"
-              }
-            </Text>
-          </Button>
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   )
 }

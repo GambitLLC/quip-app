@@ -21,7 +21,7 @@ import {
   useTicker,
   WagerSelector
 } from "@/lib";
-import {forwardRef, Ref, useEffect, useRef, useState} from "react";
+import {forwardRef, Ref, useEffect, useMemo, useRef, useState} from "react";
 import {capitalize} from "@/util/TextUtil";
 import theme from "@/util/Theme";
 import Svg, {Defs, Image, LinearGradient, Path, Pattern, Stop, Use} from "react-native-svg";
@@ -129,6 +129,42 @@ export function GameModeSelect({route, navigation}: GameModeSelectProps) {
     };
   }, []);
 
+  const MemoAnim1 = useMemo(() => {
+    return <Animated.View style={[flex.col, flex.center]} entering={FadeIn.delay(200)} exiting={FadeOut.duration(200)} key={mode}>
+      <Text style={[typography.label2, {color: quip.color}]}>SELECT MODE</Text>
+      <Text style={[typography.h5]}>{capitalize(mode)} Match</Text>
+    </Animated.View>
+  }, [mode])
+
+  const MemoAnim2 = useMemo(() => {
+    return <Animated.View
+      entering={FadeIn.delay(200)}
+      exiting={FadeOut.duration(200)}
+      key={`${mode}-inner`}
+      style={[p('x', 6), flex.col, flex.alignCenter]}
+    >
+      <Text style={[typography.label2, {color: quip.color}]}>
+        SELECT WAGER AMOUNT
+      </Text>
+      <WagerSelector
+        initialIdx={selectedWagerIdx}
+        onChangeIdx={setSelectedWagerIdx}
+        onChangeAmt={setAmt}
+        type={mode}
+        options={wagerOptions}
+      />
+      <Text style={[typography.p2, {color: theme.colors.s4}]}>
+        {
+          mode === "quick" ? (
+            `${wagerOptions[selectedWagerIdx].toFixed(2)} USD ≈ ${(wagerOptions[selectedWagerIdx] / usdPrice).toFixed(9)} SOL`
+          ) : (
+            `${amt.toFixed(2)} USD ≈ ${(amt / usdPrice).toFixed(9)} SOL`
+          )
+        }
+      </Text>
+    </Animated.View>
+  }, [mode])
+
   return (
     <Screen style={[spacing.fill, {backgroundColor: quip.bgColor}]} screenStyle={{
       position: "relative",
@@ -136,10 +172,7 @@ export function GameModeSelect({route, navigation}: GameModeSelectProps) {
       <KeyboardAvoidingView enabled={true} behavior={"position"} style={[flex.fill]}>
         <ScrollView scrollEnabled={false} contentContainerStyle={[flex.fill]} keyboardShouldPersistTaps="handled">
           <View style={[flex.col, flex.alignCenter, flex.fillH, p('t', 6), p('b', 14)]}>
-            <Animated.View style={[flex.col, flex.center]} entering={FadeIn.delay(200)} exiting={FadeOut.duration(200)} key={mode}>
-              <Text style={[typography.label2, {color: quip.color}]}>SELECT MODE</Text>
-              <Text style={[typography.h5]}>{capitalize(mode)} Match</Text>
-            </Animated.View>
+            {MemoAnim1}
             <View style={[m('y', 12), flex.fillW, flex.row, flex.justifyCenter]}>
               <View pointerEvents="box-none" style={[styles.arrowsContainer, flex.row, flex.alignCenter, flex.spaceBetween]}>
                 <TouchableRipple
@@ -204,32 +237,7 @@ export function GameModeSelect({route, navigation}: GameModeSelectProps) {
                 <GameCard ref={card2}/>
               </Animated.ScrollView>
             </View>
-            <Animated.View
-              entering={FadeIn.delay(200)}
-              exiting={FadeOut.duration(200)}
-              key={`${mode}-inner`}
-              style={[p('x', 6), flex.col, flex.alignCenter]}
-            >
-              <Text style={[typography.label2, {color: quip.color}]}>
-                SELECT WAGER AMOUNT
-              </Text>
-              <WagerSelector
-                initialIdx={selectedWagerIdx}
-                onChangeIdx={setSelectedWagerIdx}
-                onChangeAmt={setAmt}
-                type={mode}
-                options={wagerOptions}
-              />
-              <Text style={[typography.p2, {color: theme.colors.s4}]}>
-                {
-                  mode === "quick" ? (
-                    `${wagerOptions[selectedWagerIdx].toFixed(2)} USD ≈ ${(wagerOptions[selectedWagerIdx] / usdPrice).toFixed(9)} SOL`
-                  ) : (
-                    `${amt.toFixed(2)} USD ≈ ${(amt / usdPrice).toFixed(9)} SOL`
-                  )
-                }
-              </Text>
-            </Animated.View>
+            {MemoAnim2}
             <View style={flex.grow}/>
             <View>
               <Button
@@ -255,7 +263,28 @@ export function GameModeSelect({route, navigation}: GameModeSelectProps) {
                 onPress={() => {
                   if (isKeyboardVisible) {
                     Keyboard.dismiss()
-                    return
+
+                    setTimeout(() => {
+                      switch (mode) {
+                        case "quick":
+                          navigation.navigate("queue")
+                          break
+                        case "custom":
+                          if (amt === 0) {
+                            add({
+                              type: "error",
+                              message: "Please set a wager amount",
+                              timeout: 3000,
+                              id: performance.now().toString()
+                            })
+                            return
+                          }
+                          navigation.navigate("lobby")
+                          break
+                      }
+                    }, 200)
+
+                    return;
                   }
 
                   switch (mode) {

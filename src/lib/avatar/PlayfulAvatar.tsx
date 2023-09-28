@@ -10,7 +10,7 @@ import * as PlayfulMouth from "./playful/mouth"
 import * as PlayfulOutfit from "./playful/outfit"
 import {useMemo} from "react";
 
-interface PlayfulAvatarProps {
+export interface PlayfulAvatarProps {
   size: number,
   color: ColorValue,
   accessory?: Accessory,

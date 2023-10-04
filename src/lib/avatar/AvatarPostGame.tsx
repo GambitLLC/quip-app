@@ -8,14 +8,19 @@ import Svg, {Circle} from "react-native-svg";
 import {Text} from "../text/Text"
 import {PlayfulAvatar} from "../avatar/PlayfulAvatar";
 import {useAvatarStore} from "../store/AvatarStore";
+import {useGameStore, quips} from "../store/GameStore";
 
-interface AvatarXpProps {
+
+interface AvatarPostGameProps {
   percentage: number,
-  level: number,
+  levelText: string,
   size?: number,
 }
 
-export function AvatarXp(props: ViewProps & AvatarXpProps & PressableProps) {
+export function AvatarPostGame(props: ViewProps & AvatarPostGameProps & PressableProps) {
+  const {quipIdx} = useGameStore()
+  const quip = quips[quipIdx]
+
   const svgPercentage = 1 - props.percentage
   const size = props.size ?? 64
   const scale = size / 64
@@ -44,16 +49,16 @@ export function AvatarXp(props: ViewProps & AvatarXpProps & PressableProps) {
           justifyContent: "center",
         }}>
           <View style={{position: "absolute"}}>
-            <PlayfulAvatar size={size-(12 * scale)} color={avatar.color} eye={avatar.eye} face={avatar.face} mouth={avatar.mouth} outfit={avatar.outfit} hair={avatar.hair} accessory={avatar.accessory}/>
+            <PlayfulAvatar size={size-(14 * scale)} color={avatar.color} eye={avatar.eye} face={avatar.face} mouth={avatar.mouth} outfit={avatar.outfit} hair={avatar.hair} accessory={avatar.accessory}/>
           </View>
         </View>
         <View style={{
           position: "absolute",
-          padding: 2,
-          backgroundColor: theme.colors.background,
+          padding: 3,
+          backgroundColor: quip.bgColor,
           borderRadius: 9999,
-          right: -6,
-          bottom: -6,
+          right: -4,
+          bottom: -4,
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
@@ -66,10 +71,11 @@ export function AvatarXp(props: ViewProps & AvatarXpProps & PressableProps) {
             alignItems: "center",
             justifyContent: "center",
             borderRadius: 9999,
-            backgroundColor: theme.colors.p1,
+            backgroundColor: quip.color,
+            height: 30,
           }}>
-            <Text style={[typography.p3, p('x', 2), { color: theme.colors.s2 }]}>
-              {props.level}
+            <Text style={[typography.button2, p('x', 2), { color: theme.colors.s2 }]}>
+              {props.levelText}
             </Text>
           </View>
         </View>
@@ -80,7 +86,7 @@ export function AvatarXp(props: ViewProps & AvatarXpProps & PressableProps) {
             fill="transparent"
             strokeLinecap="round"
             strokeWidth={strokeWidth}
-            stroke={"#E7E9FD"}
+            stroke={theme.colors.s2}
             r={size/2 - strokeWidth/2}
           />
           <Circle
@@ -89,7 +95,7 @@ export function AvatarXp(props: ViewProps & AvatarXpProps & PressableProps) {
             fill="transparent"
             strokeLinecap="round"
             strokeWidth={strokeWidth}
-            stroke={theme.colors.p1}
+            stroke={quip.color}
             r={size/2 - strokeWidth/2}
             strokeDasharray={`${circum} ${circum}`}
             strokeDashoffset={radius * Math.PI * 2 * svgPercentage}
@@ -101,4 +107,4 @@ export function AvatarXp(props: ViewProps & AvatarXpProps & PressableProps) {
   )
 }
 
-export default AvatarXp;
+export default AvatarPostGame;

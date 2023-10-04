@@ -70,7 +70,7 @@ function GameHome({navigation}: NativeStackScreenProps<ParamListBase, "games">) 
             navigation.dispatch({
               ...CommonActions.navigate('profile')
             })
-          }} level={5} percentage={.05} source={require('../../../assets/AvatarTest.png')}/>
+          }} level={5} percentage={.05} />
         </View>
         {/*Select Quip*/}
         <Text style={[typography.h5, {color: theme.colors.s1}]}>

@@ -73,7 +73,7 @@ export default function SettingsScreen({route, navigation}: SettingsProps) {
           <Text style={typography.h5}>
             Settings
           </Text>
-          <AvatarXp level={5} percentage={.05} source={require('../../../assets/AvatarTest.png')}/>
+          <AvatarXp level={5} percentage={.05} />
         </View>
         <ScrollView showsVerticalScrollIndicator={false} style={[m('b', 16)]}>
           {

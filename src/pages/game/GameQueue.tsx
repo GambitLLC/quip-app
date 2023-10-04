@@ -59,8 +59,13 @@ export function GameQueue({route, navigation}: GameQueueProps) {
       setEllipsis(ellipsis => ellipsis.length < 3 ? ellipsis + "." : "")
     }, 1000)
 
+    const queueTimeout = setTimeout(() => {
+      navigation.push("game")
+    }, 5000)
+
     return () => {
       clearInterval(interval)
+      clearInterval(queueTimeout)
     }
   }, [])
 

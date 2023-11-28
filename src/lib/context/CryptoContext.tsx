@@ -47,6 +47,8 @@ type CryptoContextType = {
   transactions: TransactionDay[],
   usdcTransactions: TransactionDay[],
   send: (destinationAddress: string, sol: number) => Promise<string | null>,
+  logout: () => Promise<void>,
+  setIsLoggedIn: (isLoggedIn: boolean) => void,
 }
 
 // Create the context with default values
@@ -65,6 +67,8 @@ const CryptoContext = createContext<CryptoContextType>({
   transactions: [],
   usdcTransactions: [],
   send: async () => { return null },
+  logout: async () => {},
+  setIsLoggedIn: (isLoggedIn) => {},
 })
 
 // Custom hook to use the Web3 context
@@ -92,9 +96,20 @@ export function CryptoProvider(props: CryptoProviderProps) {
 
   const USDC_DECIMALS = 1_000_000
 
-  magic.user.isLoggedIn().on("done", (result: boolean) => {
-    setIsLoggedIn(result)
-  })
+  async function logout() {
+    //log out of magic
+    await magic.user.logout()
+
+    //reset state
+    setMetadata(null)
+    setIsLoggedIn(false)
+    setPubKey(null)
+    setUsdcPubKey(null)
+    setBalance(null)
+    setUsdcBalance(null)
+    setTransactions([])
+    setUsdcTransactions([])
+  }
 
   async function getUSDCTransactionList() {
     useEffect(() => {
@@ -320,6 +335,8 @@ export function CryptoProvider(props: CryptoProviderProps) {
         transactions,
         usdcTransactions,
         send,
+        logout,
+        setIsLoggedIn
       }}
     >
       {props.children}

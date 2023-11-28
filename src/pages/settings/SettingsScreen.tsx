@@ -1,12 +1,12 @@
-import {NativeStackScreenProps} from "@react-navigation/native-stack";
-import {Screen, spacing, p, m, AvatarXp, Text, typography, border, flex} from "@/lib";
-import {ParamListBase} from "@react-navigation/native";
+import {Screen, spacing, p, m, AvatarXp, Text, typography, border, flex, useCrypto} from "@/lib";
 import React, {useState} from "react";
 import {ScrollView, StyleSheet, Switch, View} from "react-native";
 import {FontAwesome5} from "@expo/vector-icons";
 import theme from "@/util/Theme";
 import {TouchableRipple} from "react-native-paper";
 import {SettingsProps} from "@/pages/settings/Settings";
+import {rootNavRef} from "@/lib/nav/RootNav";
+import {CommonActions} from "@react-navigation/native";
 
 type SettingType = "screen" | "toggle" | "none"
 
@@ -26,6 +26,8 @@ export default function SettingsScreen({route, navigation}: SettingsProps) {
   const [isEnabled, setIsEnabled] = useState(true);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
+  const { logout } = useCrypto()
+
   const settings: SettingsView[] = [
     {
       title: "ACCOUNT",
@@ -33,7 +35,13 @@ export default function SettingsScreen({route, navigation}: SettingsProps) {
         {title: "Change Avatar", type: "screen", onPress: () => navigation.navigate("avatarCreator")},
         {title: "Change Display Name", type: "screen"},
         {title: "Refer a Friend", type: "screen"},
-        {title: "Delete Account", type: "screen"}
+        {title: "Delete Account", type: "screen"},
+        {title: "Log Out", type: "screen", onPress: async () => {
+          await logout()
+          rootNavRef.current?.dispatch({
+            ...CommonActions.navigate("splash"),
+          })
+        }},
       ]
     },
     {

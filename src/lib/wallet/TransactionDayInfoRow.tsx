@@ -3,7 +3,6 @@ import {m} from "../styles/Spacing";
 import {Text} from "../text/Text"
 import {theme} from "@/util/Theme"
 import {TransactionDay} from "../context/CryptoContext";
-import {useTicker} from "../context/TickerContext"
 
 interface TransactionDayInfoRowProps {
   day: TransactionDay

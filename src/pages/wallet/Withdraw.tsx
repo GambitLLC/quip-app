@@ -22,7 +22,7 @@ export type RootStackParamList = {
   },
   withdraw3: {
     address: string,
-    amountSol: number,
+    amountUsdc: number,
   },
   scanner: undefined,
 }

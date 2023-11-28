@@ -5,7 +5,6 @@ import {Text} from "../text/Text"
 import {theme} from "@/util/Theme"
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {TransactionItem} from "../context/CryptoContext";
-import {useTicker} from "../context/TickerContext";
 
 interface TransactionItemProps {
   transaction: TransactionItem

@@ -12,7 +12,6 @@ import {
   Text,
   typography,
   useCrypto,
-  useTicker
 } from "@/lib";
 import {theme} from "@/util/Theme"
 import {FontAwesome} from "@expo/vector-icons";
@@ -25,147 +24,60 @@ function toFixedAtMost(x: number, digits: number) {
 }
 
 const usdMaxDecimalPlaces = 2
-const solanaMaxDecimalPlaces = 9
-const maxLengthSolana = 12
 const maxLengthUsd = 9
 
 export function Withdraw2({navigation, route}: Withdraw2Props) {
-  const { usdPrice } = useTicker()
-  const { balance } = useCrypto()
+  const { usdcBalance } = useCrypto()
   const { address } = route.params
 
-  const [mode, setMode] = useState<'sol' | 'usd'>('usd')
-
-  const [solanaValue, setSolanaValue] = useState('')
-  const [usdValue, setUsdValue] = useState('')
-
-  const input = useMemo(() => {
-    if (mode === 'usd') {
-      return usdValue
-    } else {
-      return solanaValue
-    }
-  }, [solanaValue, usdValue, mode])
-
-  const memoPrice = useMemo(() => {
-    if (mode === 'usd') {
-      return solanaValue
-    } else {
-      return parseFloat(usdValue).toFixed(2)
-    }
-  }, [solanaValue, usdValue, mode])
-
-  const isValid = useMemo(() => {
-    return parseFloat(solanaValue) > 0 && parseFloat(solanaValue) <= (balance ?? 0)
-  }, [solanaValue, balance])
-
-  const usdMaxDecimalPlaces = 2
-  const solanaMaxDecimalPlaces = 9
-  const maxLengthSolana = 12
-  const maxLengthUsd = 9
+  const [input, setInput] = useState('')
+  const isValid = useMemo(() => parseFloat(input) > 0 && parseFloat(input) <= (usdcBalance ?? 0), [input])
 
   function onInput(n: number) {
+    //edge case: 0 is pressed when input is 0
     if (input.length === 0 && n === 0) return
 
-    const maxLength = mode === 'usd' ? maxLengthUsd : maxLengthSolana
-    if (input.length >= maxLength) return
+    //edge case: input length is at max
+    if (input.length >= maxLengthUsd) return
 
-    if (mode === 'usd') {
-      if (input.length === 0) {
-        setUsdValue(n.toString())
-        setSolanaValue(toFixedAtMost(n / usdPrice, 9).toString())
+    //edge case: input includes decimal
+    if (input.includes('.')) {
+      const decimalPlaces = input.split('.')[1].length
+      if (decimalPlaces >= usdMaxDecimalPlaces) {
         return
       }
-
-      if (input.includes('.')) {
-        const decimalPlaces = input.split('.')[1].length
-        if (decimalPlaces >= usdMaxDecimalPlaces) {
-          return
-        }
-      }
-
-      const newSolValue = toFixedAtMost(parseFloat(input + n.toString()) / usdPrice, 9)
-      setUsdValue(input + n.toString())
-      setSolanaValue(newSolValue.toString())
-    } else {
-      if (input.length === 0) {
-        setSolanaValue(n.toString())
-        setUsdValue(toFixedAtMost(n * usdPrice, 2).toString())
-        return
-      }
-
-      if (input.includes('.')) {
-        const decimalPlaces = input.split('.')[1].length
-        if (decimalPlaces >= solanaMaxDecimalPlaces) {
-          return
-        }
-      }
-
-      const newUsdValue = toFixedAtMost(parseFloat(input + n.toString()) * usdPrice, 9)
-      setSolanaValue(input + n.toString())
-      setUsdValue(newUsdValue.toString())
     }
+
+    setInput(input + n.toString())
   }
 
   function onDecimal() {
+    //edge case: input is at max length
+    if (input.length >= maxLengthUsd) return
+
+    //edge case: input already includes decimal
     if (input.includes('.')) return
 
+    //edge case: input is empty
     if (input.length === 0) {
-      if (mode === 'usd') {
-        setUsdValue('0.')
-        setSolanaValue('0')
-      } else {
-        setSolanaValue('0.')
-        setUsdValue('0')
-      }
+      setInput('0.')
       return
     } else {
-      if (mode === 'usd') {
-        const newSolValue = toFixedAtMost(parseFloat(input) / usdPrice, 9)
-        setUsdValue(input + '.')
-        setSolanaValue(newSolValue.toString())
-      } else {
-        const newUsdValue = toFixedAtMost(parseFloat(input) * usdPrice, 2)
-        setSolanaValue(input + '.')
-        setUsdValue(newUsdValue.toString())
-      }
+      setInput(input + '.')
     }
   }
 
   function onDelete() {
-    if (mode === 'usd') {
-      const newSolValue = toFixedAtMost(parseFloat(input.slice(0, -1)) / usdPrice, 9)
-      setUsdValue(input.slice(0, -1))
-
-      if (isNaN(newSolValue)) {
-        setSolanaValue('')
-      } else {
-        setSolanaValue(newSolValue.toString())
-      }
-    } else {
-      const newUsdValue = toFixedAtMost(parseFloat(input.slice(0, -1)) * usdPrice, 2)
-      setSolanaValue(input.slice(0, -1))
-
-      if (isNaN(newUsdValue)) {
-        setUsdValue('')
-      } else {
-        setUsdValue(newUsdValue.toString())
-      }
-    }
+    const newInput = input.slice(0, -1)
+    setInput(newInput)
   }
 
-  function swap() {
-    if (mode === 'usd') {
-      setMode('sol')
-
-    } else {
-      setMode('usd')
-    }
+  function clear() {
+    setInput('')
   }
 
   function max() {
-    setSolanaValue((balance ?? 0).toString())
-    setUsdValue(toFixedAtMost((balance ?? 0) * usdPrice, 2).toString())
+    setInput((usdcBalance ?? 0).toString())
   }
 
   function fontSize() {
@@ -221,32 +133,14 @@ export function Withdraw2({navigation, route}: Withdraw2Props) {
               <Text style={styles.maxText}>MAX</Text>
             </RippleClick>
             <View style={styles.info}>
-              <Text style={styles.subtext}>{
-                mode === 'usd' ? 'USD' : 'SOL'
-              }</Text>
+              <Text style={styles.subtext}>USDC</Text>
               <View style={[flex.row, flex.alignCenter]}>
-                {
-                  mode === 'usd' ? (
-                    <FontAwesome color={theme.colors.s1} size={iconSize()} style={[margin(), m('r', 1)]} name="usd"/>
-                  ) : (
-                    <Sol color={theme.colors.s1} width={iconSize()} height={iconSize()} style={[m('b', 1), m('r', 1)]}/>
-                  )
-                }
+                <FontAwesome color={theme.colors.s1} size={iconSize()} style={[margin(), m('r', 1)]} name="usd"/>
                 <Text style={[fontSize(), p('y', 2)]}>{input.length !== 0 ? input : '0'}</Text>
               </View>
-              <View style={[flex.row, flex.alignCenter]}>
-                {
-                  mode === 'usd' ? (
-                    <Sol color={theme.colors.s4} width={14} height={14} style={{marginBottom: 2, marginRight: 2}}/>
-                  ) : (
-                    <FontAwesome color={theme.colors.s4} size={13} style={{marginBottom: 2, marginRight: 2}} name="usd"/>
-                  )
-                }
-                <Text style={styles.subtext}>{input.length !== 0 ? `${memoPrice}` : '0'} {mode !== 'usd' ? 'USD' : 'SOL'}</Text>
-              </View>
             </View>
-            <RippleClick borderless onPress={swap} style={styles.depositButton}>
-              <FontAwesome color={theme.colors.p1} size={16} name="refresh"/>
+            <RippleClick borderless onPress={clear} style={styles.depositButton}>
+              <FontAwesome color={theme.colors.p1} size={16} name="times"/>
             </RippleClick>
           </View>
         </View>
@@ -262,7 +156,7 @@ export function Withdraw2({navigation, route}: Withdraw2Props) {
             disabled={!isValid} onPress={() => {
             navigation.navigate("withdraw3", {
               address: address,
-              amountSol: parseFloat(solanaValue),
+              amountUsdc: parseFloat(input),
             })
           }} mode="contained" style={{width: "100%"}} contentStyle={{height: 56}}>
             <Text style={[typography.button1, {color: theme.colors.white}]}>

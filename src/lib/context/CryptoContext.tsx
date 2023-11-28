@@ -47,6 +47,7 @@ type CryptoContextType = {
   transactions: TransactionDay[],
   usdcTransactions: TransactionDay[],
   send: (destinationAddress: string, sol: number) => Promise<string | null>,
+  sendUsdc: (destinationAddress: string, usdc: number) => Promise<string | null>,
   logout: () => Promise<void>,
   setIsLoggedIn: (isLoggedIn: boolean) => void,
 }
@@ -67,6 +68,7 @@ const CryptoContext = createContext<CryptoContextType>({
   transactions: [],
   usdcTransactions: [],
   send: async () => { return null },
+  sendUsdc: async () => { return null },
   logout: async () => {},
   setIsLoggedIn: (isLoggedIn) => {},
 })
@@ -206,10 +208,7 @@ export function CryptoProvider(props: CryptoProviderProps) {
     }, [pubKey])
   }
 
-  async function send(
-    destinationAddress: string,
-    sol: number,
-  ): Promise<string | null> {
+  async function send(destinationAddress: string, sol: number): Promise<string | null> {
     const lamports = sol * LAMPORTS_PER_SOL;
     if (!connection || !pubKey || !balance) return null;
 
@@ -254,6 +253,11 @@ export function CryptoProvider(props: CryptoProviderProps) {
     const tx = Transaction.from(signedTransaction.rawTransaction);
 
     return connection.sendRawTransaction(tx.serialize());
+  }
+
+  async function sendUsdc(destinationAddress: string, usdc: number) {
+    //TODO: implement this!
+    return null
   }
 
   async function init() {
@@ -335,6 +339,7 @@ export function CryptoProvider(props: CryptoProviderProps) {
         transactions,
         usdcTransactions,
         send,
+        sendUsdc,
         logout,
         setIsLoggedIn
       }}

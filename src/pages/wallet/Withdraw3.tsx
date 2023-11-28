@@ -22,46 +22,52 @@ import {rootNavRef} from "@/lib/nav/RootNav";
 
 export function Withdraw3({navigation, route}: Withdraw3Props) {
   const notifications = useNotificationStore()
-  const { send } = useCrypto()
+  const { send, sendUsdc } = useCrypto()
   const { address, amountUsdc } = route.params
 
   async function sendCrypto() {
-    // TODO: USDCIFY THIS
-    // let isValid: boolean
-    // try {
-    //   const pubKey = new PublicKey(address)
-    //   isValid = PublicKey.isOnCurve(pubKey)
-    // } catch (e) {
-    //   isValid = false
-    // }
-    //
-    // if (isValid) {
-    //   rootNavRef.current?.dispatch({
-    //     ...CommonActions.navigate('wallet')
-    //   })
-    //
-    //   notifications.add({
-    //     id: performance.now().toString(),
-    //     message: "Sending transaction...",
-    //     type: "info"
-    //   })
-    //
-    //   const res = await send(address, amountUsdc)
-    //
-    //   if (res === null) {
-    //     notifications.add({
-    //       id: performance.now().toString(),
-    //       message: "Transaction failed!",
-    //       type: "error"
-    //     })
-    //   } else {
-    //     notifications.add({
-    //       id: performance.now().toString(),
-    //       message: "Transaction sent!",
-    //       type: "success"
-    //     })
-    //   }
-    // }
+    //Check if address is a valid solana address
+    let isValid = false
+    try {
+      const pubKey = new PublicKey(address)
+      isValid = PublicKey.isOnCurve(pubKey)
+    } catch (e) {
+      isValid = false
+    }
+
+    if (isValid) {
+      rootNavRef.current?.dispatch({
+        ...CommonActions.navigate('wallet')
+      })
+
+      notifications.add({
+        id: performance.now().toString(),
+        message: "Sending transaction...",
+        type: "info"
+      })
+
+      const res = await sendUsdc(address, amountUsdc)
+
+      if (res === null) {
+        notifications.add({
+          id: performance.now().toString(),
+          message: "Transaction failed!",
+          type: "error"
+        })
+      } else {
+        notifications.add({
+          id: performance.now().toString(),
+          message: "Transaction sent!",
+          type: "success"
+        })
+      }
+    } else {
+      notifications.add({
+        id: performance.now().toString(),
+        message: "Invalid address!",
+        type: "error"
+      })
+    }
   }
 
   return (

@@ -4,7 +4,6 @@ import {theme} from "@/util/Theme"
 import {m, p} from "../styles/Spacing";
 import {typography} from "../styles/Typography";
 import {useCrypto} from "../context/CryptoContext";
-import {useTicker} from "../context/TickerContext";
 import {TouchableRipple} from "react-native-paper";
 import {useMemo} from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -15,16 +14,15 @@ interface BalanceProps {
 
 export function Balance(props: BalanceProps) {
   const crypto = useCrypto()
-  const {usdPrice} = useTicker()
 
-  const usdBal = useMemo(() => ((crypto.balance ?? 0) * usdPrice).toFixed(2), [crypto.balance, usdPrice])
+  const usdBal = useMemo(() => ((crypto.usdcBalance ?? 0)).toFixed(2), [crypto.usdcBalance])
 
   return (
     <TouchableRipple borderless onPress={props.onPress} style={[styles.balance]}>
       <View style={[styles.balanceRow, p('a', 2)]}>
         <FontAwesome style={styles.usdIcon} color={theme.colors.s1} size={14} name="usd"/>
         <Text style={[typography.p3, styles.text, m('r', 1)]}>
-          {usdBal} USD
+          {usdBal} USDC
         </Text>
       </View>
     </TouchableRipple>

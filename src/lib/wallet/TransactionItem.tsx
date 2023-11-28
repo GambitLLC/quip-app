@@ -14,8 +14,6 @@ interface TransactionItemProps {
 export function TransactionItemView(props: TransactionItemProps) {
   const icon = props.transaction.amount >= 0 ? 'arrow-downward' : 'arrow-upward';
 
-  const {usdPrice} = useTicker()
-
   return (
     <View style={[p('y', 6), p('x', 4), styles.transaction]}>
       <View style={{
@@ -43,11 +41,7 @@ export function TransactionItemView(props: TransactionItemProps) {
       <View style={[styles.dataCol2]}>
         <Text style={styles.mainText}>
           {props.transaction.amount >= 0 ? "+" : ''}
-          {props.transaction.amount} SOL
-        </Text>
-        <Text style={styles.subtext}>
-          {props.transaction.amount >= 0 ? "+" : ''}
-          {(usdPrice * props.transaction.amount).toFixed(2)} USD
+          {props.transaction.amount} USDC
         </Text>
       </View>
     </View>

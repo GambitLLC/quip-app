@@ -13,7 +13,7 @@ interface TransactionHistoryProps {
 }
 
 export function TransactionHistory(props: TransactionHistoryProps) {
-  const {transactions} = useCrypto()
+  const { usdcTransactions} = useCrypto()
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -31,9 +31,8 @@ export function TransactionHistory(props: TransactionHistoryProps) {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        decelerationRate={0}
         showsVerticalScrollIndicator={false}
-        data={transactions}
+        data={usdcTransactions}
         estimatedItemSize={500}
         renderItem={({ item }) => {
           const d = item

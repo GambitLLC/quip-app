@@ -10,15 +10,13 @@ interface TransactionDayInfoRowProps {
 }
 
 export function TransactionDayInfoRow(props: TransactionDayInfoRowProps) {
-  const {usdPrice} = useTicker()
-
   const dateString = new Date(props.day.date).toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
   })
 
   const daySum = props.day.items.reduce((acc, t) => {
-    return acc + (t.amount * usdPrice)
+    return acc + t.amount
   }, 0)
 
   return (
@@ -26,7 +24,7 @@ export function TransactionDayInfoRow(props: TransactionDayInfoRowProps) {
       <Text style={styles.transactionRowText}>{dateString}</Text>
       <Text style={[styles.transactionRowText, daySum >= 0 ? styles.positive : styles.negative]}>
         {daySum >= 0 ? '+' : ''}
-        {daySum.toFixed(2)}
+        {daySum.toFixed(2)} USDC
       </Text>
     </View>
   );

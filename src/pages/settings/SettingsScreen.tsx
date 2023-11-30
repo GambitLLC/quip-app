@@ -1,4 +1,4 @@
-import {Screen, spacing, p, m, AvatarXp, Text, typography, border, flex, useCrypto} from "@/lib";
+import {Screen, spacing, p, m, AvatarXp, Text, typography, border, flex, useCrypto, useNotificationStore} from "@/lib";
 import React, {useState} from "react";
 import {ScrollView, StyleSheet, Switch, View} from "react-native";
 import {FontAwesome5} from "@expo/vector-icons";
@@ -28,6 +28,8 @@ export default function SettingsScreen({route, navigation}: SettingsProps) {
 
   const { logout } = useCrypto()
 
+  const notifications = useNotificationStore()
+
   const settings: SettingsView[] = [
     {
       title: "ACCOUNT",
@@ -37,6 +39,11 @@ export default function SettingsScreen({route, navigation}: SettingsProps) {
         {title: "Refer a Friend", type: "screen"},
         {title: "Delete Account", type: "screen"},
         {title: "Log Out", type: "screen", onPress: async () => {
+          notifications.add({
+            id: performance.now().toString(),
+            message: "Logging out...",
+            type: "info"
+          })
           await logout()
           rootNavRef.current?.dispatch({
             ...CommonActions.navigate("splash"),

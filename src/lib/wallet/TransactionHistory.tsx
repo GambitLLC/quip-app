@@ -7,21 +7,40 @@ import {theme} from "@/util/Theme"
 import {useCallback, useState} from "react";
 import {useCrypto} from "../context/CryptoContext";
 import {FlashList} from "@shopify/flash-list";
+import {useNotificationStore} from "../store/NotificationStore";
 
 interface TransactionHistoryProps {
 
 }
 
 export function TransactionHistory(props: TransactionHistoryProps) {
-  const { usdcTransactions} = useCrypto()
+  const notifications = useNotificationStore()
+  const {usdcTransactions, getUSDCTransactionList, getUSDCTokenBalance} = useCrypto()
 
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
+
+    Promise.all([
+      getUSDCTransactionList(),
+      getUSDCTokenBalance()
+    ]).then(() => {
+      notifications.add({
+        id: performance.now().toString(),
+        message: "Updated wallet!",
+        type: "info"
+      })
+    }).catch((e) => {
+      console.log(e)
+      notifications.add({
+        id: performance.now().toString(),
+        message: "Failed fetch wallet!",
+        type: "error"
+      })
+    }).finally(() => {
+      setRefreshing(false)
+    })
   }, []);
 
 

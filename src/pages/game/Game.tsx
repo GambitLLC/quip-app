@@ -2,17 +2,20 @@ import {View, StyleSheet} from "react-native";
 import {GameProps} from "@/pages/game/GameScreen";
 import {ButtonClick, flex, Screen, spacing, Text, typography} from "@/lib";
 import theme from "@/util/Theme";
+import UnityView from '@azesmway/react-native-unity';
+
+function Unity() {
+  return (
+    <View style={{ flex: 1, width: "100%", height: "100%" }}>
+      <UnityView style={{ flex: 1 }}/>
+    </View>
+  )
+}
 
 export function Game({route, navigation}: GameProps) {
   return (
     <Screen style={[spacing.fill]}>
-      <View style={[flex.col, flex.fill, flex.center]}>
-        <ButtonClick onPress={() => {
-          navigation.push("postGame")
-        }} mode="contained" style={{width: 300}} contentStyle={{height: 56}}>
-          <Text style={[typography.button1, {color: theme.colors.white}]}>To Post Game</Text>
-        </ButtonClick>
-      </View>
+      <Unity/>
     </Screen>
   )
 }

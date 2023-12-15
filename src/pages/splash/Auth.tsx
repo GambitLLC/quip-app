@@ -13,7 +13,7 @@ type LoginModalState = "login" | "otp" | "loading" | "error"
 
 export function Auth(props: AuthProps) {
   const [state, setState] = useState<LoginModalState>("login")
-  const { magic } = useCrypto()
+  const { magic, setIsLoggedIn } = useCrypto()
 
   const navigation = useNavigation()
 
@@ -31,6 +31,7 @@ export function Auth(props: AuthProps) {
         loginEvent.emit('cancel');
       })
       .on('done',async (result) => {
+        setIsLoggedIn(true)
         navigation.dispatch({
           ...CommonActions.navigate("gameHome"),
         })
@@ -48,6 +49,7 @@ export function Auth(props: AuthProps) {
   useEffect(() => {
     magic.user.isLoggedIn().then((isLoggedIn) => {
       if (isLoggedIn) {
+        setIsLoggedIn(true)
         navigation.dispatch({
             ...CommonActions.navigate("gameHome"),
         })

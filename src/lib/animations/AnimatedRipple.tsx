@@ -1,19 +1,42 @@
-import Animated from 'react-native-reanimated';
-import { LogBox } from 'react-native';
+import Animated, {
+  Easing,
+  StyleProps,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated';
 
-import {View} from "react-native";
-import {ComponentPropsWithRef, forwardRef, Ref} from "react";
-import {TouchableRipple} from "react-native-paper";
+import {View, Pressable} from "react-native";
+import {ComponentPropsWithRef, forwardRef} from "react";
 
-LogBox.ignoreLogs([
-  "Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?",
-])
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
-const RippleWrapper = forwardRef((props: ComponentPropsWithRef<typeof TouchableRipple>, ref: Ref<View>) => {
+type RippleWrapperProps = ComponentPropsWithRef<typeof Pressable> & {
+  duration?: number
+}
+
+const RippleWrapper = forwardRef<View, RippleWrapperProps>((props, ref) => {
+  const isPressed = useSharedValue(false)
+
+  const duration = props.duration ?? 600
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(isPressed.value ? .5 : 1, {
+      duration: duration / 2,
+      easing: Easing.inOut(Easing.linear)
+    })
+  }))
+
   return (
-    <TouchableRipple ref={ref} {...props}>
+    <AnimatedPressable
+      {...props}
+      style={[props.style as StyleProps, animatedStyle]}
+      onPressIn={(e) => { isPressed.value = true; props.onPressIn?.(e) }}
+      onPressOut={(e) => { isPressed.value = false; props.onPressOut?.(e) }}
+      ref={ref}
+    >
       {props.children}
-    </TouchableRipple>
+    </AnimatedPressable>
   )
 })
 

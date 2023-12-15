@@ -12,7 +12,6 @@ import {
   typography,
   useCrypto,
   useNotificationStore,
-  useTicker,
 } from "@/lib";
 import {theme} from "@/util/Theme"
 import {Withdraw3Props} from "./Withdraw";
@@ -22,13 +21,13 @@ import {CommonActions} from "@react-navigation/native";
 import {rootNavRef} from "@/lib/nav/RootNav";
 
 export function Withdraw3({navigation, route}: Withdraw3Props) {
-  const { usdPrice } = useTicker()
   const notifications = useNotificationStore()
-  const { send } = useCrypto()
-  const { address, amountSol } = route.params
+  const { send, sendUsdc } = useCrypto()
+  const { address, amountUsdc } = route.params
 
   async function sendCrypto() {
-    let isValid: boolean
+    //Check if address is a valid solana address
+    let isValid = false
     try {
       const pubKey = new PublicKey(address)
       isValid = PublicKey.isOnCurve(pubKey)
@@ -47,7 +46,7 @@ export function Withdraw3({navigation, route}: Withdraw3Props) {
         type: "info"
       })
 
-      const res = await send(address, amountSol)
+      const res = await sendUsdc(address, amountUsdc)
 
       if (res === null) {
         notifications.add({
@@ -62,6 +61,12 @@ export function Withdraw3({navigation, route}: Withdraw3Props) {
           type: "success"
         })
       }
+    } else {
+      notifications.add({
+        id: performance.now().toString(),
+        message: "Invalid address!",
+        type: "error"
+      })
     }
   }
 
@@ -78,15 +83,10 @@ export function Withdraw3({navigation, route}: Withdraw3Props) {
         <View style={[flex.row, flex.center, m('b', 2)]}>
           <FontAwesome name="usd" size={40} color={theme.colors.s1} style={{marginBottom: 4, marginRight: 8}}/>
           <Text style={[typography.h3]}>
-            {(amountSol * usdPrice).toFixed(2)}
+            {(amountUsdc).toFixed(2)}
           </Text>
         </View>
-        <View style={[flex.row, flex.center, m('b', 28)]}>
-          <Sol width={20} height={20} color={theme.colors.s4} style={{marginBottom: 2, marginRight: 4}}/>
-          <Text style={[typography.p1, styles.subText]}>
-            {amountSol}
-          </Text>
-        </View>
+        <View style={flex.grow}/>
         <Text style={[{width: 288}, m('b', 14)]}>
           <Text style={[styles.warningTextBold]}>WARNING! </Text>
           <Text style={[styles.warningText]}>

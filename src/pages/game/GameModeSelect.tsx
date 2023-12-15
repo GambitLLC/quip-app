@@ -5,7 +5,7 @@ import {
   useWindowDimensions,
   ViewProps,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback, Keyboard, LogBox
+  Keyboard, LogBox
 } from "react-native";
 import {GameModeSelectProps} from "@/pages/game/GameScreen";
 import {
@@ -18,7 +18,6 @@ import {
   Text,
   typography,
   useGameStore, useNotificationStore,
-  useTicker,
   WagerSelector
 } from "@/lib";
 import {forwardRef, Ref, useEffect, useMemo, useRef, useState} from "react";
@@ -63,7 +62,6 @@ const GameCard = forwardRef((props: ViewProps, ref: Ref<View | undefined>) =>
 export function GameModeSelect({route, navigation}: GameModeSelectProps) {
   const {add} = useNotificationStore()
 
-  const {usdPrice} = useTicker()
   const [mode, setMode] = useState<GameMode>("quick")
 
   const {quipIdx} = useGameStore()
@@ -153,15 +151,6 @@ export function GameModeSelect({route, navigation}: GameModeSelectProps) {
         type={mode}
         options={wagerOptions}
       />
-      <Text style={[typography.p2, {color: theme.colors.s4}]}>
-        {
-          mode === "quick" ? (
-            `${wagerOptions[selectedWagerIdx].toFixed(2)} USD ≈ ${(wagerOptions[selectedWagerIdx] / usdPrice).toFixed(9)} SOL`
-          ) : (
-            `${amt.toFixed(2)} USD ≈ ${(amt / usdPrice).toFixed(9)} SOL`
-          )
-        }
-      </Text>
     </Animated.View>
   }, [mode])
 
@@ -237,6 +226,7 @@ export function GameModeSelect({route, navigation}: GameModeSelectProps) {
                 <GameCard ref={card2}/>
               </Animated.ScrollView>
             </View>
+            <View style={flex.grow}/>
             {MemoAnim2}
             <View style={flex.grow}/>
             <View>

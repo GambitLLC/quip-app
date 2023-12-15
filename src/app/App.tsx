@@ -7,7 +7,6 @@ import {theme} from "@/util/Theme"
 // -- providers --
 import {PaperProvider} from "react-native-paper";
 import {CryptoProvider} from "@/lib/context/CryptoContext"
-import {TickerProvider} from "@/lib/context/TickerContext"
 
 // -- notifications --
 import {NotificationBar} from "@/lib/notification/NotificationBar"
@@ -31,29 +30,27 @@ const Stack = createNativeStackNavigator();
 export const App = () => {
   return (
     <PaperProvider theme={theme}>
-      <TickerProvider>
-        <CryptoProvider>
-          <NavigationContainer ref={rootNavRef}>
-            <NotificationBar>
-              <Stack.Navigator initialRouteName="splash" screenOptions={{headerShown: false}}>
-                <Stack.Group>
-                  <Stack.Screen name="splash" component={Splash}/>
-                  <Stack.Screen name="auth" component={Auth} />
-                  <Stack.Screen name="gameHome" component={Home}/>
-                  <Stack.Screen name="gameScreen" component={GameScreen} />
-                </Stack.Group>
-                <Stack.Group screenOptions={{
-                  presentation: 'modal',
-                }}>
-                  <Stack.Screen name="depositWallet" component={Deposit}/>
-                  <Stack.Screen name="withdrawWallet" component={Withdraw}/>
-                  <Stack.Screen name="buyWallet" component={Buy}/>
-                </Stack.Group>
-              </Stack.Navigator>
-            </NotificationBar>
-          </NavigationContainer>
-        </CryptoProvider>
-      </TickerProvider>
+      <CryptoProvider>
+        <NavigationContainer ref={rootNavRef}>
+          <NotificationBar>
+            <Stack.Navigator initialRouteName="splash" screenOptions={{headerShown: false}}>
+              <Stack.Group>
+                <Stack.Screen name="splash" component={Splash}/>
+                <Stack.Screen name="auth" component={Auth} />
+                <Stack.Screen name="gameHome" component={Home}/>
+                <Stack.Screen name="gameScreen" component={GameScreen} />
+              </Stack.Group>
+              <Stack.Group screenOptions={{
+                presentation: 'modal',
+              }}>
+                <Stack.Screen name="depositWallet" component={Deposit}/>
+                <Stack.Screen name="withdrawWallet" component={Withdraw}/>
+                <Stack.Screen name="buyWallet" component={Buy}/>
+              </Stack.Group>
+            </Stack.Navigator>
+          </NotificationBar>
+        </NavigationContainer>
+      </CryptoProvider>
     </PaperProvider>
   );
 };

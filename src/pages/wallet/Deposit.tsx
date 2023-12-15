@@ -121,7 +121,7 @@ export function Deposit(props: DepositProps) {
         </View>
         <Text style={{width: 288}}>
           <Text style={[styles.warningTextBold]}>WARNING!</Text>
-          <Text style={[styles.warningText]}> Send only Solana (SOL) to this address. Sending any other coin will result in permanent loss.</Text>
+          <Text style={[styles.warningText]}> Send only USDC (SOL) to this address. Sending any other coin or token will result in permanent loss.</Text>
         </Text>
         <View>
           <Pressable

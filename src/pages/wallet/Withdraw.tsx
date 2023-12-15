@@ -22,7 +22,7 @@ export type RootStackParamList = {
   },
   withdraw3: {
     address: string,
-    amountSol: number,
+    amountUsdc: number,
   },
   scanner: undefined,
 }
@@ -59,7 +59,7 @@ export function Withdraw(props: WithdrawProps) {
           <Stack.Screen name="withdraw1" component={Withdraw1} options={{
             header: () => <WalletModalHeader prev={() => {
               navigation.goBack()
-            }} prevIcon="close" title="Send SOL"/>
+            }} prevIcon="close" title="Send USDC (SOL)"/>
           }} />
           <Stack.Screen name="withdraw2" component={Withdraw2} options={{
             header: () => <WalletModalHeader prev={() => {

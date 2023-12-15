@@ -5,14 +5,13 @@ import WalletNavIcon from "./WalletNavIcon";
 import FontAwesome from "@expo/vector-icons/FontAwesome"
 import {Text} from "../text/Text"
 import {m, p} from "../styles/Spacing"
-import {useCrypto} from "../context/CryptoContext";
-import {useTicker} from "../context/TickerContext";
+import {useCrypto} from "../context/CryptoContext"
+import {Usdc} from "../candy/Usdc"
 
 interface TopWalletInfoProps {}
 
 export function TopWalletInfo(props: TopWalletInfoProps) {
   const crypto = useCrypto()
-  const {usdPrice} = useTicker()
 
   return (
     <View style={[styles.topWalletInfo, p('a', 6)]}>
@@ -21,12 +20,9 @@ export function TopWalletInfo(props: TopWalletInfoProps) {
         <View style={[styles.cryptoBalance]}>
           <FontAwesome size={28} name="usd"/>
           <Text style={styles.usdBal}>{
-            ((crypto.balance ?? 0) * usdPrice).toFixed(2)
-          } USD</Text>
-        </View>
-        <View style={[styles.cryptoBalance]}>
-          <Sol opacity={.4} color={theme.colors.s1} style={styles.solIcon}/>
-          <Text style={styles.solBal}>{crypto.balance} SOL</Text>
+            (crypto.usdcBalance ?? 0).toFixed(2)
+            // ((crypto.balance ?? 0) * usdPrice).toFixed(2)
+          } USDC</Text>
         </View>
       </View>
       {/*Bottom Part of Wallet Info*/}

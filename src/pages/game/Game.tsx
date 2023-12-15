@@ -7,14 +7,16 @@ import UnityView from '@azesmway/react-native-unity';
 function Unity() {
   return (
     <View style={{ flex: 1, width: "100%", height: "100%" }}>
-      <UnityView style={{ flex: 1 }}/>
+      <UnityView onUnityMessage={(event) => {
+        console.log(`UnityMessage: ${event.nativeEvent.message}`)
+      }} style={{ flex: 1 }}/>
     </View>
   )
 }
 
 export function Game({route, navigation}: GameProps) {
   return (
-    <Screen style={[spacing.fill]}>
+    <Screen hasStatusBar={false} hasSafeArea={false} style={[spacing.fill]}>
       <Unity/>
     </Screen>
   )

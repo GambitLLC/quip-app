@@ -12,11 +12,13 @@ interface ScreenProps {
   containerStyle?: StyleProp<ViewStyle>,
   pointerEvents?: "box-none" | "none" | "box-only" | "auto",
   hasSafeArea?: boolean,
+  hasStatusBar?: boolean,
   backgroundColor?: ColorValue
 }
 
 export const Screen = forwardRef((props: ScreenProps, ref: Ref<View>) => {
   const hasSafeArea = props.hasSafeArea ?? true
+  const hasStatusBar = props.hasStatusBar ?? true
   const backgroundColor = props.backgroundColor ?? theme.colors.background
 
   return (
@@ -29,7 +31,7 @@ export const Screen = forwardRef((props: ScreenProps, ref: Ref<View>) => {
         {position: "relative", backgroundColor}
       ]}
     >
-      <StatusBar style="dark"/>
+      <StatusBar hidden={!hasStatusBar} style="dark"/>
       <View
         pointerEvents={props.pointerEvents}
         style={[

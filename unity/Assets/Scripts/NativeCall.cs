@@ -21,11 +21,13 @@ public class NativeCall
         {
             case RuntimePlatform.Android:
                 throw new NotImplementedException("Android support not yet implemented!");
+                break;
             
             case RuntimePlatform.IPhonePlayer:
                 #if UNITY_IOS && !UNITY_EDITOR
                      NativeAPI.sendMessageToMobileApp(message);        
                 #endif
+                break;
             
             default:
                 throw new NotImplementedException($"${Application.platform} not supported!");

@@ -10,7 +10,7 @@ public class GameManager : NetworkBehaviour
     public GameObject defeatPrefab;
 
     private int playerId = 0;
-    
+
     [ClientRpc]
     public void RpcSetPlayerId(int id)
     {
@@ -22,6 +22,9 @@ public class GameManager : NetworkBehaviour
     void HandleGameEnd(int winnerId)
     {
         RpcHandleGameEnd(winnerId);
+        
+        //reset the game after 5 seconds
+        Invoke("Reset", 5f);
     }
 
     [ClientRpc]
@@ -47,6 +50,16 @@ public class GameManager : NetworkBehaviour
     void GoToPostGameScreen()
     {
         NativeCall.sendMessage("postGame");
+    }
+
+    [Server]
+    private void Reset()
+    {
+        //stop the server
+        TankNetworkManager.singleton.StopServer();
+        
+        //start the server
+        TankNetworkManager.singleton.StartServer();
     }
 
     // Start is called before the first frame update

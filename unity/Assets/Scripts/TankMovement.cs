@@ -22,14 +22,13 @@ public class TankMovement : NetworkBehaviour
     public int acceleration = 30;
     
     public GameObject bulletPrefab;
-    private Vector3 bulletOffset = new Vector3(0, 0.07f, 1.0f);
+    private Vector3 bulletOffset = new Vector3(0, 0.07f, 1.25f);
     public float bulletSpeed = 20f;
     
     //joystick flag
     private bool isPressed = false;
     
     //bullet shooting interval
-    private float timer = 0f;
     private float serverTimer = 0f;
     public float interval = 1f; // Set the interval in seconds
     
@@ -116,8 +115,8 @@ public class TankMovement : NetworkBehaviour
     [Command]
     private void CmdShootBullet()
     {
-        if (bulletPrefab == null) return;
         if (serverTimer < interval) return;
+        if (bulletPrefab == null) return;
         
         //spawn the bullet
         var rotatedTransform = turret.rotation * bulletOffset;
@@ -141,17 +140,9 @@ public class TankMovement : NetworkBehaviour
         }
 
         if (!isPressed) return;
-        
-        // Update the timer with the elapsed time
-        timer += Time.deltaTime;
-        
-        if (timer < interval) return;
-        
+
         //call the shoot bullet RPC
         CmdShootBullet();
-
-        // Reset the timer
-        timer = 0f;
     }
 
     private void FixedUpdate()
@@ -189,13 +180,11 @@ public class TankMovement : NetworkBehaviour
         {
             isPressed = true;
             turret.rotation = Quaternion.Lerp(turret.rotation, Quaternion.LookRotation(shoot), 0.08f);
-        }
-        else
+        } else
         {
             isPressed = false;
-            timer = 0f;
         }
-        
+
         // -- Camera --
         //make the camera follow the player
         camera.transform.position = Vector3.Slerp(camera.transform.position, transform.position + cameraOffset, 0.2f);

@@ -42,6 +42,23 @@ public class TankNetworkManager : NetworkManager
     public override void Start()
     {
         Application.targetFrameRate = 60;
+
+        //if we are on an ios device, start the client and auto connect to server
+        #if UNITY_IOS && !UNITY_EDITOR
+        if (!NetworkClient.isConnected)
+        {
+            StartClient();
+            Debug.Log($"Started Client on: {networkAddress}");
+            NativeCall.sendMessage($"Started Client on: {networkAddress}");
+        }
+        #elif UNITY_EDITOR
+        if (!NetworkServer.active)
+        {
+            StartServer();
+            Debug.Log("Started Server!");
+        }
+        #endif
+        
         base.Start();
     }
 

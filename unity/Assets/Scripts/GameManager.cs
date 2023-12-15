@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
+using Application = UnityEngine.Device.Application;
 
 public class GameManager : NetworkBehaviour
 {
@@ -10,6 +11,9 @@ public class GameManager : NetworkBehaviour
     public GameObject defeatPrefab;
 
     private int playerId = 0;
+    
+    [SyncVar]
+    private int winnerId = 0;
 
     [ClientRpc]
     public void RpcSetPlayerId(int id)
@@ -21,6 +25,7 @@ public class GameManager : NetworkBehaviour
     [Server]
     void HandleGameEnd(int winnerId)
     {
+        this.winnerId = winnerId;
         RpcHandleGameEnd(winnerId);
         
         //reset the game after 5 seconds
@@ -49,7 +54,7 @@ public class GameManager : NetworkBehaviour
     [Client]
     void GoToPostGameScreen()
     {
-        NativeCall.sendMessage("postGame");
+        NativeCall.sendMessage($"postGame {winnerId}");
     }
 
     [Server]

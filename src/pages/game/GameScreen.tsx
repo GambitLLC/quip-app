@@ -21,7 +21,9 @@ export type RootStackParamList = {
   queue: undefined,
   lobby: undefined,
   game: undefined,
-  postGame: undefined,
+  postGame: {
+    winner: "1" | "2"
+  },
   leaderboard: undefined,
 }
 

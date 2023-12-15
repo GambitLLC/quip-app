@@ -13,6 +13,8 @@ export function GamePostGame({route, navigation}: GamePostGameProps) {
 
   const points = 21370
 
+  console.log(`winner: ${route.params.winner}`)
+
   const onShare = async () => {
     await Share.share({
       message: `Look at my awesome score! I just scored ${points} points on https://quip.gg!`,

@@ -1,7 +1,9 @@
+#if UNITY_EDITOR
 using UnityEditor;
 
 public static class AutoBuild
 {
+    [MenuItem("Build/Build iOS Project %#i")]
     public static void BuildProject()
     {
         var options = new BuildPlayerOptions
@@ -14,3 +16,4 @@ public static class AutoBuild
         BuildPipeline.BuildPlayer(options);
     }
 }
+#endif

@@ -52,10 +52,10 @@ public class TankNetworkManager : NetworkManager
             NativeCall.sendMessage($"Started Client on: {networkAddress}");
         }
         #elif UNITY_EDITOR
-        if (!NetworkServer.active)
+        //add the NetworkManagerHUD component to the scene
+        if (FindObjectOfType<NetworkManagerHUD>() == null)
         {
-            StartServer();
-            Debug.Log("Started Server!");
+            gameObject.AddComponent<NetworkManagerHUD>();
         }
         #endif
         

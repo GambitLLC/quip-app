@@ -10,6 +10,8 @@ public class TankMovement : NetworkBehaviour
     private Joystick joyStickMove;
     private Joystick joyStickShoot;
     
+    private GameObject parentObject;
+    
     private Transform turret;
     private Transform body;
     
@@ -22,7 +24,7 @@ public class TankMovement : NetworkBehaviour
     public int acceleration = 30;
     
     public GameObject bulletPrefab;
-    private Vector3 bulletOffset = new Vector3(0, 0.07f, 1.25f);
+    private Vector3 bulletOffset = new Vector3(0.0f, 0.07f, 0.875f);
     public float bulletSpeed = 20f;
     
     //joystick flag
@@ -46,6 +48,8 @@ public class TankMovement : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        parentObject = transform.parent.gameObject;
+        
         if (isLocalPlayer)
         {
             if (isPlayer2)
@@ -118,9 +122,11 @@ public class TankMovement : NetworkBehaviour
         if (serverTimer < interval) return;
         if (bulletPrefab == null) return;
         
-        //spawn the bullet
+        //spawn the bullet as a child of the parentObject
         var rotatedTransform = turret.rotation * bulletOffset;
-        var bullet = Instantiate(bulletPrefab, turret.position + rotatedTransform, turret.rotation);
+        var bullet = Instantiate(bulletPrefab, turret.position + rotatedTransform, turret.rotation, parentObject.transform);
+        bullet.transform.SetAsLastSibling();
+
         NetworkServer.Spawn(bullet);
         bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * bulletSpeed;
 

@@ -9,6 +9,8 @@ public class Bullet : NetworkBehaviour
     [SyncVar]
     private bool didHit = false;
     
+    private GameObject parentObject;
+
     public void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -17,6 +19,19 @@ public class Bullet : NetworkBehaviour
         {
             rb.useGravity = false;
         }
+        
+        parentObject = transform.parent.gameObject;
+        var tank = parentObject.transform.Find("tank");
+        var body = tank.Find("Body");
+        var turret = tank.Find("Turret");
+        
+        var bodyCollider = body.GetComponent<Collider>();
+        var turretCollider = turret.GetComponent<Collider>();
+        var selfCollider = GetComponent<Collider>();
+        
+        //make sure the bullet is not colliding with the tank that shot it
+        Physics.IgnoreCollision(bodyCollider, selfCollider);
+        Physics.IgnoreCollision(turretCollider, selfCollider);
     }
 
     private void FixedUpdate()

@@ -9,8 +9,15 @@ public class Bullet : NetworkBehaviour
     [SyncVar]
     private bool didHit = false;
     
-    private GameObject parentObject;
+    [SyncVar]
+    public int playerId = 0;
 
+    [Server]
+    public void IgnoreCollision(Collider other)
+    {
+        Physics.IgnoreCollision(other, GetComponent<Collider>());
+    }
+    
     public void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -20,18 +27,34 @@ public class Bullet : NetworkBehaviour
             rb.useGravity = false;
         }
         
-        parentObject = transform.parent.gameObject;
-        var tank = parentObject.transform.Find("tank");
-        var body = tank.Find("Body");
-        var turret = tank.Find("Turret");
-        
-        var bodyCollider = body.GetComponent<Collider>();
-        var turretCollider = turret.GetComponent<Collider>();
-        var selfCollider = GetComponent<Collider>();
-        
-        //make sure the bullet is not colliding with the tank that shot it
-        Physics.IgnoreCollision(bodyCollider, selfCollider);
-        Physics.IgnoreCollision(turretCollider, selfCollider);
+        Debug.Log($"Bullet: PlayerId: {playerId}");
+
+        //disable bullet collision with the tank that shot it (client-sided)
+        if (isClient)
+        {
+            var collider = GetComponent<Collider>();
+            
+            //find all the game objects with the tag "Tank"
+            var tanks = GameObject.FindGameObjectsWithTag("Tank");
+            foreach (var tank in tanks)
+            {
+                var isPlayer2 = tank.GetComponent<TankMovement>().isPlayer2;
+                var body = tank.transform.Find("Body");
+                var turret = tank.transform.Find("Turret");
+
+                if (playerId == 1 && !isPlayer2)
+                {
+                    Physics.IgnoreCollision(body.GetComponent<Collider>(), collider);
+                    Physics.IgnoreCollision(turret.GetComponent<Collider>(), collider);
+                }
+                
+                if (playerId == 2 && isPlayer2)
+                {
+                    Physics.IgnoreCollision(body.GetComponent<Collider>(), collider);
+                    Physics.IgnoreCollision(turret.GetComponent<Collider>(), collider);
+                }
+            }
+        }
     }
 
     private void FixedUpdate()

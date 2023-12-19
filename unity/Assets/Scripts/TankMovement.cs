@@ -24,7 +24,7 @@ public class TankMovement : NetworkBehaviour
     public int acceleration = 30;
     
     public GameObject bulletPrefab;
-    private Vector3 bulletOffset = new Vector3(0.0f, 0.07f, 0.875f);
+    private Vector3 bulletOffset = new Vector3(0.0f, 0.07f, 0.0f);
     public float bulletSpeed = 20f;
     
     //joystick flag
@@ -124,8 +124,13 @@ public class TankMovement : NetworkBehaviour
         
         //spawn the bullet as a child of the parentObject
         var rotatedTransform = turret.rotation * bulletOffset;
-        var bullet = Instantiate(bulletPrefab, turret.position + rotatedTransform, turret.rotation, parentObject.transform);
-        bullet.transform.SetAsLastSibling();
+        var bullet = Instantiate(bulletPrefab, turret.position + rotatedTransform, turret.rotation);
+        
+        //disable the bullet colliding with the tank that shot it (server-sided)
+        Bullet bulletScript = bullet.GetComponent<Bullet>();
+        bulletScript.playerId = isPlayer2 ? 2 : 1;
+        bulletScript.IgnoreCollision(turret.GetComponent<Collider>());
+        bulletScript.IgnoreCollision(body.GetComponent<Collider>());
 
         NetworkServer.Spawn(bullet);
         bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * bulletSpeed;
@@ -145,8 +150,9 @@ public class TankMovement : NetworkBehaviour
             healthText.transform.localEulerAngles = new Vector3(0, 180, 0);
         }
 
-        if (!isPressed) return;
-
+        //if (!isPressed) return;
+        if (!isLocalPlayer) return;
+        
         //call the shoot bullet RPC
         CmdShootBullet();
     }

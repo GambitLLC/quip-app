@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+#if UNITY_EDITOR && UNITY_IOS
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -73,6 +73,60 @@ public static class AutoBuild
         // Close the process
         process.Close();
     }
+
+    private static void QuickInstall()
+    {
+        // Set up process start info
+        ProcessStartInfo psi = new ProcessStartInfo()
+        {
+            FileName = "/bin/bash",
+            RedirectStandardInput = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+
+        // Start the process
+        Process process = new Process() { StartInfo = psi };
+        process.Start();
+        
+        // Read the output stream asynchronously
+        process.OutputDataReceived += (sender, e) =>
+        {
+            if (e.Data != null)
+            {
+                Debug.Log(e.Data);
+            }
+        };
+
+        process.BeginOutputReadLine();
+
+        // Read the error stream asynchronously
+        process.ErrorDataReceived += (sender, e) =>
+        {
+            if (e.Data != null)
+            {
+                Debug.LogError(e.Data);
+            }
+        };
+
+        process.BeginErrorReadLine();
+
+        // Execute the Bash command
+        StreamWriter sw = process.StandardInput;
+        sw.WriteLine("rm -rf ../node_modules/@azesmway/react-native-unity/ios/UnityFramework.framework");
+        sw.WriteLine("rm -rf ../node_modules/@azesmway/react-native-unity/ios/UnityFramework.framework.dSYM");
+        sw.WriteLine("mv ./builds/ios/UnityFramework.framework ../node_modules/@azesmway/react-native-unity/ios/UnityFramework.framework");
+        sw.WriteLine("mv ./builds/ios/UnityFramework.framework.dSYM ../node_modules/@azesmway/react-native-unity/ios/UnityFramework.framework.dSYM");
+        sw.Close();
+
+        // Wait for the process to exit
+        process.WaitForExit();
+
+        // Close the process
+        process.Close();
+    }
     
     [PostProcessBuild(1)]
     public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject) {
@@ -130,6 +184,9 @@ public static class AutoBuild
         
         // call fastlane to build the project framework
         BuildFastlane();
+        
+        // quick install
+        QuickInstall();
     }
 }
 #endif

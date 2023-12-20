@@ -24,7 +24,7 @@ public class TankMovement : NetworkBehaviour
     public int acceleration = 30;
     
     public GameObject bulletPrefab;
-    private Vector3 bulletOffset = new Vector3(0.0f, 0.07f, 0.0f);
+    private Vector3 bulletOffset = new Vector3(0.0f, 0.07f, 0.875f);
     public float bulletSpeed = 20f;
     
     //joystick flag
@@ -150,9 +150,9 @@ public class TankMovement : NetworkBehaviour
             healthText.transform.localEulerAngles = new Vector3(0, 180, 0);
         }
 
-        //if (!isPressed) return;
         if (!isLocalPlayer) return;
-        
+        if (!isPressed) return;
+
         //call the shoot bullet RPC
         CmdShootBullet();
     }

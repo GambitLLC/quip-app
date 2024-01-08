@@ -3,34 +3,90 @@ import {GameProps} from "@/pages/game/GameScreen";
 import {ButtonClick, flex, Screen, spacing, Text, typography} from "@/lib";
 import theme from "@/util/Theme";
 import UnityView from '@azesmway/react-native-unity';
-import {useRef} from "react";
+import {forwardRef, useRef, useState} from "react";
 
-function Unity({route, navigation}: GameProps) {
-  const unityRef = useRef<UnityView | null>(null)
+enum MessageType {
+  GameStart = "gameStart",
+  GameEnd = "gameEnd",
+}
 
-  return (
-    <View style={{ flex: 1, width: "100%", height: "100%" }}>
-      <UnityView ref={unityRef} onUnityMessage={(event) => {
-        if (unityRef.current === null) return
+type TwoPlayerId = "1" | "2"
 
-        console.log(`UnityMessage: ${event.nativeEvent.message}`)
-        const message = event.nativeEvent.message
+interface GameMessage {
+  type: MessageType,
+}
 
-        if (message.includes("postGame")) {
-          unityRef.current?.unloadUnity()
-          navigation.navigate("postGame", {
-            winner: (message.split(" ")[1]) as "1" | "2"
-          })
-        }
-      }} style={{ flex: 1 }}/>
-    </View>
-  )
+interface GameStartMessage extends GameMessage {
+  type: MessageType.GameStart,
+  player: TwoPlayerId,
+  enemy: TwoPlayerId,
+}
+
+interface GameEndMessage extends GameMessage {
+  type: MessageType.GameEnd,
+  winner: TwoPlayerId,
+}
+
+type UnityMessage = GameStartMessage | GameEndMessage;
+
+const Unity = forwardRef<UnityView, GameEvents>((props, ref) => {
+  return <UnityView 
+    ref={ref}
+    onUnityMessage={(event) => {
+      if (ref.current === null) return
+
+      const message = JSON.parse(event.nativeEvent.message) as UnityMessage
+
+      console.log(message)
+      console.log(`type: ${message.type}`)
+
+      const cb = props.on[message.type]
+      if (cb === undefined) return
+
+      console.log(cb)
+
+      // @ts-ignore
+      cb(message)
+    }}
+    style={{ flex: 1 }}
+  />
+})
+
+interface GameEvents {
+  on: {
+    gameStart: (event: GameStartMessage) => void,
+    gameEnd: (event: GameEndMessage) => void,
+  }
 }
 
 export function Game({route, navigation}: GameProps) {
+  const [playerId, setPlayerId] = useState<TwoPlayerId | null>(null)
+  const unityRef = useRef<UnityView>(null)
+
   return (
     <Screen hasStatusBar={false} hasSafeArea={false} style={[spacing.fill]}>
-      <Unity route={route} navigation={navigation}/>
+      <Unity 
+        ref={unityRef}
+        on={{
+          gameStart: ({player, enemy}) => {
+            console.log(`Game start: ${player} vs ${enemy}`)
+            setPlayerId(player)
+          },
+          gameEnd: ({winner}) => {
+            console.log(`Game end: ${winner} won`)
+            unityRef.current?.unloadUnity()
+            navigation.navigate("postGame", 
+            {
+              didWin: winner === playerId,
+              rewards: {
+                wager: 1,
+                exp: 100,
+              }
+            }
+            )
+          }
+        }}
+      />
     </Screen>
   )
 }

@@ -25,7 +25,7 @@ function Profile({navigation}: NativeStackScreenProps<ParamListBase, "profile">)
           <Text style={[typography.h5, {color: theme.colors.p1}, m('t', 4), m('b', 6)]}>Username</Text>
           <LevelInfo level={10} currExp={200} totalExp={1000}/>
         </View>
-        <ScrollView decelerationRate={0} showsVerticalScrollIndicator={false} style={[m('t', 6)]}>
+        <ScrollView showsVerticalScrollIndicator={false} style={[m('t', 6)]}>
           <Achievement color={theme.colors.p2} name="Quip!" description="Play 10 quips" progress={3} maxProgress={10} level={2}/>
           <Achievement color={theme.colors.p1} name="GG!" description="Win 5 quips" progress={1} maxProgress={5} level={2}/>
           <Achievement color={"#39C0EB"} name="Sizzling!" description="Win 3 quips in a row" progress={1} maxProgress={3} level={1}/>

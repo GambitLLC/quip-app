@@ -54,11 +54,11 @@ export function AvatarPostGame(props: ViewProps & AvatarPostGameProps & Pressabl
         </View>
         <View style={{
           position: "absolute",
-          padding: 3,
+          padding: 5,
           backgroundColor: quip.bgColor,
           borderRadius: 9999,
-          right: -4,
-          bottom: -4,
+          right: -3,
+          bottom: -3,
           display: "flex",
           flexDirection: "row",
           alignItems: "center",

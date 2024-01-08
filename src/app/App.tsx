@@ -23,6 +23,7 @@ import Buy from "@/pages/wallet/Buy";
 import Splash from "@/pages/splash/Splash";
 import Auth from "@/pages/splash/Auth";
 import GameScreen from "@/pages/game/GameScreen";
+import Test from "@/pages/test/Test"
 import {rootNavRef} from "@/lib/nav/RootNav";
 
 const Stack = createNativeStackNavigator();
@@ -33,8 +34,9 @@ export const App = () => {
       <CryptoProvider>
         <NavigationContainer ref={rootNavRef}>
           <NotificationBar>
-            <Stack.Navigator initialRouteName="splash" screenOptions={{headerShown: false}}>
+            <Stack.Navigator initialRouteName="test" screenOptions={{headerShown: false}}>
               <Stack.Group>
+                <Stack.Screen name="test" component={Test}/>
                 <Stack.Screen name="splash" component={Splash}/>
                 <Stack.Screen name="auth" component={Auth} />
                 <Stack.Screen name="gameHome" component={Home}/>

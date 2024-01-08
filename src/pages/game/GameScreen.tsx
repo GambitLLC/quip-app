@@ -22,7 +22,11 @@ export type RootStackParamList = {
   lobby: undefined,
   game: undefined,
   postGame: {
-    winner: "1" | "2"
+    didWin: boolean,
+    rewards: {
+      wager: number,
+      exp: number,
+    }
   },
   leaderboard: undefined,
 }

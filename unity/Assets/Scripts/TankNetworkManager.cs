@@ -49,7 +49,6 @@ public class TankNetworkManager : NetworkManager
         {
             StartClient();
             Debug.Log($"Started Client on: {networkAddress}");
-            NativeCall.sendMessage($"Started Client on: {networkAddress}");
         }
         #elif UNITY_EDITOR
         //add the NetworkManagerHUD component to the scene

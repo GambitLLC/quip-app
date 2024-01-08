@@ -7,89 +7,126 @@ import {FontAwesome5} from "@expo/vector-icons";
 import {rootNavRef} from "@/lib/nav/RootNav";
 import {CommonActions} from "@react-navigation/native";
 
+function random<T>(arr: T[]) { return arr[Math.floor((Math.random()*arr.length))] }
+
+interface DidWinProps {
+  didWin: boolean,
+}
+
+interface RewardsProps {
+  wager: number,
+  exp: number,
+}
+
+function RewardsAndLosses(props: DidWinProps & RewardsProps) {
+  const {quipIdx} = useGameStore()
+  const quip = quips[quipIdx]
+
+  if (props.didWin) {
+    return <>
+      <View style={[m('t', 8)]}>
+        <Text style={[typography.label2, {color: quip.color}]}>REWARDS</Text>
+      </View>
+      <View style={[flex.row, flex.alignCenter, m('t', 2)]}>
+        <View style={[border.quip, {borderRadius: 16, backgroundColor: theme.colors.background, height: 72}, flex.col, flex.center, p('x', 6), m('x', 2)]}>
+          <Text style={[typography.p2]}>
+            + {props.wager.toFixed(2)} USDC
+          </Text>
+        </View>
+        <View style={[border.quip, {borderRadius: 16, backgroundColor: theme.colors.background, height: 72}, flex.col, flex.center, p('x', 6), m('x', 2)]}>
+          <Text style={[typography.p2]}>
+            + {props.exp} EXP
+          </Text>
+        </View>
+      </View>
+    </>
+  } else {
+    return <>
+      <View style={[m('t', 8)]}>
+        <Text style={[typography.label2, {color: theme.colors.error}]}>LOSSES</Text>
+      </View>
+      <View style={[flex.row, flex.alignCenter, m('t', 2)]}>
+        <View style={[border.quip, {borderRadius: 16, backgroundColor: theme.colors.background, height: 72}, flex.col, flex.center, p('x', 6), m('x', 2)]}>
+          <Text style={[typography.p2]}>
+            - {props.wager.toFixed(2)} USDC
+          </Text>
+        </View>
+        <View style={[border.quip, {borderRadius: 16, backgroundColor: theme.colors.background, height: 72}, flex.col, flex.center, p('x', 6), m('x', 2)]}>
+          <Text style={[typography.p2]}>
+            + 0 EXP
+          </Text>
+        </View>
+      </View>
+    </>
+  }
+}
+
+function HeaderText(props: DidWinProps) {
+  const {quipIdx} = useGameStore()
+  const quip = quips[quipIdx]
+
+  const winText = random([
+    "Nice job!",
+    "Congratulations!",
+    "Great work!",
+    "Thats a wrap!",
+    "Good game!",
+  ])
+
+  const loseText = random([
+    "Try again!",
+    "Nice try!",
+    "Close one!",
+    "Good game!",
+  ])
+
+  if (props.didWin) {
+    return <View style={[flex.col, flex.fillW, flex.center]}>
+      <Text style={[typography.label2, {color: quip.color}]}>YOU WON</Text>
+      <Text style={[typography.h5]}>{winText}</Text>
+    </View>
+  } else {
+    return <View style={[flex.col, flex.fillW, flex.center]}>
+      <Text style={[typography.label2, {color: theme.colors.error}]}>YOU LOST</Text>
+      <Text style={[typography.h5]}>{loseText}</Text>
+    </View>
+  }
+}
+
+function PostGameAvatar(props: DidWinProps) {
+  if (props.didWin) {
+    return <AvatarPostGame size={180} levelText="1ST" percentage={.05}/>
+  } else {
+    return <AvatarPostGame size={180} levelText="2ND" percentage={.05}/>
+  }
+}
+
 export function GamePostGame({route, navigation}: GamePostGameProps) {
   const {quipIdx} = useGameStore()
   const quip = quips[quipIdx]
 
-  const points = 21370
-
-  console.log(`winner: ${route.params.winner}`)
-
-  const onShare = async () => {
-    await Share.share({
-      message: `Look at my awesome score! I just scored ${points} points on https://quip.gg!`,
-    }, {
-      dialogTitle: "Share Match Score",
-      excludedActivityTypes: [
-        //addToReadingList
-        "com.apple.UIKit.activity.AddToReadingList",
-        //airdrop
-        "com.apple.UIKit.activity.AirDrop",
-        //assignToContact
-        "com.apple.UIKit.activity.AssignToContact",
-      ]
-    })
-  }
+  const didWin = route.params.didWin
+  const rewards = route.params.rewards
 
   return (
     <Screen style={[spacing.fill, {backgroundColor: quip.bgColor}]}>
       <View style={[flex.col, flex.alignCenter, flex.fillH, p('t', 6)]}>
-        <View style={[flex.col, flex.fillW, flex.center]}>
-          <Text style={[typography.label2, {color: quip.color}]}>YOU WON</Text>
-          <Text style={[typography.h5]}>Congratulations!</Text>
-        </View>
-        <View style={[m('t', 11), m('b', 4)]}>
-          <AvatarPostGame size={112} levelText="1ST" percentage={.05}/>
-        </View>
-        <Text style={typography.h5}>
-          {points} PTS
-        </Text>
-        <View style={[m('t', 8)]}>
-          <Text style={[typography.label2, {color: quip.color}]}>REWARDS</Text>
-        </View>
-        <View style={[flex.row, flex.alignCenter, m('t', 2)]}>
-          <View style={[border.quip, {borderRadius: 16, backgroundColor: theme.colors.background, height: 72}, flex.col, flex.center, p('x', 6), m('x', 2)]}>
-            <Text style={[typography.p2]}>
-              10.00 USD
-            </Text>
-            <Text style={[typography.p3, {color: theme.colors.s4}]}>
-              ≈ 0.5 SOL
-            </Text>
-          </View>
-          <View style={[border.quip, {borderRadius: 16, backgroundColor: theme.colors.background, height: 72}, flex.col, flex.center, p('x', 6), m('x', 2)]}>
-            <Text style={[typography.p2]}>
-              2500 EXP
-            </Text>
-          </View>
+        <View style={flex.grow}/>
+        <HeaderText didWin={didWin}/>
+        <View style={flex.grow}/>
+        <View style={[m('t', 8), m('b', 4)]}>
+          <PostGameAvatar didWin={didWin}/>
         </View>
         <View style={flex.grow}/>
-        <View>
-          <Button theme={{colors: {primary: theme.colors.s1}}} onPress={() => {
-            navigation.push("leaderboard")
-          }} mode="outlined" style={{width: 327}} contentStyle={{height: 56}}>
-            <Text style={typography.button1}>
-              View Leaderboard
-            </Text>
-          </Button>
-        </View>
+        <RewardsAndLosses didWin={didWin} exp={rewards.exp} wager={rewards.wager}/>
+        <View style={flex.grow}/>
         <View style={[m('t', 8), p('b', 8), {backgroundColor: theme.colors.background, borderTopLeftRadius: 40, borderTopRightRadius: 40}, flex.col, flex.alignCenter, flex.fillW]}>
-          <Button
-            theme={{colors: {primary: theme.colors.s1}}}
-            onPress={onShare}
-            style={[{width: 327}, m('y', 2)]}
-            contentStyle={{height: 56}} mode="text"
-            icon={({size, color}) => <FontAwesome5 name="share-alt" size={size} color={color}/>}
-          >
-            <Text style={[typography.button1]}>
-              Share Your Score
-            </Text>
-          </Button>
           <Button
             theme={{colors: {primary: theme.colors.s1}}}
             onPress={() => {
               rootNavRef.dispatch({...CommonActions.navigate("gameHome"),})
             }}
-            style={[{width: 327}, m('b', 2)]}
+            style={[{width: 327}, m('y', 4)]}
             contentStyle={{height: 56}}
             mode="outlined"
           >

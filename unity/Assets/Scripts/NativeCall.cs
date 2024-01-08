@@ -33,4 +33,10 @@ public class NativeCall
                 throw new NotImplementedException($"${Application.platform} not supported!");
         }
     }
+
+    //serialize an object to json and send it to the react native app
+    public static void sendObject(object obj)
+    {
+        sendMessage(JsonUtility.ToJson(obj));
+    }
 }

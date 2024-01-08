@@ -1,9 +1,7 @@
 #if UNITY_EDITOR && UNITY_IOS
-using System;
 using System.Diagnostics;
 using System.IO;
 using UnityEditor;
-using UnityEditor.Build.Reporting;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using Debug = UnityEngine.Debug;
@@ -39,36 +37,26 @@ public static class AutoBuild
         // Start the process
         Process process = new Process() { StartInfo = psi };
         process.Start();
-        
-        // Read the output stream asynchronously
-        process.OutputDataReceived += (sender, e) =>
-        {
-            if (e.Data != null)
-            {
-                Debug.Log(e.Data);
-            }
-        };
-
-        process.BeginOutputReadLine();
-
-        // Read the error stream asynchronously
-        process.ErrorDataReceived += (sender, e) =>
-        {
-            if (e.Data != null)
-            {
-                Debug.LogError(e.Data);
-            }
-        };
-
-        process.BeginErrorReadLine();
 
         // Execute the Bash command
         StreamWriter sw = process.StandardInput;
+        sw.WriteLine("ssh-add --apple-use-keychain ~/.ssh/id_rsa");
         sw.WriteLine("/usr/local/bin/fastlane build");
         sw.Close();
 
+        // Read the output and error streams
+        string output = process.StandardOutput.ReadToEnd();
+        string error = process.StandardError.ReadToEnd();
+
         // Wait for the process to exit
         process.WaitForExit();
+
+        // Display the output and error using Debug.Log and Debug.LogError
+        Debug.Log("Output: " + output);
+        if (!string.IsNullOrEmpty(error))
+        {
+            Debug.LogError("Error: " + error);
+        }
 
         // Close the process
         process.Close();

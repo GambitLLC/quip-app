@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
-using Application = UnityEngine.Device.Application;
+using NativeEvents;
 
 public class GameManager : NetworkBehaviour
 {
@@ -20,6 +17,11 @@ public class GameManager : NetworkBehaviour
     {
         if (playerId != 0) return;
         playerId = id;
+        
+        //send message to react native that the player id has been set
+        NativeCall.sendObject(
+            new GameStartMessage(id.ToString(), (id == 1 ? "2" : "1"))
+        );
     }
 
     [Server]
@@ -54,7 +56,7 @@ public class GameManager : NetworkBehaviour
     [Client]
     void GoToPostGameScreen()
     {
-        NativeCall.sendMessage($"postGame {winnerId}");
+        NativeCall.sendObject(new GameEndMessage(winnerId.ToString()));
     }
 
     [Server]

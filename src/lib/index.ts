@@ -55,4 +55,5 @@ export * from './animations/AnimatedRipple'
 export * from './animations/AnimatedScreen'
 export * from './avatar/PlayfulAvatar'
 export * from './avatar/Selector'
+export * from './confetti/ConfettiPopper'
 

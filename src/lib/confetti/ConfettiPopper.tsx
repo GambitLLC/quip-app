@@ -20,7 +20,8 @@ const CONFETTI_SHAPES = [
   'confettiCircle',
   'confettiHeart',
   'confettiSquiggle',
-  'confettiX'
+  'confettiX',
+  'confettiDollar'
 ] as const
 
 type ConfettiShape = typeof CONFETTI_SHAPES[number]
@@ -91,6 +92,44 @@ function drawPath(shape: ConfettiShape, path: SkPath, x: number, y: number, r: n
       path.lineTo(x + r, y + r)
       path.moveTo(x - r, y + r)
       path.lineTo(x + r, y - r)
+      path.close()
+      break;
+    case 'confettiDollar':
+      path.moveTo(x, y)
+      path.rMoveTo(0.5094 * r, -0.1766 * r)
+      path.rLineTo(-0.8438 * r, -0.2469 * r)
+      path.rCubicTo(-0.0977  * r, -0.0281 * r, -0.1656 * r, -0.1195 * r, -0.1656 * r, -0.2211 * r)
+      path.rCubicTo(0, -0.1273 * r, 0.1031 * r, -0.2305 * r, 0.2305 * r, -0.2305 * r)
+      path.rLineTo(0.518 * r, 0) //Horizontal line
+      path.rCubicTo(0.0953 * r, 0, 0.1891 * r, 0.0289 * r, 0.2672 * r, 0.082 * r)
+      path.rCubicTo(0.0477 * r, 0.032 * r, 0.1117 * r, 0.0242 * r, 0.1523 * r, -0.0156 * r)
+      path.rLineTo(0.2719 * r, -0.2656 * r)
+      path.rCubicTo(0.0555 * r, -0.0539 * r, 0.0477 * r, -0.1437 * r, -0.0141 * r, -0.1914 * r)
+      path.rCubicTo(-0.1914 * r, -0.15 * r, -0.4305 * r, -0.2336 * r, -0.6758 * r, -0.2344 * r)
+      path.rLineTo(0, -0.375 * r) //Vertical line
+      path.rCubicTo(0, -0.0688 * r, -0.0563 * r, -0.125 * r, -0.125 * r, -0.125 * r)
+      path.rLineTo(-0.25 * r, 0) //Horizontal line
+      path.rCubicTo(-0.0688 * r, 0, -0.125 * r, 0.0563 * r, -0.125 * r, 0.125 * r)
+      path.rLineTo(0, 0.375 * r) //Vertical line
+      path.rLineTo(-0.0195 * r, 0) //Horizontal line
+      path.rCubicTo(-0.4977 * r, 0, -0.8977 * r, 0.4273 * r, -0.8516 * r, 0.9344 * r)
+      path.rCubicTo(0.0328 * r, 0.3602 * r, 0.3078 * r, 0.6531 * r, 0.6547 * r, 0.7547 * r)
+      path.rLineTo(0.8008 * r, 0.2344 * r)
+      path.rCubicTo(0.0977 * r, 0.0289 * r, 0.1656 * r, 0.1195 * r, 0.1656 * r, 0.2211 * r)
+      path.rCubicTo(0, 0.1273 * r, -0.1031 * r, 0.2305 * r, -0.2305 * r, 0.2305 * r)
+      path.rLineTo(-0.518 * r, 0) //Horizontal line
+      path.rCubicTo(-0.0953 * r, 0, -0.1891 * r, -0.0289 * r, -0.2672 * r, -0.082 * r)
+      path.rCubicTo(-0.0477 * r, -0.032 * r, -0.1117 * r, -0.0242 * r, -0.1523 * r, 0.0156 * r)
+      path.rLineTo(-0.2719 * r, 0.2656 * r)
+      path.rCubicTo(-0.0555 * r, 0.0539 * r, -0.0477 * r, 0.1437 * r, 0.0141 * r, 0.1914 * r)
+      path.rCubicTo(0.1914 * r, 0.15 * r, 0.4305 * r, 0.2336 * r, 0.6758 * r, 0.2344 * r)
+      path.rLineTo(0, 0.375 * r) //Vertical line
+      path.rCubicTo(0, 0.0688 * r, 0.0563 * r, 0.125 * r, 0.125 * r, 0.125 * r)
+      path.rLineTo(0.25 * r, 0) //Horizontal line
+      path.rCubicTo(0.0688 * r, 0, 0.125 * r, -0.0563 * r, 0.125 * r, -0.125 * r)
+      path.rLineTo(0, -0.3766 * r) //Vertical line
+      path.rCubicTo(0.3641 * r, -0.007 * r, 0.7055 * r, -0.2234 * r, 0.8258 * r, -0.568 * r)
+      path.rCubicTo(0.168 * r, -0.4813 * r, -0.1141 * r, -0.975 * r, -0.5664 * r, -1.107 * r)
       path.close()
       break;
   }
@@ -187,6 +226,8 @@ function ConfettiPiece(props: ConfettiPieceProps & ConfettiPieceMetaProps) {
     case 'confettiCircle':
       return <Path path={path} color={props.color} opacity={opacity} />
     case 'confettiHeart':
+      return <Path path={path} color={props.color} opacity={opacity} />
+    case 'confettiDollar':
       return <Path path={path} color={props.color} opacity={opacity} />
     case 'confettiSquiggle':
       return <Path

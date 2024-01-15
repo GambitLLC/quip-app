@@ -11,7 +11,7 @@ function Test({navigation}: NativeStackScreenProps<ParamListBase, "test">) {
     })
 
     const [WinPopper, winPop] = ConfettiPopper({
-        shapes: ['confettiHeart', 'confettiCircle', 'confettiSquiggle'],
+        shapes: ['confettiDollar'],
         colors: [theme.colors.success]
     })
 

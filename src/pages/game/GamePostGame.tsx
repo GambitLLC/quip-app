@@ -1,6 +1,19 @@
 import {View, StyleSheet, Share} from "react-native";
 import {GamePostGameProps} from "@/pages/game/GameScreen";
-import {AvatarPostGame, border, flex, m, p, quips, Screen, spacing, Text, typography, useGameStore} from "@/lib";
+import {
+  AvatarPostGame,
+  border,
+  ConfettiPopper,
+  flex,
+  m,
+  p,
+  quips,
+  Screen,
+  spacing,
+  Text,
+  typography,
+  useGameStore
+} from "@/lib";
 import theme from "@/util/Theme";
 import {Button} from "react-native-paper";
 import {FontAwesome5} from "@expo/vector-icons";
@@ -101,6 +114,28 @@ function PostGameAvatar(props: DidWinProps) {
   }
 }
 
+function PostGamePopper(props: DidWinProps) {
+  if (props.didWin) {
+    const [WinPopper, winPop] = ConfettiPopper({
+      shapes: ['confettiCircle', 'confettiSquiggle'],
+      colors: [theme.colors.success]
+    })
+
+    winPop(true)
+
+    return <WinPopper/>
+  } else {
+    const [LosePopper, losePop] = ConfettiPopper({
+      shapes: ['confettiX'],
+      colors: [theme.colors.error]
+    })
+
+    losePop(true)
+
+    return <LosePopper/>
+  }
+}
+
 export function GamePostGame({route, navigation}: GamePostGameProps) {
   const {quipIdx} = useGameStore()
   const quip = quips[quipIdx]
@@ -149,6 +184,7 @@ export function GamePostGame({route, navigation}: GamePostGameProps) {
           </Button>
         </View>
       </View>
+      <PostGamePopper didWin={didWin}/>
     </Screen>
   )
 }

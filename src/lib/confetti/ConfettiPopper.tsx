@@ -1,12 +1,10 @@
-
 // -- Confetti constants --
 import {runOnJS, SharedValue, useDerivedValue, useFrameCallback, useSharedValue} from "react-native-reanimated";
 import {useWindowDimensions, View} from "react-native";
-import {Canvas, Circle, Rect, Path, Skia, SkPath, Offset, Group} from "@shopify/react-native-skia";
+import {Canvas, Path, Skia, SkPath} from "@shopify/react-native-skia";
 import {useMemo} from "react";
 import {random, range} from "@/util/ArrayUtil";
 import {spacing} from "../styles/Spacing";
-import {ConfettiHeart, ConfettiSquiggle, ConfettiX, ConfettiCircle, ConfettiStar} from "./Shapes";
 
 const NUM_CONFETTI = 350
 
@@ -16,33 +14,26 @@ const CONFETTI_COLORS = [
   "#db3853",
   "#f45c44",
   "#f8b646",
-] as const
-
-type ConfettiColor = typeof CONFETTI_COLORS[number]
+]
 
 const CONFETTI_SHAPES = [
   'confettiCircle',
   'confettiHeart',
-  'confettiStar',
   'confettiSquiggle',
-  'confettiX'
+  'confettiX',
+  'confettiDollar'
 ] as const
 
 type ConfettiShape = typeof CONFETTI_SHAPES[number]
 
 // -- DOP --
-const DOP = 0.0085
+const DOP = 0.0125
 const DOP_MAX = 4
 const DOP_MIN = 1
 
 // -- SIZE --
 const SIZE_MAX = 6
 const SIZE_MIN = 2
-
-// -- OFFSET --
-const X_OFFSET = 0
-const Y_OFFSET_A = 50
-const Y_RANGE_P = 0.1
 
 // -- VELOCITY --
 const VX = 1
@@ -54,7 +45,7 @@ interface ConfettiPieceProps {
   y: number,
   vx: number,
   vy: number,
-  color: ConfettiColor,
+  color: string,
   shape: ConfettiShape,
   size: number,
   opacity: number,
@@ -67,12 +58,83 @@ interface ConfettiPieceMetaProps {
   raining: SharedValue<boolean>,
 }
 
+function drawPath(shape: ConfettiShape, path: SkPath, x: number, y: number, r: number) {
+  'worklet'
+
+  path.rewind()
+
+  switch (shape) {
+    case 'confettiCircle':
+      path.addCircle(x, y, r)
+      path.close()
+      break;
+    case 'confettiHeart':
+      r = r * 0.75
+      path.moveTo(x + 2*r, y)
+      path.rCubicTo(-0.3651 * r, 0.702 * r, -1.3415 * r, 1.6567 * r, -1.8938 * r, 2.1654 * r)
+      path.rArcTo(0.1561 * r, 0.1561 * r, 90, true, true, -0.209 * r, 0)
+      path.rCubicTo(-0.5553 * r, -0.5085 * r, -1.5319 * r, -1.4633 * r, -1.897 * r, -2.1654 * r)
+      path.rCubicTo(-0.8019 * r, -1.5444 * r, 1.2199 * r, -2.574 * r, 2 * r, -1.0295 * r)
+      path.rCubicTo(0.7801 * r, -1.5444 * r, 2.8018 * r, -0.5148 * r, 2 * r, 1.0295 * r)
+      path.close()
+      break;
+    case 'confettiSquiggle':
+      path.moveTo(x - r, y + r)
+      path.cubicTo(x - r, y - r, x + r, y + r, x + r, y - r)
+      path.close()
+      break;
+    case 'confettiX':
+      path.moveTo(x - r, y - r)
+      path.lineTo(x + r, y + r)
+      path.moveTo(x - r, y + r)
+      path.lineTo(x + r, y - r)
+      path.close()
+      break;
+    case 'confettiDollar':
+      path.moveTo(x, y)
+      path.rMoveTo(0.5094 * r, -0.1766 * r)
+      path.rLineTo(-0.8438 * r, -0.2469 * r)
+      path.rCubicTo(-0.0977  * r, -0.0281 * r, -0.1656 * r, -0.1195 * r, -0.1656 * r, -0.2211 * r)
+      path.rCubicTo(0, -0.1273 * r, 0.1031 * r, -0.2305 * r, 0.2305 * r, -0.2305 * r)
+      path.rLineTo(0.518 * r, 0) //Horizontal line
+      path.rCubicTo(0.0953 * r, 0, 0.1891 * r, 0.0289 * r, 0.2672 * r, 0.082 * r)
+      path.rCubicTo(0.0477 * r, 0.032 * r, 0.1117 * r, 0.0242 * r, 0.1523 * r, -0.0156 * r)
+      path.rLineTo(0.2719 * r, -0.2656 * r)
+      path.rCubicTo(0.0555 * r, -0.0539 * r, 0.0477 * r, -0.1437 * r, -0.0141 * r, -0.1914 * r)
+      path.rCubicTo(-0.1914 * r, -0.15 * r, -0.4305 * r, -0.2336 * r, -0.6758 * r, -0.2344 * r)
+      path.rLineTo(0, -0.375 * r) //Vertical line
+      path.rCubicTo(0, -0.0688 * r, -0.0563 * r, -0.125 * r, -0.125 * r, -0.125 * r)
+      path.rLineTo(-0.25 * r, 0) //Horizontal line
+      path.rCubicTo(-0.0688 * r, 0, -0.125 * r, 0.0563 * r, -0.125 * r, 0.125 * r)
+      path.rLineTo(0, 0.375 * r) //Vertical line
+      path.rLineTo(-0.0195 * r, 0) //Horizontal line
+      path.rCubicTo(-0.4977 * r, 0, -0.8977 * r, 0.4273 * r, -0.8516 * r, 0.9344 * r)
+      path.rCubicTo(0.0328 * r, 0.3602 * r, 0.3078 * r, 0.6531 * r, 0.6547 * r, 0.7547 * r)
+      path.rLineTo(0.8008 * r, 0.2344 * r)
+      path.rCubicTo(0.0977 * r, 0.0289 * r, 0.1656 * r, 0.1195 * r, 0.1656 * r, 0.2211 * r)
+      path.rCubicTo(0, 0.1273 * r, -0.1031 * r, 0.2305 * r, -0.2305 * r, 0.2305 * r)
+      path.rLineTo(-0.518 * r, 0) //Horizontal line
+      path.rCubicTo(-0.0953 * r, 0, -0.1891 * r, -0.0289 * r, -0.2672 * r, -0.082 * r)
+      path.rCubicTo(-0.0477 * r, -0.032 * r, -0.1117 * r, -0.0242 * r, -0.1523 * r, 0.0156 * r)
+      path.rLineTo(-0.2719 * r, 0.2656 * r)
+      path.rCubicTo(-0.0555 * r, 0.0539 * r, -0.0477 * r, 0.1437 * r, 0.0141 * r, 0.1914 * r)
+      path.rCubicTo(0.1914 * r, 0.15 * r, 0.4305 * r, 0.2336 * r, 0.6758 * r, 0.2344 * r)
+      path.rLineTo(0, 0.375 * r) //Vertical line
+      path.rCubicTo(0, 0.0688 * r, 0.0563 * r, 0.125 * r, 0.125 * r, 0.125 * r)
+      path.rLineTo(0.25 * r, 0) //Horizontal line
+      path.rCubicTo(0.0688 * r, 0, 0.125 * r, -0.0563 * r, 0.125 * r, -0.125 * r)
+      path.rLineTo(0, -0.3766 * r) //Vertical line
+      path.rCubicTo(0.3641 * r, -0.007 * r, 0.7055 * r, -0.2234 * r, 0.8258 * r, -0.568 * r)
+      path.rCubicTo(0.168 * r, -0.4813 * r, -0.1141 * r, -0.975 * r, -0.5664 * r, -1.107 * r)
+      path.close()
+      break;
+  }
+}
+
 function ConfettiPiece(props: ConfettiPieceProps & ConfettiPieceMetaProps) {
   const isFirstRun = useSharedValue(true)
 
   const {width, height} = useWindowDimensions()
-
-  const rotation = useSharedValue(0)
 
   const x = useSharedValue(props.x)
   const y = useSharedValue(props.y)
@@ -83,8 +145,7 @@ function ConfettiPiece(props: ConfettiPieceProps & ConfettiPieceMetaProps) {
   const yMax = useSharedValue(props.yMax)
   const xMax = useSharedValue(props.xMax)
 
-  const Y_RANGE = Y_RANGE_P * height
-  const Y_OFFSET = -Y_RANGE_P * height + Y_OFFSET_A
+  const Y_RANGE = height
 
   const rainCallback = useFrameCallback(() => {
     x.value += vx.value
@@ -102,8 +163,8 @@ function ConfettiPiece(props: ConfettiPieceProps & ConfettiPieceMetaProps) {
       //replace (reset)
       opacity.value = 1
       dop.value = DOP * (Math.random() * (DOP_MAX-DOP_MIN) + DOP_MIN)
-      x.value = (Math.random() * width - 2*props.size) + X_OFFSET
-      y.value = (Y_RANGE * Math.random() - Y_RANGE) + Y_OFFSET
+      x.value = Math.random() * width - 2*props.size
+      y.value = (Y_RANGE * Math.random() - Y_RANGE)
       yMax.value = height - props.size
       xMax.value = width - props.size
       vx.value = VX * (Math.random()*2 + 8 * 0.5 - 5)
@@ -119,6 +180,10 @@ function ConfettiPiece(props: ConfettiPieceProps & ConfettiPieceMetaProps) {
   }
 
   const deathCallback = useFrameCallback(() => {
+    if (dop.value > 0) {
+      dop.value *= -1
+    }
+
     x.value += vx.value
     y.value += vy.value
     opacity.value -= Math.abs(dop.value)
@@ -127,8 +192,8 @@ function ConfettiPiece(props: ConfettiPieceProps & ConfettiPieceMetaProps) {
       //replace (reset)
       opacity.value = -1
       dop.value = DOP * (Math.random() * (DOP_MAX-DOP_MIN) + DOP_MIN)
-      x.value = (Math.random() * width - 2*props.size) + X_OFFSET
-      y.value = (Y_RANGE * Math.random() - Y_RANGE) + Y_OFFSET
+      x.value = (Math.random() * width - 2*props.size)
+      y.value = (Y_RANGE * Math.random() - Y_RANGE)
       yMax.value = height - props.size
       xMax.value = width - props.size
       vx.value = VX * (Math.random()*2 + 8 * 0.5 - 5)
@@ -148,100 +213,70 @@ function ConfettiPiece(props: ConfettiPieceProps & ConfettiPieceMetaProps) {
     }
   })
 
-  //const path = useSharedValue(Skia.Path.Make())
+  const path = useSharedValue(Skia.Path.Make())
 
-  // function drawPath(shape: ConfettiShape, path: SkPath, x: number, y: number, r: number) {
-  //   'worklet'
-  //
-  //   const size = r * 2
-  //
-  //   path.rewind()
-  //
-  //   //update the path origin
-  //   path.moveTo(x, y)
-  //
-  //   switch (shape) {
-  //     case 'confettiCircle':
-  //       //circle path is handled by the Circle component
-  //       break;
-  //     case 'confettiHeart':
-  //       //draw a heart path with the origin at the top left corner and size*2 as the width and height
-  //       path.rMoveTo(4.0355, 0)
-  //       path.rCubicTo(-2.2288, 0, -4.0355, 1.8068, -4.0355, 4.0355)
-  //       path.rCubicTo(0, 1.0703, 0.4252, 2.0968, 1.182, 2.8536)
-  //       path.rLineTo(5.9645, 5.9645)
-  //       path.rCubicTo(0.1953, 0.1952, 0.5118, 0.1952, 0.7071, 0)
-  //       path.rLineTo(5.9644, -5.9645)
-  //       path.rCubicTo(0.7568, -0.7568, 1.182, -1.7833, 1.182, -2.8536)
-  //       path.rCubicTo(0, -2.2288, -1.8068, -4.0355, -4.0355, -4.0355)
-  //       path.rCubicTo(-1.0703, 0, -2.0968, 0.4252, -2.8536, 1.182)
-  //       path.rLineTo(-0.6109, 0.6109)
-  //       path.rLineTo(-0.6109, -0.6109)
-  //       path.rCubicTo(-0.7568, -0.7568, -1.7833, -1.182, -2.8536, -1.182)
-  //       path.close()
-  //       break;
-  //     case 'confettiStar':
-  //       //draw a star path with the origin at the top left corner and size*2 as the width and height
-  //       path.lineTo(x + size, y)
-  //       path.lineTo(x + size, y + size)
-  //       path.lineTo(x, y + size)
-  //       path.close()
-  //       break;
-  //     case 'confettiSquiggle':
-  //       //draw a squiggle path with the origin at the top left corner and size*2 as the width and height
-  //       path.lineTo(x + size, y)
-  //       path.lineTo(x + size, y + size)
-  //       path.lineTo(x, y + size)
-  //       path.close()
-  //       break;
-  //   }
-  // }
-  //
-  // useDerivedValue(() => {
-  //   drawPath(props.shape, path.value, x.value, y.value, props.size)
-  // })
+  useDerivedValue(() => {
+    drawPath(props.shape, path.value, x.value, y.value, props.size)
+  })
 
   switch (props.shape) {
     case 'confettiCircle':
-      return <ConfettiCircle x={x} y={y} size={props.size} color={props.color} opacity={opacity} rotation={rotation}/>
+      return <Path path={path} color={props.color} opacity={opacity} />
     case 'confettiHeart':
-      return <ConfettiHeart x={x} y={y} size={props.size} color={props.color} opacity={opacity} rotation={rotation}/>
-    case 'confettiStar':
-      return <ConfettiStar x={x} y={y} size={props.size} color={props.color} opacity={opacity} rotation={rotation}/>
+      return <Path path={path} color={props.color} opacity={opacity} />
+    case 'confettiDollar':
+      return <Path path={path} color={props.color} opacity={opacity} />
     case 'confettiSquiggle':
-      return <ConfettiSquiggle x={x} y={y} size={props.size} color={props.color} opacity={opacity} rotation={rotation}/>
-    case "confettiX":
-      return <ConfettiX x={x} y={y} size={props.size} color={props.color} opacity={opacity} rotation={rotation}/>
+      return <Path
+        path={path}
+        color={props.color}
+        style='stroke'
+        opacity={opacity}
+        strokeWidth={props.size}
+        strokeCap="round"
+        strokeJoin="round"
+      />
+    case 'confettiX':
+      return <Path
+        path={path}
+        color={props.color}
+        style='stroke'
+        opacity={opacity}
+        strokeWidth={props.size}
+        strokeCap="round"
+        strokeJoin="round"
+      />
   }
 }
 
 interface ConfettiCannonProps {
-
+  shapes?: ConfettiShape[]
+  colors?: string[]
+  amount?: number
 }
 
 function ConfettiCannon(props: ConfettiCannonProps & ConfettiPieceMetaProps) {
   const {width, height} = useWindowDimensions()
 
-  const Y_RANGE = Y_RANGE_P * height
-  const Y_OFFSET = -Y_RANGE_P * height + Y_OFFSET_A
+  const Y_RANGE = height
 
-  const confetti = useMemo<ConfettiPieceProps[]>(() => Array(NUM_CONFETTI).fill(0).map(() => {
+  const confetti = useMemo<ConfettiPieceProps[]>(() => Array(props.amount ?? NUM_CONFETTI).fill(0).map(() => {
     const size = ~~range(SIZE_MIN, SIZE_MAX)
 
     return {
       size,
       opacity: -1,
       dop: DOP * range(DOP_MIN, DOP_MAX),
-      x: range(-2*size, width - 2*size) + X_OFFSET,
-      y: range(-Y_RANGE, 0) + Y_OFFSET,
+      x: range(-2*size, width - 2*size),
+      y: range(-Y_RANGE, 0),
       xMax: width - size,
       yMax: height - size,
       vx: VX * (range(0, 2) + 8 * 0.5 - 5),
       vy: VY * (0.7 * size + range(-1, 1)),
-      color: random(CONFETTI_COLORS) as ConfettiColor,
-      shape: random(CONFETTI_SHAPES) as ConfettiShape,
+      color: random(props.colors ?? CONFETTI_COLORS),
+      shape: random(props.shapes ?? CONFETTI_SHAPES) as ConfettiShape,
     }
-  }), [])
+  }), [props.amount, props.colors, props.shapes])
 
   return <View pointerEvents={"none"} style={[spacing.fill, {position: 'absolute'}]}>
     <Canvas pointerEvents={"none"} style={[spacing.fill, {backgroundColor: 'transparent'}]}>
@@ -252,7 +287,7 @@ function ConfettiCannon(props: ConfettiCannonProps & ConfettiPieceMetaProps) {
   </View>
 }
 
-export function ConfettiPopper(props: ConfettiCannonProps) {
+export function ConfettiPopper(props?: ConfettiCannonProps) {
   const isRaining = useSharedValue(false)
   return [
     () => {

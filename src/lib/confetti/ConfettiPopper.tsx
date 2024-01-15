@@ -1,7 +1,7 @@
 // -- Confetti constants --
 import {runOnJS, SharedValue, useDerivedValue, useFrameCallback, useSharedValue} from "react-native-reanimated";
 import {useWindowDimensions, View} from "react-native";
-import {Canvas, Path, Skia, SkPath, StrokeCap, StrokeJoin} from "@shopify/react-native-skia";
+import {Canvas, Path, Skia, SkPath} from "@shopify/react-native-skia";
 import {useMemo} from "react";
 import {random, range} from "@/util/ArrayUtil";
 import {spacing} from "../styles/Spacing";
@@ -27,18 +27,13 @@ const CONFETTI_SHAPES = [
 type ConfettiShape = typeof CONFETTI_SHAPES[number]
 
 // -- DOP --
-const DOP = 0.0085
+const DOP = 0.0125
 const DOP_MAX = 4
 const DOP_MIN = 1
 
 // -- SIZE --
 const SIZE_MAX = 6
 const SIZE_MIN = 2
-
-// -- OFFSET --
-const X_OFFSET = 0
-const Y_OFFSET_A = 50
-const Y_RANGE_P = 0.1
 
 // -- VELOCITY --
 const VX = 1
@@ -65,6 +60,7 @@ interface ConfettiPieceMetaProps {
 
 function drawPath(shape: ConfettiShape, path: SkPath, x: number, y: number, r: number) {
   'worklet'
+
   path.rewind()
 
   switch (shape) {
@@ -140,8 +136,6 @@ function ConfettiPiece(props: ConfettiPieceProps & ConfettiPieceMetaProps) {
 
   const {width, height} = useWindowDimensions()
 
-  const rotation = useSharedValue(0)
-
   const x = useSharedValue(props.x)
   const y = useSharedValue(props.y)
   const vx = useSharedValue(props.vx)
@@ -151,8 +145,7 @@ function ConfettiPiece(props: ConfettiPieceProps & ConfettiPieceMetaProps) {
   const yMax = useSharedValue(props.yMax)
   const xMax = useSharedValue(props.xMax)
 
-  const Y_RANGE = Y_RANGE_P * height
-  const Y_OFFSET = -Y_RANGE_P * height + Y_OFFSET_A
+  const Y_RANGE = height
 
   const rainCallback = useFrameCallback(() => {
     x.value += vx.value
@@ -170,8 +163,8 @@ function ConfettiPiece(props: ConfettiPieceProps & ConfettiPieceMetaProps) {
       //replace (reset)
       opacity.value = 1
       dop.value = DOP * (Math.random() * (DOP_MAX-DOP_MIN) + DOP_MIN)
-      x.value = (Math.random() * width - 2*props.size) + X_OFFSET
-      y.value = (Y_RANGE * Math.random() - Y_RANGE) + Y_OFFSET
+      x.value = Math.random() * width - 2*props.size
+      y.value = (Y_RANGE * Math.random() - Y_RANGE)
       yMax.value = height - props.size
       xMax.value = width - props.size
       vx.value = VX * (Math.random()*2 + 8 * 0.5 - 5)
@@ -187,6 +180,10 @@ function ConfettiPiece(props: ConfettiPieceProps & ConfettiPieceMetaProps) {
   }
 
   const deathCallback = useFrameCallback(() => {
+    if (dop.value > 0) {
+      dop.value *= -1
+    }
+
     x.value += vx.value
     y.value += vy.value
     opacity.value -= Math.abs(dop.value)
@@ -195,8 +192,8 @@ function ConfettiPiece(props: ConfettiPieceProps & ConfettiPieceMetaProps) {
       //replace (reset)
       opacity.value = -1
       dop.value = DOP * (Math.random() * (DOP_MAX-DOP_MIN) + DOP_MIN)
-      x.value = (Math.random() * width - 2*props.size) + X_OFFSET
-      y.value = (Y_RANGE * Math.random() - Y_RANGE) + Y_OFFSET
+      x.value = (Math.random() * width - 2*props.size)
+      y.value = (Y_RANGE * Math.random() - Y_RANGE)
       yMax.value = height - props.size
       xMax.value = width - props.size
       vx.value = VX * (Math.random()*2 + 8 * 0.5 - 5)
@@ -261,8 +258,7 @@ interface ConfettiCannonProps {
 function ConfettiCannon(props: ConfettiCannonProps & ConfettiPieceMetaProps) {
   const {width, height} = useWindowDimensions()
 
-  const Y_RANGE = Y_RANGE_P * height
-  const Y_OFFSET = -Y_RANGE_P * height + Y_OFFSET_A
+  const Y_RANGE = height
 
   const confetti = useMemo<ConfettiPieceProps[]>(() => Array(props.amount ?? NUM_CONFETTI).fill(0).map(() => {
     const size = ~~range(SIZE_MIN, SIZE_MAX)
@@ -271,8 +267,8 @@ function ConfettiCannon(props: ConfettiCannonProps & ConfettiPieceMetaProps) {
       size,
       opacity: -1,
       dop: DOP * range(DOP_MIN, DOP_MAX),
-      x: range(-2*size, width - 2*size) + X_OFFSET,
-      y: range(-Y_RANGE, 0) + Y_OFFSET,
+      x: range(-2*size, width - 2*size),
+      y: range(-Y_RANGE, 0),
       xMax: width - size,
       yMax: height - size,
       vx: VX * (range(0, 2) + 8 * 0.5 - 5),
